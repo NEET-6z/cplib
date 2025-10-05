@@ -1,0 +1,3 @@
+[console_scripts]
+competitive-verifier=competitive_verifier.app:main
+
