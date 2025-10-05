@@ -3,4 +3,4 @@ bundled/
 cache/
 .competitive-verifier/.jekyll-cache
 .competitive-verifier/_site
-.competitive_/jekyll
+.competitive-verifier/_jekyll
