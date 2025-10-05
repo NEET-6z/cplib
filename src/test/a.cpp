@@ -18,8 +18,7 @@ int main(){
             seg.set(x,y);
         }
         else{
-            y++;
-            cout<<seg.prod(x,y)<<"\n";
+            cout<<seg.prod(x,y+1)<<"\n";
         }
     }
 }
