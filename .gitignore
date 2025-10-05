@@ -4,3 +4,6 @@ cache/
 .competitive-verifier/.jekyll-cache
 .competitive-verifier/_site
 .competitive-verifier/_jekyll
+result.json
+verify.json
+verify.sh
