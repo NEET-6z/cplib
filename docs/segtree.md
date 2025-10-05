@@ -1,6 +1,6 @@
 ---
 title: Segment Tree
-documentation_of: ./segmtree.hpp
+documentation_of: src/segtree.hpp
 ---
 
 
