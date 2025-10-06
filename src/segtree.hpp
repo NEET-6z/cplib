@@ -4,6 +4,7 @@
 template<class S, S (*op)(S, S), S (*e)()> struct segtree {
     int n;
     vector<S> d;
+    segtree(): segtree(1) {}
     segtree(int n_): n(__bit_ceil(n_)), d(n * 2, e()) {}
     void set(int i, S x) {
         for(d[i += n] = x; i >>= 1;) d[i] = op(d[i * 2], d[i * 2 + 1]);

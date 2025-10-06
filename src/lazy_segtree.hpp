@@ -4,7 +4,7 @@
 template<class S, S (*op)(S, S), S (*e)(), class F, S (*mpp)(F, S),
          F (*cmpo)(F, F), F (*id)()>
 struct lazy_segtree {
-    lazy_segtree(): lazy_segtree(0) {}
+    lazy_segtree(): lazy_segtree(1) {}
     explicit lazy_segtree(int n): lazy_segtree(vector<S>(n, e())) {}
     explicit lazy_segtree(const vector<S> &v):
         n(__bit_ceil(si(v))),

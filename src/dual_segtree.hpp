@@ -1,10 +1,10 @@
 #pragma once
-#include "./template.hpp"
+#include "template.hpp"
 
 //伝搬一切しないver
 template<class F, F (*id)(), void (*cmpo)(const F&, F&)>
 struct dual_segtree {
-    dual_segtree(): dual_segtree(0) {}
+    dual_segtree(): dual_segtree(1) {}
     explicit dual_segtree(int n_): n(__bit_ceil(n_)),
         d(2 * n, id()) {}
     void apply(int l, int r, F f) {
