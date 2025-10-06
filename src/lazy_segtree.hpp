@@ -132,3 +132,6 @@ private:
         for(int i = log + 1; --i;) push(k >> i);
     }
 };
+template<class T> using LazySegtreeFrom =
+    lazy_segtree<typename T::S, T::op, T::e, typename T::F, T::mpp, T::cmpo,
+                 T::id>;

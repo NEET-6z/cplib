@@ -53,3 +53,7 @@ template<class S, S (*op)(S, S), S (*e)()> struct segtree {
         return 0;
     }
 };
+
+template<class T> using SegtreeFrom =
+    segtree<typename T::S, T::op, T::e>;
+
