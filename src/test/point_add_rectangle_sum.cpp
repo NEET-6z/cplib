@@ -1,3 +1,5 @@
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/point_add_rectangle_sum
+
 #include "../segtree2d.hpp"
 long op(long l, long r) { return l + r; }
 long e() { return 0; }

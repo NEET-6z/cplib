@@ -1,8 +1,7 @@
 #pragma once
 #include "template.hpp"
 
-template<class S, S (*op)(S, S), S (*e)(), class F, S (*mpp)(F, S),
-         F (*cmpo)(F, F), F (*id)()>
+template<class S, S (*op)(S, S), S (*e)(), class F, S (*mpp)(F, S), F (*cmpo)(F, F), F (*id)()>
 struct lazy_segtree {
     lazy_segtree(): lazy_segtree(1) {}
     explicit lazy_segtree(int n): lazy_segtree(vector<S>(n, e())) {}
@@ -133,5 +132,4 @@ private:
     }
 };
 template<class T> using LazySegtreeFrom =
-    lazy_segtree<typename T::S, T::op, T::e, typename T::F, T::mpp, T::cmpo,
-                 T::id>;
+    lazy_segtree<typename T::S, T::op, T::e, typename T::F, T::mpp, T::cmpo, T::id>;

@@ -1,6 +1,6 @@
 #include "template.hpp"
 
-template<class S, bool EnableSum=0> struct merge_sort_tree {
+template<class S, bool EnableSum = 0> struct merge_sort_tree {
     int n;
     vector<vector<S>> d, s;
     merge_sort_tree(vector<S>& a): n(__bit_ceil(si(a))), d(n * 2), s(n * 2) {
@@ -24,10 +24,8 @@ template<class S, bool EnableSum=0> struct merge_sort_tree {
         assert(EnableSum);
         S ret = 0;
         for(l += n, r += n; l < r; l >>= 1, r >>= 1) {
-            if(l & 1)
-                ret += s[l][lower_bound(all(d[l]), u) - d[l].begin()], l++;
-            if(r & 1)
-                --r, ret += s[r][lower_bound(all(d[r]), u) - d[r].begin()];
+            if(l & 1) ret += s[l][lower_bound(all(d[l]), u) - d[l].begin()], l++;
+            if(r & 1) --r, ret += s[r][lower_bound(all(d[r]), u) - d[r].begin()];
         }
         return ret;
     }

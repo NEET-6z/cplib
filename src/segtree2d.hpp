@@ -1,22 +1,4 @@
 #include "segtree.hpp"
-template<class S, S (*op)(S, S), S (*e)()> struct segtree {
-    int n;
-    vector<S> d;
-    segtree() {}
-    segtree(int n_): n(__bit_ceil(n_)), d(n * 2, e()) {}
-    void set(int i, S x) {
-        for(d[i += n] = x; i >>= 1;) d[i] = op(d[i * 2], d[i * 2 + 1]);
-    }
-    S get(int i) { return d[i + n]; }
-    S prod(int l, int r) {
-        S L = e(), R = e();
-        for(l += n, r += n; l < r; l >>= 1, r >>= 1) {
-            if(l & 1) L = op(L, d[l++]);
-            if(r & 1) R = op(d[--r], R);
-        }
-        return op(L, R);
-    }
-};
 
 template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
     int n;
@@ -32,8 +14,7 @@ template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
         n = __bit_ceil(si(ps));
         ys.resize(2 * n);
         rep(i, si(ps)) ys[n + i] = {ps[i].se};
-        for(int i = n; --i;)
-            merge(all(ys[i * 2]), all(ys[i * 2 + 1]), back_inserter(ys[i]));
+        for(int i = n; --i;) merge(all(ys[i * 2]), all(ys[i * 2 + 1]), back_inserter(ys[i]));
 
         d.resize(2 * n);
         for(int i = 1; i < 2 * n; i++) {
