@@ -1,12 +1,13 @@
 #include "template.hpp"
 
-template<class S> struct merge_sort_tree {
+template<class S, bool EnableSum=0> struct merge_sort_tree {
     int n;
     vector<vector<S>> d, s;
     merge_sort_tree(vector<S>& a): n(__bit_ceil(si(a))), d(n * 2), s(n * 2) {
         rep(i, si(a)) d[n + i] = {a[i]}, s[n + i] = {S(), a[i]};
         for(int i = n; --i;) {
             merge(all(d[i * 2]), all(d[i * 2 + 1]), back_inserter(d[i]));
+            if(!EnableSum) continue;
             s[i].resize(si(d[i]) + 1, S());
             rep(j, si(d[i])) s[i][j + 1] = s[i][j] + d[i][j];
         }
@@ -20,6 +21,7 @@ template<class S> struct merge_sort_tree {
         return ret;
     }
     S range_sum(int l, int r, S& u) {
+        assert(EnableSum);
         S ret = 0;
         for(l += n, r += n; l < r; l >>= 1, r >>= 1) {
             if(l & 1)
