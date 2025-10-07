@@ -5,8 +5,8 @@ template<class S, S (*op)(S, S), S (*e)()> struct segtree {
     int n;
     vector<S> d;
     segtree(): segtree(1) {}
-    segtree(int n_): segtree(vector<S>(n_, e())) {}
-    segtree(const vector<S>& a): n(__bit_ceil(si(a))), d(n * 2, ()) {
+    explicit segtree(int n_): segtree(vector<S>(n_, e())) {}
+    explicit segtree(const vector<S>& a): n(__bit_ceil(si(a))), d(n * 2, e()) {
         rep(i, si(a)) d[n + i] = a[i];
         for(int i = n; --i;) d[i] = op(d[i * 2], d[i * 2 + 1]);
     }
