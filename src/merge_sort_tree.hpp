@@ -1,3 +1,4 @@
+#pragma once
 #include "template.hpp"
 
 template<class S, bool EnableSum = 0> struct merge_sort_tree {

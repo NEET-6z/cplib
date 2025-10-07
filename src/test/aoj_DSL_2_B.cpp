@@ -10,10 +10,10 @@ int main() {
         int c, x, y;
         cin >> c >> x >> y;
         if(c == 0) {
-            bit.add(x, y);
+            bit.add(x-1, y);
         }
         else {
-            cout << bit.sum(x, y + 1) << "\n";
+            cout << bit.sum(x-1, y) << "\n";
         }
     }
 }
