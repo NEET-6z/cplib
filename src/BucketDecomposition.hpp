@@ -17,7 +17,7 @@ template<class Block> struct BucketDecomposition {
             blocks.push_back(Block(si(a), i, a));
         }
     }
-    Block::S prod(int l, int r) {
+    S prod(int l, int r) {
         int lb = l / B;
         int rb = (r - 1) / B;
         S ret{};
@@ -34,7 +34,7 @@ template<class Block> struct BucketDecomposition {
         }
         return ret;
     }
-    void apply(int l, int r, Block::F f) {
+    void apply(int l, int r, F f) {
         int lb = l / B;
         int rb = (r - 1) / B;
         if(lb == rb) blocks[lb].apply(l - B * lb, r - B * lb, f);

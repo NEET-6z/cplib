@@ -32,7 +32,7 @@ struct lazy_segtree {
             if(((r >> i) << i) != r) push((r - 1) >> i);
         }
         S sml = e(), smr = e();
-        for(l += n, r += n; l < r; l >>= 1, r >>= 1) {
+        for(;l < r; l >>= 1, r >>= 1) {
             if(l & 1) sml = op(sml, d[l++]);
             if(r & 1) smr = op(d[--r], smr);
         }

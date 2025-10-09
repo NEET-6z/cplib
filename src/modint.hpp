@@ -41,7 +41,6 @@ template<int mod = 998244353> struct modint {
     }
     constexpr int val() const { return x; }
     constexpr friend ostream& operator<<(ostream& os, const modint& m) { return os << m.val(); }
-
     constexpr friend istream& operator>>(istream& is, modint& m) {
         long v;
         is >> v;
