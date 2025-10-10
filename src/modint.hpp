@@ -46,4 +46,3 @@ template<int mod = 998244353> struct modint {
         return is;
     }
 };
-using mint = modint<>;

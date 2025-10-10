@@ -1,20 +1,23 @@
 #pragma once
 #include "template.hpp"
 
-template<typename T, int MAX_N> struct Combination {
-    array<T, MAX_N + 1> fa{}, ifa{};
-    constexpr Combination() {
+template<typename T>
+struct Combination {
+    vector<T> fa{}, ifa{};
+    Combination(int n) {
+        fa.resize(n+1);
+        ifa.resize(n+1);
         fa[0] = 1;
-        for(int i = 1; i <= MAX_N; i++) fa[i] = fa[i - 1] * i;
-        ifa[MAX_N] = fa[MAX_N].inv();
-        for(int i = MAX_N; i >= 1; i--) ifa[i - 1] = ifa[i] * i;
+        for(int i = 1; i <= n; i++) fa[i] = fa[i - 1] * i;
+        ifa[n] = fa[n].inv();
+        for(int i = n; i >= 1; i--) ifa[i - 1] = ifa[i] * i;
     }
 
     T fact(int n){
         return fa[n];
     }
 
-    T inv_fact(int n){
+    T ifact(int n){
         return ifa[n];
     }
 
@@ -37,7 +40,5 @@ template<typename T, int MAX_N> struct Combination {
     T Kata(int n, int m, int k) {
         if(n > m + k) return 0;
         return C(n + m, n) - C(n + m, n - k - 1);
-    };    
+    };
 };
-
-

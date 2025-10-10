@@ -3,6 +3,7 @@
 #include "../swag.hpp"
 #include "../modint.hpp"
 
+using mint=modint<>;
 using S=pair<mint,mint>;
 S op(S l, S r){return {l.fi*r.fi, l.se*r.fi+r.se};}
 S e(){return {1,0};}
