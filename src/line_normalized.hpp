@@ -10,4 +10,4 @@ inline array<long, 3> line_normalized(long sy, long sx, long ty, long tx) {
     c /= g;
     if(a < 0) a *= -1, b *= -1, c *= -1;
     return {a, b, c};
-}
+} 
