@@ -20,7 +20,7 @@ template<int mod = 998244353> struct modint {
         return *this;
     }
     constexpr modint& operator*=(modint r) {
-        x = 1LL * x * r.x % mod;
+        x = 1l * x * r.x % mod;
         return *this;
     }
     constexpr modint& operator/=(modint r) { return *this *= r.inv(); }

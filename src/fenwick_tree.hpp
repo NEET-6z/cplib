@@ -6,8 +6,7 @@ template<class T> struct fenwick_tree {
     fenwick_tree(): a(1) {}
     fenwick_tree(int n): a(n + 1) {}
     void add(int i, T x) {
-        i++;
-        while(i < si(a)) a[i] += x, i += i & -i;
+        for(i++; i < si(a);) a[i] += x, i += i & -i;
     }
     T sum(int r) {
         T s = 0;

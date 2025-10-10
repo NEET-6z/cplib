@@ -32,13 +32,12 @@ struct lazy_segtree {
             if(((r >> i) << i) != r) push((r - 1) >> i);
         }
         S sml = e(), smr = e();
-        for(;l < r; l >>= 1, r >>= 1) {
+        for(; l < r; l >>= 1, r >>= 1) {
             if(l & 1) sml = op(sml, d[l++]);
             if(r & 1) smr = op(d[--r], smr);
         }
         return op(sml, smr);
     }
-    S all_prod() { return d[1]; }
     void apply(int p, F f) {
         p += n;
         PUSH(p);
@@ -54,10 +53,9 @@ struct lazy_segtree {
             if(((r >> i) << i) != r) push((r - 1) >> i);
         }
         int ml = l, mr = r;
-        while(l < r) {
+        for(; l < r; l >>= 1, r >>= 1) {
             if(l & 1) all_apply(l++, f);
             if(r & 1) all_apply(--r, f);
-            l >>= 1, r >>= 1;
         }
         l = ml, r = mr;
         for(int i = 1; i <= log; i++) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "template.hpp"
-vector<int> topological_sort(vector<vector<int>> g){
+
+inline vector<int> topological_sort(vector<vector<int>> g){
     vector<int> in(si(g)),ret;
     for(auto &&v: g) for(auto&& e: v) in[e]++;
     queue<int> q;

@@ -2,7 +2,7 @@
 
 
 inline bool next_combination(vector<int>& ids, int n){
-    int r=ssize(ids);
+    int r=si(ids);
     int i=r-1;
     while(~i&&ids[i]==i+n-r) i--;
     if(i==-1) return false;
@@ -11,7 +11,7 @@ inline bool next_combination(vector<int>& ids, int n){
     return true;
 }
 inline bool next_combination_with_replacement(vector<int>& ids, int n) {
-    int r = size(ids);
+    int r = si(ids);
     for(int i=r;i--;){
         if (ids[i]<n-1) {
             ++ids[i];
