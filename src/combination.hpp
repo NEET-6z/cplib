@@ -41,4 +41,13 @@ struct Combination {
         if(n > m + k) return 0;
         return C(n + m, n) - C(n + m, n - k - 1);
     };
+    // n個の箱にk個の玉を入れる。各箱は最大でr個しか入れれない
+    T limC(int n, int k, int r) {
+        T ret = 0;
+        rep(i, k / (r + 1) + 1) {
+            ret += ((i % 2 == 0) * 2 - 1) * C(n, i)
+                * C(n + k - 1 - i * (r + 1), n - 1);
+        }
+        return ret;
+    }
 };
