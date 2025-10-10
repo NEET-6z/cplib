@@ -3,9 +3,7 @@
 
 template<int mod = 998244353> struct modint {
     int x;
-    constexpr modint(long x_ = 0): x(x_ % mod) {
-        if(x < 0) x += mod;
-    }
+    constexpr modint(long x_ = 0): x(((x_ % mod)+mod)%mod) { }
     constexpr modint operator-() {
         auto res = *this;
         res.x = (x ? mod - x : 0);

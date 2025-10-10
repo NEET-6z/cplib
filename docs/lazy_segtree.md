@@ -3,4 +3,5 @@ title: Lazy Segment Tree (ACL)
 documentation_of: src/lazy_segtree.hpp
 ---
 
-ACLの単体動作ver
+
+https://github.com/KentaroMatsushita/icpc_library/blob/main/src/data-structure/lazy-segtree.hpp

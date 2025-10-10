@@ -1,5 +1,5 @@
 ---
-title:  Boyer-Moore majority vote algorithm
+title: Boyer-Moore majority vote algorithm
 documentation_of: src/boyermoore.hpp
 ---
 
