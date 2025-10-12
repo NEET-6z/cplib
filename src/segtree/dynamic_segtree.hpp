@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 //省メモリ化はしてません
 template<class S, S (*op)(S, S), S (*e)(), typename K = uint64_t> struct dynamic_segtree {

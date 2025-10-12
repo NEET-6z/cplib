@@ -1,5 +1,5 @@
-// competitive-verifier: PROBLEM https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2907
-#include "../merge_sort_tree.hpp"
+#define PROBLEM "https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=2907"
+#include "../segtree/merge_sort_tree.hpp"
 
 int main() {
     ios::sync_with_stdio(false);

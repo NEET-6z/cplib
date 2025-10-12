@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 inline vector<int> topological_sort(vector<vector<int>> g){
     vector<int> in(si(g)),ret;

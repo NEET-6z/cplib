@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 inline vector<int> boyer_moore_generalized(const vector<int>& a, int k) {
     vector<int> c(k, 0), cnt(k, 0);

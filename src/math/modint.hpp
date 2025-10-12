@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 template<int mod = 998244353> struct modint {
     int x;

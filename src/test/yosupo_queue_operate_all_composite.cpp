@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/queue_operate_all_composite"
 
-#include "../swag.hpp"
-#include "../modint.hpp"
+#include "../structure/swag.hpp"
+#include "../math/modint.hpp"
 
 using mint=modint<>;
 using S=pair<mint,mint>;

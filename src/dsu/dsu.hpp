@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 struct dsu {
     vector<int> p;

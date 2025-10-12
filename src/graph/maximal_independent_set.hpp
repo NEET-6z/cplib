@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 using BS = bitset<40>;
 BS maximal_independent_set(vector<BS> g, BS d = 0) {

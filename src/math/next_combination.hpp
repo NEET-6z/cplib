@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 inline bool next_combination(vector<int>& a, int n) {
     int r = si(a);

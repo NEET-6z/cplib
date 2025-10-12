@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 template<class S, S (*op)(S, S), S (*e)(), class F, S (*mpp)(F, S), F (*cmpo)(F, F), F (*id)()>
 struct lazy_segtree {

@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 template<typename T> struct SparseTable {
     function<T(T, T)> f;

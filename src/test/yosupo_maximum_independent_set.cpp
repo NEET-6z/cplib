@@ -1,5 +1,5 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/maximum_independent_set"
-#include "../maximal_independent_set.hpp"
+#include "../graph/maximal_independent_set.hpp"
 
 int main() {
     ios::sync_with_stdio(false);

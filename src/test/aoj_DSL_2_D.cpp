@@ -1,5 +1,5 @@
 // competitive-verifier: PROBLEM https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_D
-#include "../dual_segtree.hpp"
+#include "../segtree/dual_segtree.hpp"
 
 using F = pair<int, int>;
 F id() { return {-1, INT_MAX}; }

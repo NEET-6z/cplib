@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 inline vector<array<long, 3>> floor_intervals(long N) {
     vector<array<long, 3>> ret;

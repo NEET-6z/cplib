@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 template<class S> struct merge_sort_tree {
     int n;

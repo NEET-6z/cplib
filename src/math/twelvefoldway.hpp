@@ -4,7 +4,7 @@ template<typename T>
 struct Twelvefoldway: Combination<T> {
     using Combination<T>::Combination;
 
-    // (玉を区別しない, 玉を区別する)x(箱を区別しない, 箱を区別する)x(1個以内, 制限無し, 1個以上)
+    // (玉を区別しない, 玉を区別する) x (箱を区別しない, 箱を区別する) x (1個以内, 制限無し, 1個以上)
     T f000(int n, int k){
         return (n<=k);
     }

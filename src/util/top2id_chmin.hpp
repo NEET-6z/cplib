@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 
 //[val, id], idが被らないように小さい方から2つを保持する

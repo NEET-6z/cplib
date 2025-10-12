@@ -1,5 +1,5 @@
-// competitive-verifier: PROBLEM http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_A
-#include "../segtree.hpp"
+#define PROBLEM "http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_A"
+#include "../segtree/segtree.hpp"
 
 int op(int l, int r) { return min(l, r); }
 int e() { return INT_MAX; }

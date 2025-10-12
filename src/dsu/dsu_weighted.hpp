@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 template<typename T> struct dsu_weighted {
     vector<int> p;

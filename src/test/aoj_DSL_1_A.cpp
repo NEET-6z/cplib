@@ -1,6 +1,6 @@
 #define PROBLEM "https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_1_A"
 
-#include "../dsu.hpp"
+#include "../dsu/dsu.hpp"
 int main() {
     int n, q;
     cin >> n >> q;

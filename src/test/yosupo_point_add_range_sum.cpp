@@ -1,5 +1,5 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/point_add_range_sum"
-#include "../dynamic_segtree.hpp"
+#include "../segtree/dynamic_segtree.hpp"
 
 long op(long l, long r) { return l + r; }
 long e() { return 0; }

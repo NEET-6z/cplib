@@ -1,4 +1,4 @@
-#include "template.hpp"
+#include "../template.hpp"
 
 inline vector<pair<long, long>> segment_interval(long L, long R) {
     vector<pair<long, long>> lv, rv;
