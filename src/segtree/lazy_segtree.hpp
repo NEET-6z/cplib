@@ -9,10 +9,10 @@ struct lazy_segtree {
         n(__bit_ceil(si(v))),
         log(__countr_zero(n)),
         d(2 * n, e()),
-        lz(n, 2 * n) {
-        rep(i, si(v)) d[n + i] = v[i];
-        for(int i = n; --i;) update(i);
-    }
+        lz(2 * n, id()) {
+            rep(i, si(v)) d[n + i] = v[i];
+            for(int i = n; --i;) update(i);
+        }
     void set(int p, S x) {
         p += n;
         PUSH(p);
@@ -126,7 +126,7 @@ private:
         lz[k] = id();
     }
     void PUSH(int k) {
-        for(int i = log + 1; --i;) push(k >> i);
+        for(int i = log; --i;) push(k >> i);
     }
 };
 template<class T> using LazySegtreeFrom =
