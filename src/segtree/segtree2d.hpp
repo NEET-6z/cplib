@@ -3,53 +3,63 @@
 template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
     int n;
     vector<segtree<S, op, e>> d;
+    vector<K> xs;
     vector<vector<K>> ys;
-    vector<pair<K, K>> ps;
+    vector<pair<K, K>> xp;
+    vector<vector<pair<K,K>>> yp;
     segtree_2d() {}
-    void add_point(K x, K y) { ps.push_back({x, y}); }
+    void add_point(K x, K y) { xp.push_back({x, y});}
 
     void build() {
-        sort(all(ps));
-        ps.erase(unique(all(ps)), ps.end());
-        n = __bit_ceil(si(ps));
+        sort(all(xp));
+        xp.erase(unique(all(xp)), xp.end());
+        n = __bit_ceil(si(xp));
+        for(auto [x,y]:xp)xs.push_back(x);
+        yp.resize(2 * n);
         ys.resize(2 * n);
-        rep(i, si(ps)) ys[n + i] = {ps[i].se};
-        for(int i = n; --i;) merge(all(ys[i * 2]), all(ys[i * 2 + 1]), back_inserter(ys[i]));
-
+        rep(i, si(xp)) {
+            yp[n + i] = {make_pair(xp[i].se,xp[i].fi)};
+            ys[n + i] = {xp[i].se};
+        }
+        for(int i = n; --i;) {
+            merge(all(yp[i * 2]), all(yp[i * 2 + 1]), back_inserter(yp[i]));
+            merge(all(ys[i * 2]), all(ys[i * 2 + 1]), back_inserter(ys[i]));
+        }
         d.resize(2 * n);
         for(int i = 1; i < 2 * n; i++) {
-            d[i] = segtree<S, op, e>(si(ys[i]) + 1);
+            d[i] = segtree<S, op, e>(si(yp[i]));
         }
     }
 
     void set(K x, K y, S v) {
-        auto it = lower_bound(all(ps), make_pair(x, y));
-        assert(it != ps.end() && it->fi == x && it->se == y);
-        int k = it - ps.begin();
+        auto it = lower_bound(all(xp), make_pair(x, y));
+        assert(it != xp.end() && it->fi == x && it->se == y);
+        int k = it - xp.begin();
         for(k += n; k; k >>= 1) {
-            auto it = lower_bound(all(ys[k]), y);
-            assert(it != ys[k].end());
-            int id = it - ys[k].begin();
+            auto it2 = lower_bound(all(yp[k]), make_pair(y,x));
+            assert(it2 != yp[k].end());
+            int id = it2 - yp[k].begin();
             d[k].set(id, v);
         }
     }
-    void add(K x, K y, S v) {
-        auto it = lower_bound(all(ps), make_pair(x, y));
-        assert(it != ps.end() && it->fi == x && it->se == y);
-        int k = it - ps.begin();
-        for(k += n; k; k >>= 1) {
-            auto it = lower_bound(all(ys[k]), y);
-            assert(it != ys[k].end());
-            int id = it - ys[k].begin();
-            d[k].set(id, op(d[k].get(id), v));
-        }
+    S get(K x, K y) {
+        auto it = lower_bound(all(xp), make_pair(x, y));
+        assert(it != xp.end() && it->fi == x && it->se == y);
+        int k = it - xp.begin();
+        k += n;
+        auto it2 = lower_bound(all(yp[k]), make_pair(y,x));
+        assert(it2 != yp[k].end());
+        int id = it2 - yp[k].begin();
+        return d[k].get(id);
+    }
+    void apply(K x, K y, S v){
+        set(x,y,op(get(x,y),v));
     }
 
     S range(K lv, K rv, K dv, K uv) {
         if(dv >= uv) return e();
-        int l = lower_bound(all(ps), make_pair(lv, -1)) - ps.begin();
-        int r = lower_bound(all(ps), make_pair(rv, -1)) - ps.begin();
-
+        int l = lower_bound(all(xs), lv) - xs.begin();
+        int r = lower_bound(all(xs), rv) - xs.begin();
         S sml = e(), smr = e();
         for(l += n, r += n; l < r; l >>= 1, r >>= 1) {
             if(l & 1) {

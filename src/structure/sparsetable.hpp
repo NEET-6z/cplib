@@ -4,7 +4,7 @@ template<typename T> struct SparseTable {
     function<T(T, T)> f;
     vector<vector<int>> st;
     SparseTable(const vector<T> v = {0},
-                const function<T(T, T)>& f_ = [](int a, int b) { return min(a, b); }):
+                const function<T(T, T)>& f_ = [](T a, T b) { return min(a, b); }):
         f(f_) {
         int n = si(v);
         int l = 32 - __builtin_clz(n);

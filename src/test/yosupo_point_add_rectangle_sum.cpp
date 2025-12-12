@@ -34,7 +34,7 @@ int main() {
     seg.build();
     for(auto a: qu) {
         if(a[0] == 0) {
-            seg.add(a[1], a[2], a[3]);
+            seg.apply(a[1], a[2], a[3]);
         }
         else {
             cout << seg.range(a[1], a[3], a[2], a[4]) << "\n";

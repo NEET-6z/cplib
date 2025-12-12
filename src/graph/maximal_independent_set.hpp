@@ -5,7 +5,17 @@ BS maximal_independent_set(vector<BS> g, BS d = 0) {
     int n = si(g);
     BS ret = 0;
     int v = -1;
-    rep(i, n) if(!d[i]) v = i;
+    int md=-1;
+    rep(i, n) if(!d[i]) {
+        if(g[i].count()<=1){
+            v = i;
+            break;
+        }
+        if(chmax(md, (int)g[i].count())){
+            v = i;
+        }
+    }
+
     if(v == -1) return ret;
 
     d[v] = 1;

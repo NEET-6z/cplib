@@ -1,9 +1,10 @@
 #pragma once
 #include "../template.hpp"
 
+//こどふぉ対策のためlong longを使用
 template<int mod = 998244353> struct modint {
     int x;
-    constexpr modint(long x_ = 0): x(((x_ % mod)+mod)%mod) { }
+    constexpr modint(long long x_ = 0): x(((x_ % mod)+mod)%mod) { }
     constexpr modint operator-() {
         auto res = *this;
         res.x = (x ? mod - x : 0);
@@ -18,7 +19,7 @@ template<int mod = 998244353> struct modint {
         return *this;
     }
     constexpr modint& operator*=(modint r) {
-        x = 1l * x * r.x % mod;
+        x = 1ll * x * r.x % mod;
         return *this;
     }
     constexpr modint& operator/=(modint r) { return *this *= r.inv(); }
@@ -27,7 +28,7 @@ template<int mod = 998244353> struct modint {
     constexpr friend modint operator*(modint a, modint b) { return a *= b; }
     constexpr friend modint operator/(modint a, modint b) { return a /= b; }
     constexpr modint inv() const { return pow(mod - 2); }
-    constexpr modint pow(long b) const {
+    constexpr modint pow(long long b) const {
         assert(0 <= b);
         modint a = *this, c = 1;
         while(b) {
@@ -40,7 +41,7 @@ template<int mod = 998244353> struct modint {
     constexpr int val() const { return x; }
     constexpr friend ostream& operator<<(ostream& os, const modint& m) { return os << m.val(); }
     constexpr friend istream& operator>>(istream& is, modint& m) {
-        long v;
+        long long v;
         is >> v;
         m = modint(v);
         return is;

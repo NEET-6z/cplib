@@ -1,7 +1,6 @@
 
 #include "../template.hpp"
 
-
 //acl
 template<typename T> constexpr pair<T, T> inv_gcd(T a, T b) {
     a = (a % b + b) % b;
