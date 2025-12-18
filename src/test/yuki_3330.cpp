@@ -6,7 +6,7 @@ long op(long l, long r){
 }
 long e(){
     return 0;
-}
+} 
 
 int main(){
     ios::sync_with_stdio(false);

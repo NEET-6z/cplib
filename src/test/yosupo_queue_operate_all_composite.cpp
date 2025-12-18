@@ -1,5 +1,4 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/queue_operate_all_composite"
-
 #include "../structure/swag.hpp"
 #include "../math/modint.hpp"
 

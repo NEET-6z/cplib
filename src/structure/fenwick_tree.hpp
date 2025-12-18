@@ -15,16 +15,15 @@ template<class T> struct fenwick_tree {
     }
     T sum(int l, int r) { return sum(r) - sum(l); }
 
-    //sum(0,x+1)がw以上になるような最小のxを返す(各要素は正の数)
+    //sum(i)がw以上になるような最小のiを返す(正整数を仮定)
     int lower_bound(T w) {
-        if(w <= 0) return 0;
         int x = 0, N = si(a) - 1;
-        for(int k = 1 << __lg(N); k >>= 1;) {
-            if(x + k <= N - 1 && a[x + k] < w) {
+        for(int k = 1 << __lg(N); k; k >>= 1) {
+            if(x + k <= N && a[x + k] < w) {
                 w -= a[x + k];
                 x += k;
             }
         }
-        return x;
+        return x + 1;
     }
 };
