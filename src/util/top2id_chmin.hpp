@@ -2,7 +2,7 @@
 
 
 //[val, id], idが被らないように小さい方から2つを保持する
-inline bool top2id_chmin(pair<pair<long,long>,pair<long,long>> &p, pair<long,long> x){
+template<typename T> bool top2id_chmin(pair<pair<T,T>,pair<T,T>> &p, pair<T,T> x){
     if(p.fi.se==x.se){
         if(p.fi.fi>x.fi){
             p.fi.fi=x.fi;
@@ -20,13 +20,12 @@ inline bool top2id_chmin(pair<pair<long,long>,pair<long,long>> &p, pair<long,lon
         if(p.fi.fi>x.fi){
             p.se=p.fi;
             p.fi=make_pair(x.fi,x.se);
-            return 1;
         }
         if(p.se.fi>x.fi){
             p.se=make_pair(x.fi,x.se);
             if(p.fi.fi>p.se.fi) swap(p.fi,p.se);
-            return 1;
         }
+        return 1;
     }
     return 0;
 }

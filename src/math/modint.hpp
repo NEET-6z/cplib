@@ -1,7 +1,6 @@
 #pragma once
 #include "../template.hpp"
 
-//こどふぉ対策のためlong longを使用
 template<int mod = 998244353> struct modint {
     int x;
     constexpr modint(long long x_ = 0): x(((x_ % mod)+mod)%mod) { }

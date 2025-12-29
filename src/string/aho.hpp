@@ -1,17 +1,18 @@
+#pragma once
 #include "../template.hpp"
 
 struct Node {
     int prefix_cnt;
     int parent;
     vector<int> nxt, ids;
-    Node(int sigma=26, int parent=-1): prefix_cnt(0), parent(-1), nxt(sigma, -1) {}
+    Node(int sigma=26, int parent=-1):prefix_cnt(0), parent(-1), nxt(sigma, -1){}
 };
 
-struct Trie{
+struct Trie {
     int sigma;
     vector<Node> nodes;
-    
-    Trie(int _sigma): sigma(_sigma), nodes(1, Node(sigma)) {}
+
+    Trie(int _sigma):sigma(_sigma), nodes(1, Node(sigma)){}
     int add(vector<int> V){
         int id=nodes[0].prefix_cnt;
         int now=0;
@@ -28,9 +29,9 @@ struct Trie{
     }
 };
 
-struct AhoCorasick: Trie{
+struct AhoCorasick:Trie {
     vector<int> cnt;
-    AhoCorasick(int _sigma): Trie(_sigma+1) {}
+    AhoCorasick(int _sigma):Trie(_sigma+1){}
     void build(){
         cnt.assign(ssize(nodes), 0);
         rep(i,ssize(nodes)) cnt[i]=ssize(nodes[i].ids);

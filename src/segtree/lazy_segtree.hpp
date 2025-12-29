@@ -1,6 +1,7 @@
 #pragma once
 #include "../template.hpp"
 
+//https://github.com/KentaroMatsushita/icpc_library
 template<class S, S (*op)(S, S), S (*e)(), class F, S (*mpp)(F, S), F (*cmpo)(F, F), F (*id)()>
 struct lazy_segtree {
     lazy_segtree(): lazy_segtree(1) {}

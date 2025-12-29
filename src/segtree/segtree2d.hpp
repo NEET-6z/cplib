@@ -1,3 +1,4 @@
+#pragma once
 #include "segtree.hpp"
 
 template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
@@ -13,7 +14,7 @@ template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
     void build() {
         sort(all(xp));
         xp.erase(unique(all(xp)), xp.end());
-        n = __bit_ceil(si(xp));
+        n = __bit_ceil(xp.size());
         for(auto [x,y]:xp)xs.push_back(x);
         yp.resize(2 * n);
         ys.resize(2 * n);

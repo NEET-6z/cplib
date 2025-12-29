@@ -1,13 +1,9 @@
 #pragma once
 #include "../template.hpp"
 
-template<class T>
-T POW(T x, long n){
-    T ret = 1;
-    while(n){
-        if(n & 1) ret*=x;
-        x*=x;
-        n>>=1L;
-    }
-    return ret;
+template<class T, integral I>
+T pow(T b,I k){
+    T r=1;
+    for(;k;k>>=1, b*=b) if(k&1) r*=b;
+    return r;
 }
