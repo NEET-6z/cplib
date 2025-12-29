@@ -18,8 +18,9 @@ struct P {
     P operator-(P o){return P(*this)-=o;}
     P& operator*=(S k){x*=k;y*=k;return *this;}
     P operator*(S k){return P(*this)*=k;}
+    S real(){return x;}
+    S imag(){return y;}
 };
-int sgn(S x){return (x>0)-(x<0);}
 S dot(P a,P b){return a.x*b.x+a.y*b.y;}
 S cross(P a,P b){return a.x*b.y-a.y*b.x;}
 S norm(P a){return dot(a,a);}
@@ -99,8 +100,6 @@ int inConvexContained(vector<P> ps, P a){
 
 int intersect_poly_segment(vector<P> ps, P a1, P a2){
     int n=si(ps);
-    rep(i,n) if(intersect_segment(ps[i],ps[(i+1)%n],a1,a2)==1) return 1; //周に触れる
-    if(n<3) return 0;
     vector<pair<P,P>> dia;
     rep(i,n) dia.emplace_back(ps[i],ps[(i+1)%n]);
     rep(i,n/2) dia.emplace_back(ps[i],ps[i+n/2]);
@@ -110,6 +109,7 @@ int intersect_poly_segment(vector<P> ps, P a1, P a2){
             return 2; //内部を通過する
         }
     }
+    rep(i,n) if(intersect_segment(ps[i],ps[(i+1)%n],a1,a2)==1) return 1; //周に触れる
     return 0; //触れない
 }
 
@@ -128,4 +128,8 @@ vector<P> convex_hull(vector<P> ps, bool strict=true){ //共線点を排除す�
     }
     ch.resize(k-1);
     return ch;
+}
+
+bool arglt(P a, P b){
+    return (P(0,0)<a)==(P(0, 0)<b)?a.x*b.y>a.y*b.x:a<b;
 }

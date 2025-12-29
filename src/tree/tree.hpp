@@ -63,4 +63,8 @@ struct Tree {
         }
         return v;
     }
+
+    bool on_path(int u, int a, int v){
+        return dist(u,v)==dist(u,a)+dist(a,v);
+    }
 };

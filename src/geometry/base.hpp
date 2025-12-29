@@ -1,9 +1,5 @@
 #include "../template.hpp"
 
-/*
-x(real)軸の正方向=右
-y(imag)軸の正方向=上
-*/
 
 using ld=long double;
 using P=complex<ld>;
