@@ -24,33 +24,33 @@ struct P {
 S dot(P a,P b){return a.x*b.x+a.y*b.y;}
 S cross(P a,P b){return a.x*b.y-a.y*b.x;}
 S norm(P a){return dot(a,a);}
-int ccw(P a, P b, P c){
+int ccw(P a,P b,P c){
     b-=a;c-=a;
-    if(cross(b, c)>0) return 1; // counter-clockwise(反時計)
-    if(cross(b, c)<0) return -1; // clockwise(時計)
-    if(dot(b, c)<0) return 2; // c-a-b
+    if(cross(b,c)>0) return 1;  // counter-clockwise(反時計)
+    if(cross(b,c)<0) return -1;  // clockwise(時計)
+    if(dot(b,c)<0) return 2;  // c-a-b
     if(norm(b)<norm(c)) return -2; // a-b-c
     return 0; // a=c=b
 }
 
-bool is_orthogonal(P a1, P a2, P b1, P b2){
-    return dot(a1-a2, b1-b2)==0;
+bool is_orthogonal(P a1,P a2,P b1,P b2){
+    return dot(a1-a2,b1-b2)==0;
 }
-bool is_parallel(P a1, P a2, P b1, P b2){
-    return cross(a1-a2, b1-b2)==0;
+bool is_parallel(P a1,P a2,P b1,P b2){
+    return cross(a1-a2,b1-b2)==0;
 }
-bool is_point_on_line(P a1, P a2, P b){
+bool is_point_on_line(P a1,P a2,P b){
     return ccw(a1,b,a2)==0;
 }
-bool is_point_on_segment(P a1, P a2, P b){
+bool is_point_on_segment(P a1,P a2,P b){
     return abs(ccw(a1,b,a2))!=1;
 }
 
-int intersect_segment(P a1, P a2, P b1, P b2){
-    int c1=ccw(a1, a2, b1);
-    int c2=ccw(a1, a2, b2);
-    int c3=ccw(b1, b2, a1);
-    int c4=ccw(b1, b2, a2);
+int intersect_segment(P a1,P a2,P b1,P b2){
+    int c1=ccw(a1,a2,b1);
+    int c2=ccw(a1,a2,b2);
+    int c3=ccw(b1,b2,a1);
+    int c4=ccw(b1,b2,a2);
     int x=c1*c2;
     int y=c3*c4;
     if(x>0||y>0) return 0; //触れていない
@@ -85,11 +85,11 @@ int isConvex(vector<P> ps){
     return 1;
 }
 
-int inConvexContained(vector<P> ps, P a){
+int inConvexContained(vector<P> ps,P a){
     int n=si(ps);
     int dir=0;
     rep(i,n){
-        int t=ccw(ps[i], ps[(i+1)%n], a);
+        int t=ccw(ps[i],ps[(i+1)%n],a);
         if(t==2||t==-2) continue;
         if(t==0) return 1; //周に触れる
         if(dir==0) dir=t;
@@ -98,7 +98,7 @@ int inConvexContained(vector<P> ps, P a){
     return 2; //含まれる
 }
 
-int intersect_poly_segment(vector<P> ps, P a1, P a2){
+int intersect_poly_segment(vector<P> ps,P a1,P a2){
     int n=si(ps);
     vector<pair<P,P>> dia;
     rep(i,n) dia.emplace_back(ps[i],ps[(i+1)%n]);
@@ -113,23 +113,23 @@ int intersect_poly_segment(vector<P> ps, P a1, P a2){
     return 0; //触れない
 }
 
-vector<P> convex_hull(vector<P> ps, bool strict=true){ //共線点を排除するか
+vector<P> convex_hull(vector<P> ps,bool strict=true){  //共線点を排除するか
     int n=si(ps),k=0;
-    sort(ps.begin(), ps.end());
+    sort(ps.begin(),ps.end());
     vector<P> ch(2*n);
 
     for(int i=0;i<n;ch[k++]=ps[i++]){
-        while(k>=2&&cross(ch[k-1]-ch[k-2], ps[i]-ch[k-1])<strict)
+        while(k>=2&&cross(ch[k-1]-ch[k-2],ps[i]-ch[k-1])<strict)
             --k;
     }
-    for(int i=n-2, t=k+1;i>=0;ch[k++]=ps[i--]){
-        while(k>=t&&cross(ch[k-1]-ch[k-2], ps[i]-ch[k-1])<strict)
+    for(int i=n-2,t=k+1;i>=0;ch[k++]=ps[i--]){
+        while(k>=t&&cross(ch[k-1]-ch[k-2],ps[i]-ch[k-1])<strict)
             --k;
     }
     ch.resize(k-1);
     return ch;
 }
 
-bool arglt(P a, P b){
-    return (P(0,0)<a)==(P(0, 0)<b)?a.x*b.y>a.y*b.x:a<b;
+bool arglt(P a,P b){
+    return (P(0,0)<a)==(P(0,0)<b)?a.x*b.y>a.y*b.x:a<b;
 }

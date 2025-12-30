@@ -2,7 +2,7 @@
 
 
 //[val, id], idが被らないように小さい方から2つを保持する
-template<typename T> bool top2id_chmin(pair<pair<T,T>,pair<T,T>> &p, pair<T,T> x){
+template<typename T> bool top2id_chmin(pair<pair<T,T>,pair<T,T>> &p,pair<T,T> x){
     if(p.fi.se==x.se){
         if(p.fi.fi>x.fi){
             p.fi.fi=x.fi;

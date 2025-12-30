@@ -4,7 +4,7 @@
 
 using mint=modint<>;
 using S=pair<mint,mint>;
-S op(S l, S r){return {l.fi*r.fi, l.se*r.fi+r.se};}
+S op(S l,S r){return {l.fi*r.fi,l.se*r.fi+r.se};}
 S e(){return {1,0};}
 
 int main(){
@@ -25,13 +25,13 @@ int main(){
         }
         else if(o==1){
             swag.pop();
-        } 
+        }
         else{
             long x;
             cin>>x;
             S s=swag.get();
             mint ans=s.fi*x+s.se;
-            cout<<ans<<"\n";  
+            cout<<ans<<"\n";
         }
 
     }

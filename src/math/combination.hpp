@@ -3,7 +3,7 @@
 
 template<typename T>
 struct Combination {
-    vector<T> fa{}, ifa{};
+    vector<T> fa{},ifa{};
     Combination(int n){
         fa.resize(n+1);
         ifa.resize(n+1);
@@ -21,21 +21,21 @@ struct Combination {
         return ifa[n];
     }
 
-    T C(int n, int k){
+    T C(int n,int k){
         if(k<0||k>n) return 0;
         return fa[n]*ifa[k]*ifa[n-k];
     }
     // n<=m+K
-    T Kata(int n, int m, int k){
+    T Kata(int n,int m,int k){
         if(n>m+k) return 0;
-        return C(n+m, n)-C(n+m, n-k-1);
+        return C(n+m,n)-C(n+m,n-k-1);
     };
     // n個の箱にk個の玉を入れる。各箱は最大でr個しか入れれない
-    T limC(int n, int k, int r){
+    T limC(int n,int k,int r){
         T ret=0;
-        rep(i, k/(r+1)+1){
-            ret+=((i%2==0)*2-1)*C(n, i)
-                  *C(n+k-1-i*(r+1), n-1);
+        rep(i,k/(r+1)+1){
+            ret+=((i%2==0)*2-1)*C(n,i)
+                  *C(n+k-1-i*(r+1),n-1);
         }
         return ret;
     }

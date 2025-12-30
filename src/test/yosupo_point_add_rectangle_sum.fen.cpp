@@ -1,19 +1,16 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/point_add_rectangle_sum"
-#include "../segtree/segtree2d.hpp"
-
-long op(long l,long r){return l+r;}
-long e(){return 0;}
+#include "../structure/fen2d.hpp"
 
 int main(){
     int N,Q;
     cin>>N>>Q;
     vector<array<int,5>> qu(N+Q);
-    segtree_2d<int,long,op,e> seg;
+    Fen2D<int,long> f2d;
     rep(i,N){
         int x,y,w;
         cin>>x>>y>>w;
         qu[i]={0,x,y,w};
-        seg.add_point(x,y);
+        f2d.add_point(x,y);
     }
     rep(i,Q){
         int t;
@@ -22,7 +19,7 @@ int main(){
             int x,y,w;
             cin>>x>>y>>w;
             qu[i+N]={0,x,y,w};
-            seg.add_point(x,y);
+            f2d.add_point(x,y);
         }
         else {
             int l,d,r,u;
@@ -30,14 +27,13 @@ int main(){
             qu[i+N]={1,l,d,r,u};
         }
     }
-
-    seg.build();
+    f2d.build();
     for(auto a: qu){
         if(a[0]==0){
-            seg.apply(a[1],a[2],a[3]);
+            f2d.add(a[1],a[2],a[3]);
         }
         else {
-            cout<<seg.range(a[1],a[3],a[2],a[4])<<"\n";
+            cout<<f2d.sum(a[1],a[3],a[2],a[4])<<"\n";
         }
     }
 }
