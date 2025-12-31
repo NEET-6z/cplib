@@ -4,22 +4,25 @@
 struct Tree {
     int N,L;
     vector<vector<int>> G,P;
-    vector<int> dep;
-    Tree(vector<vector<int>> G_,int root=0):N(si(G_)),G(G_),dep(N){
+    vector<int> dep,sub;
+    Tree(vector<vector<int>> G_,int root=0):N(si(G_)),G(G_),dep(N),sub(N,1){
         L=32-__builtin_clz(N);
-        P.assign(L,vector<int>(N));
-        dfs(root,-1,0);
+        P.assign(L,vector<int>(N,root));
+        dfs(root,root,0);
         rep(k,L-1){
             rep(i,N){
-                if(P[k][i]==-1) P[k+1][i]=-1;
-                else P[k+1][i]=P[k][P[k][i]];
+                P[k+1][i]=P[k][P[k][i]];
             }
         }
     }
     void dfs(int v,int p,int d){
         dep[v]=d;
         P[0][v]=p;
-        for(int e: G[v]) if(e!=p) dfs(e,v,d+1);
+        for(int e: G[v]){
+            if(e==p) continue;
+            dfs(e,v,d+1);
+            sub[v]+=sub[e];
+        }
     }
     int lca(int u,int v){
         if(dep[u]>dep[v]) swap(u,v);
@@ -38,7 +41,7 @@ struct Tree {
     }
     int kth_ancestor(int v,int k){
         for(auto p: P){
-            if(k<=0||v==-1) break;
+            if(k<=0) break;
             if(k&1){
                 v=p[v];
             }
@@ -56,15 +59,4 @@ struct Tree {
         int r=k-du;
         return kth_ancestor(v,dv-r);
     };
-
-    int cond_ancestor(int v,function<bool(int)> f){
-        for(int k=L;k--;){
-            if(f(P[k][v])) v=P[k][v];
-        }
-        return v;
-    }
-
-    bool on_path(int u,int a,int v){
-        return dist(u,v)==dist(u,a)+dist(a,v);
-    }
 };
