@@ -3,8 +3,8 @@
 
 template<typename T> struct SparseTable {
     function<T(T,T)> f;
-    vector<vector<int>> st;
-    SparseTable(const vector<T> v={0},
+    vector<vector<T>> st;
+    SparseTable(const vector<T> v={T{}},
                 const function<T(T,T)>& f_=[] (T a,T b){return min(a,b);}):
         f(f_){
         int n=si(v);
