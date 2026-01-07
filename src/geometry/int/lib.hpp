@@ -47,12 +47,8 @@ bool is_point_on_segment(P a1,P a2,P b){
 }
 
 int intersect_segment(P a1,P a2,P b1,P b2){
-    int c1=ccw(a1,a2,b1);
-    int c2=ccw(a1,a2,b2);
-    int c3=ccw(b1,b2,a1);
-    int c4=ccw(b1,b2,a2);
-    int x=c1*c2;
-    int y=c3*c4;
+    int x=ccw(a1,a2,b1)*ccw(a1,a2,b2);
+    int y=ccw(b1,b2,a1)*ccw(b1,b2,a2);
     if(x>0||y>0) return 0; //触れていない
     if(x==0||y==0) return 1; // 触れている
     return 2; //交差している
@@ -80,7 +76,7 @@ int isConvex(vector<P> ps){
         int t=ccw(ps[0],ps[i],ps[(i+1)%n]);
         if(t==0||t==-2||t==2) continue;
         if(dir==0) dir=t;
-        if(dir!=t) return -1; // 凸だが外角の和が180度ではない
+        if(dir!=t) return -1; // 凸だが外角の和が360度ではない
     }
     return 1;
 }

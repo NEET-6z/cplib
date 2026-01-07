@@ -4,7 +4,7 @@ pair<bool,vector<int>> is_bipartite(vector<vector<int>> &G){
     int N=si(G);
     vector<int> color(N,-1);
     bool isb=1;
-    auto dfs=[&](auto dfs,int v) {
+    auto dfs=[&](auto dfs,int v)->void {
         for(int e: G[v]){
             if(~color[e]){
                 isb&=(color[v]!=color[e]);
@@ -14,7 +14,8 @@ pair<bool,vector<int>> is_bipartite(vector<vector<int>> &G){
                 dfs(dfs,e);
             }
         }
-    } rep(i,N){
+    };
+    rep(i,N){
         if(~color[i]) continue;
         color[i]=0;
         dfs(dfs,i);
