@@ -1,6 +1,6 @@
 #include "../template.hpp"
 
-inline vector<pair<long,long>> segment_interval(long L,long R){
+vector<pair<long,long>> segment_interval(long L,long R){
     vector<pair<long,long>> lv,rv;
     for(long i=0;L<R;i++){
         if((L>>i)&1){

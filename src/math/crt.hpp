@@ -1,7 +1,7 @@
 #pragma once
 #include "../template.hpp"
 
-//acl
+//acl(template)
 template<typename T> constexpr pair<T,T> inv_gcd(T a,T b){
     a=(a%b+b)%b;
     if(a==0) return {b,0};

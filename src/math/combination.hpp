@@ -14,16 +14,27 @@ struct Combination {
     }
 
     T fact(int n){
+        if(n<0) return T(0);
         return fa[n];
     }
 
     T ifact(int n){
+        if(n<0) return T(0);
         return ifa[n];
     }
 
     T C(int n,int k){
         if(k<0||k>n) return 0;
-        return fa[n]*ifa[k]*ifa[n-k];
+        return fact(n)*ifact(k)*ifact(n-k);
+    }
+    T H(int n,int k){
+        if(n==0&&k==0) return 1;
+        if(n<=0||k<0) return 0;
+        return C(n+k-1,k);
+    }
+    T P(int n,int k){
+        if(k<0||k>n) return 0;
+        return fact(n)*ifact(n-k);
     }
     // n<=m+K
     T Kata(int n,int m,int k){

@@ -1,0 +1,10 @@
+[project]
+name = "cplib"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "competitive-verifier>=3.4.1",
+    "online-judge-verify-helper>=5.6.0",
+]

@@ -2,7 +2,7 @@
 
 struct FunctionalGraph {
     int N,L;
-    vector<int> P,color,isc,cid,leader,root; //親, どの連結成分, サイクルに属するか, サイクルに属する場合leaderから何番目か, 連結成分のリーダー(サイクル内のどれか), はじめて訪れるサイクル内の頂点
+    vector<int> P,color,isc,cid,leader,root; //親, どの連結成分, サイクルに属するか, サイクルに属する場合leaderから何番目か, 連結成分のleader(サイクル内のどれか), はじめて訪れるサイクル内の頂点
     vector<vector<int>> cycles,G;
     FunctionalGraph(vector<int> P_):N(si(P_)),L(0),P(P_),color(N,-1),isc(N,0),cid(N,0),leader(N,0),root(N,0),G(N){
         rep(i,N){
