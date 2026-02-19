@@ -29,7 +29,7 @@ int main(){
             int u,v;
             cin>>u>>v;
             long cur=0;
-            for(auto [l,r]: hld.path_decompose(u,v)){
+            for(auto [l,r]: hld.path_decompose(u,v,false)){
                 cur+=bit.sum(l,r);
             }
             cout<<cur<<"\n";

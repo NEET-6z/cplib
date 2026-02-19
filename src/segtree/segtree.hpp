@@ -1,7 +1,6 @@
 #pragma once
 #include "../template.hpp"
 
-//https://github.com/KentaroMatsushita/icpc_library
 template<class S,S (*op)(S,S),S (*e)()> struct segtree {
     int n;
     vector<S> d;

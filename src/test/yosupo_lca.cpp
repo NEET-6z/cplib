@@ -1,6 +1,5 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/lca"
 
-#include "../structure/sparsetable.hpp
 #include "../tree/lca.hpp"
 
 int main(){

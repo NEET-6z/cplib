@@ -1,9 +1,25 @@
 #pragma once
 #include "../template.hpp"
 
-//https://github.com/KentaroMatsushita/icpc_library
 template<class S,S (*op)(S,S),S (*e)(),class F,S (*mpp)(F,S),F (*cmpo)(F,F),F (*id)()>
-struct lazy_segtree {
+class lazy_segtree {
+    int n,log;
+    vector<S> d;
+    vector<F> lz;
+    void update(int k){d[k]=op(d[2*k],d[2*k+1]);}
+    void all_apply(int k,F f){
+        d[k]=mpp(f,d[k]);
+        if(k<n) lz[k]=cmpo(f,lz[k]);
+    }
+    void push(int k){
+        all_apply(2*k,lz[k]);
+        all_apply(2*k+1,lz[k]);
+        lz[k]=id();
+    }
+    void PUSH(int k){
+        for(int i=log;--i;) push(k>>i);
+    }
+public:
     lazy_segtree():lazy_segtree(1){}
     explicit lazy_segtree(int n):lazy_segtree(vector<S>(n,e())){}
     explicit lazy_segtree(const vector<S> &v):
@@ -64,71 +80,4 @@ struct lazy_segtree {
             if(((r>>i)<<i)!=r) update((r-1)>>i);
         }
     }
-    template<class G> int max_right(int l,G g){
-        assert(g(e()));
-        if(l==n) return n;
-        l+=n;
-        PUSH(l);
-        S sm=e();
-        do {
-            while(~l&1) l>>=1;
-            if(!g(op(sm,d[l]))){
-                while(l<n){
-                    push(l);
-                    l<<=1;
-                    if(g(op(sm,d[l]))){
-                        sm=op(sm,d[l]);
-                        l++;
-                    }
-                }
-                return l-n;
-            }
-            sm=op(sm,d[l]);
-            l++;
-        } while((l& -l)!=l);
-        return n;
-    }
-    template<class G> int min_left(int r,G g){
-        assert(g(e()));
-        if(r==0) return 0;
-        r+=n;
-        PUSH(r-1);
-        S sm=e();
-        do {
-            r--;
-            while(r>1&&r&1) r>>=1;
-            if(!g(op(d[r],sm))){
-                while(r<n){
-                    push(r);
-                    r=(2*r+1);
-                    if(g(op(d[r],sm))){
-                        sm=op(d[r],sm);
-                        r--;
-                    }
-                }
-                return r+1-n;
-            }
-            sm=op(d[r],sm);
-        } while((r& -r)!=r);
-        return 0;
-    }
-private:
-    int n,log;
-    vector<S> d;
-    vector<F> lz;
-    void update(int k){d[k]=op(d[2*k],d[2*k+1]);}
-    void all_apply(int k,F f){
-        d[k]=mpp(f,d[k]);
-        if(k<n) lz[k]=cmpo(f,lz[k]);
-    }
-    void push(int k){
-        all_apply(2*k,lz[k]);
-        all_apply(2*k+1,lz[k]);
-        lz[k]=id();
-    }
-    void PUSH(int k){
-        for(int i=log;--i;) push(k>>i);
-    }
 };
-template<class T> using LazySegtreeFrom=
-    lazy_segtree<typename T::S,T::op,T::e,typename T::F,T::mpp,T::cmpo,T::id>;

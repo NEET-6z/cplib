@@ -1,6 +1,5 @@
 #include "../template.hpp"
-#include "../structure/sparsetable.hpp"
-
+#include "../structure/sparsetable.hpp
 
 struct LCA {
     vector<vector<int>> G;
@@ -26,4 +25,4 @@ struct LCA {
         if(in[u]>in[v]) swap(u,v);
         return st.prod(in[u],in[v]+1).se;
     }
-}
+};
