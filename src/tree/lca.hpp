@@ -1,5 +1,5 @@
 #include "../template.hpp"
-#include "../structure/sparsetable.hpp
+#include "../structure/sparsetable.hpp"
 
 struct LCA {
     vector<vector<int>> G;
