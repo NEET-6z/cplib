@@ -1,4 +1,4 @@
-#include "../template.hpp"
+#include "../../template.hpp"
 
 array<long,3> line_normalized(long sy,long sx,long ty,long tx){
     long a=sy-ty;
