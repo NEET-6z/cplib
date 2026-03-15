@@ -1,2 +1,0 @@
-[compile]
-cpp = "g++ -std=gnu++20 -O2 -Wall"
