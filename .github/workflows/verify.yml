@@ -73,11 +73,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install GCC 13
-        run: |
-          sudo apt update
-          sudo apt install -y g++-13
-
       - name: Download verify_files.json
         uses: competitive-verifier/actions/download-verify-artifact@v2
 

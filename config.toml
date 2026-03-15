@@ -1,3 +1,2 @@
-[[languages.cpp.environments]]
-CXX = "g++-13"
-CXXFLAGS = ["-std=c++20", "-Wall"]
+[compile]
+cpp = "g++ -std=gnu++20 -O2 -Wall"
