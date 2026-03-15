@@ -89,7 +89,6 @@ jobs:
           split-index: ${{ matrix.index }}
           timeout: 1800
         env:
-          CXXFLAGS: "-std=gnu++20 -O2"
           YUKICODER_TOKEN: ${{secrets.YUKICODER_TOKEN}}
 
       - name: Upload result artifact
