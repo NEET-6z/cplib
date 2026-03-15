@@ -5,7 +5,7 @@ struct Fen2D {
     int n;
     vector<pair<K,K>> ps;
     vector<K> xz;
-    vector<vector<int>> ys;
+    vector<vector<K>> ys;
     vector<fenwick_tree<T>> bit;
 
     void add_point(K x,K y){
