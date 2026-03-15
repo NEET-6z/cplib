@@ -29,7 +29,7 @@ public:
         while(n<si(a)) n*=2,log++;
         d.resize(2*n,e());
         lz.resize(2*n,id());
-        for(auto [i,v]:views::zip(views::iota(n),a)) d[i]=v;
+        rep(i,si(a))d[n+i]=a[i];
         for(int i=n;--i;) update(i);
     }
     void set(int p,S x){
