@@ -26,7 +26,7 @@ public:
     lazy_segtree(int n):lazy_segtree(vector<S>(n,e())){}
     lazy_segtree(vector<S> a){
         n=log=1;
-        while(n<si(a)) n*=2,log++;
+        while(n<si(a)) n<<=1,log++;
         d.resize(2*n,e());
         lz.resize(2*n,id());
         rep(i,si(a))d[n+i]=a[i];

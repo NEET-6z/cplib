@@ -17,9 +17,9 @@ template<class T> struct fenwick_tree {
 
     int lower_bound(T w){
         if(w<=0) return 0;
-        int x=0,r=1;
-        while(r<si(a))r<<=1;
-        for(int k=r;k;k>>=1){
+        int x=0,k=1;
+        while(k<si(a))k<<=1;
+        for(;k;k>>=1){
             if(x+k<si(a)&&a[x+k]<w){
                 w-=a[x+k];
                 x+=k;
