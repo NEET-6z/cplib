@@ -1,5 +1,5 @@
 #define PROBLEM "https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_3_A&lang=ja"
-#include "../template.hpp"
+#include "../graph/lowlink.hpp"
 
 int main(){
     int N,M;
