@@ -2,8 +2,9 @@
 #include "./modint.hpp"
 
 //acl
-mint g=3;
+template<typename mint>
 void fft(vector<mint>& a,bool inv=false){
+    mint g=3;
     int n=si(a),s=__lg(n);
     static vector<mint> z,iz;
     while(si(z)<=s){
@@ -25,16 +26,18 @@ void fft(vector<mint>& a,bool inv=false){
     }
 }
 
+template<typename mint>
 vector<mint> convolution(vector<mint> a,vector<mint> b){
     int n=si(a),m=si(b);
-    if(!n or !m) return {};
+    if(!n||!m) return {};
     if(min(n,m)<=30){
         vector<mint> ans(n+m-1);
         rep(i,n) rep(j,m) ans[i+j]+=a[i]*b[j];
         return ans;
     }
     int N=n+m-1;
-    int z=__bit_ceil(unsigned(N));
+    int z=1;
+    while(z<N) z<<=1;
     a.resize(z),b.resize(z);
     fft(a),fft(b);
     rep(i,z) a[i]*=b[i];

@@ -4,11 +4,16 @@
 template<typename T> struct SparseTable {
     function<T(T,T)> f;
     vector<vector<T>> st;
+    vector<int> bt;
     SparseTable(const vector<T> v={T{}},
                 const function<T(T,T)>& f_=[] (T a,T b){return min(a,b);}):
         f(f_){
         int n=si(v);
-        int l=32-__builtin_clz(n);
+        bt.resize(n+1,0);
+        for(int i=2;i<=n;i++){
+            bt[i]=bt[i>>1]+1;
+        }
+        int l=bt[n]+1;
         st.resize(l,vector<T>(n));
         st[0]=v;
         rep(k,l-1){
@@ -16,7 +21,7 @@ template<typename T> struct SparseTable {
         }
     }
     T prod(int l,int r){
-        int k=31-__builtin_clz(r-l);
+        int k=bt[r-l];
         return f(st[k][l],st[k][r-(1<<k)]);
     }
 };

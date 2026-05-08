@@ -29,7 +29,7 @@ public:
         while(n<si(a)) n<<=1,log++;
         d.resize(2*n,e());
         lz.resize(2*n,id());
-        rep(i,si(a))d[n+i]=a[i];
+        rep(i,si(a)) d[n+i]=a[i];
         for(int i=n;--i;) update(i);
     }
     void set(int p,S x){
@@ -80,5 +80,51 @@ public:
             if((l>>i)<<i!=l) update(l>>i);
             if((r>>i)<<i!=r) update((r-1)>>i);
         }
+    }
+    template <class G> int max_right(int l,G g){
+        if(l==n) return n;
+        l+=n;
+        PUSH(l);
+        S sm=e();
+        do {
+            while(l%2==0) l>>=1;
+            if(!g(op(sm,d[l]))){
+                while(l<n){
+                    push(l);
+                    l=(2*l);
+                    if(g(op(sm,d[l]))){
+                        sm=op(sm,d[l]);
+                        l++;
+                    }
+                }
+                return l-n;
+            }
+            sm=op(sm,d[l]);
+            l++;
+        } while((l& -l)!=l);
+        return n;
+    }
+    template <class G> int min_left(int r,G g){
+        if(r==0) return 0;
+        r+=n;
+        PUSH(r-1);
+        S sm=e();
+        do {
+            r--;
+            while(r>1&&(r%2)) r>>=1;
+            if(!g(op(d[r],sm))){
+                while(r<n){
+                    push(r);
+                    r=(2*r+1);
+                    if(g(op(d[r],sm))){
+                        sm=op(d[r],sm);
+                        r--;
+                    }
+                }
+                return r+1-n;
+            }
+            sm=op(d[r],sm);
+        } while((r& -r)!=r);
+        return 0;
     }
 };

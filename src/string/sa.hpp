@@ -27,3 +27,20 @@ vector<int> suffix_array(string S){
     sa.erase(sa.begin());
     return sa;
 }
+
+vector<int> lcp_array(string S,vector<int> sa){
+    int n=si(S);
+    vector<int> rsa(n,0),lcp(n,0);
+    rep(i,n) rsa[sa[i]]=i;
+    int h=0;
+    rep(i,n-1){
+        int p=sa[rsa[i]];
+        if(h>0) h--;
+        for(;p+h<n&&i+h<n;++h){
+            if(S[p+h]!=S[i+h]) break;
+        }
+        lcp[rsa[i]]=h;
+    }
+    lcp.pop_back();
+    return lcp;
+}

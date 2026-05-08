@@ -40,7 +40,7 @@ template<class S,S (*op)(S,S),S (*e)()> struct segtree {
         return n;
     }
     template<typename F> int min_left(int r,F f) const {
-        if(!r) return 0;
+        if(r==0) return 0;
         r+=n;
         S sm=e();
         do {
