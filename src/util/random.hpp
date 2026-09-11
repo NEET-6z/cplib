@@ -18,4 +18,4 @@ struct Random {
     int operator()(){
         return mt();
     }
-}
+};

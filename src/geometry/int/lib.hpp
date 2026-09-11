@@ -126,6 +126,6 @@ vector<P> convex_hull(vector<P> ps,bool strict=true){  //共線点を排除す�
     return ch;
 }
 
-bool arglt(P a,P b){
+bool arglt(P a,P b){ //(0, -∞) ~ (-1, -∞) / (0, 0)を含むと狭義弱順序を満たさない
     return (P(0,0)<a)==(P(0,0)<b)?a.x*b.y>a.y*b.x:a<b;
 }
