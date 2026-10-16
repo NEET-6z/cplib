@@ -10,8 +10,8 @@ optional<P> parall_cross(P a1,P a2,P b1,P b2){
     auto [ay0,ay1]=minmax(y1,y2);
     auto [bx0,bx1]=minmax(x3,x4);
     auto [by0,by1]=minmax(y3,y4);
-    int ix0=max(ax0,bx0),ix1=min(ax1,bx1);
-    int iy0=max(ay0,by0),iy1=min(ay1,by1);
+    long ix0=max(ax0,bx0),ix1=min(ax1,bx1);
+    long iy0=max(ay0,by0),iy1=min(ay1,by1);
     if(ix0>ix1||iy0>iy1) return nullopt;
     return {{ix0,iy0}};
 }

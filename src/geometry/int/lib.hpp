@@ -40,7 +40,7 @@ bool is_parallel(P a1,P a2,P b1,P b2){
     return cross(a1-a2,b1-b2)==0;
 }
 bool is_point_on_segment(P a1,P a2,P b){
-    return ccw(a1,b,a2)==0;
+    return ccw(a1,a2,b)==0;
 }
 bool is_point_on_line(P a1,P a2,P b){
     return abs(ccw(a1,b,a2))!=1;

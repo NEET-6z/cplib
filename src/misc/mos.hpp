@@ -29,4 +29,4 @@ struct Mo {
     template<typename A,typename E,typename O> void build(const A& add,const E& erase,const O& out){
         build(add,add,erase,erase,out);
     }
-}
+};
