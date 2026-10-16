@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+ #include "../../template.hpp"
 #include "lib.hpp"
 
 optional<P> parall_cross(P a1,P a2,P b1,P b2){

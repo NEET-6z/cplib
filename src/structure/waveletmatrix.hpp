@@ -1,4 +1,4 @@
-#include"../template.hpp"
+#include "../template.hpp"
 
 template<typename S=int,int H=30>
 struct WaveletMatrix {

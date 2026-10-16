@@ -20,4 +20,5 @@ vector<T> shortest_path(int N,const function<T(int,int)>& f){
         dfs(dfs,m,r);
     };
     dfs(dfs,0,N-1);
+    return dp;
 }

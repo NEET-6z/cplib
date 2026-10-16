@@ -1,16 +1,16 @@
 #include "../template.hpp"
 
-struct IntervalSet{
+struct IntervalSet {
     set<pair<long,long>> st;
     IntervalSet(){
         st.insert(make_pair(-1e18,-1e18));
         st.insert(make_pair(1e18,1e18));
     }
-    void add(long l, long r){
-        if(l>=r) return ;
+    void add(long l,long r){
+        if(l>=r) return;
         auto it=st.lower_bound(make_pair(l,r));
         it--;
-        if(it->fi<=l && l<=it->se){
+        if(it->fi<=l&&l<=it->se){
             chmin(l,it->fi);
             chmax(r,it->se);
         }
@@ -24,8 +24,8 @@ struct IntervalSet{
         }
         st.insert(make_pair(l,r));
     }
-    void erase(long l, long r){
-        if(l>=r) return ;
+    void erase(long l,long r){
+        if(l>=r) return;
         long mr=r;
         auto it=st.lower_bound(make_pair(l,-1));
         it--;
@@ -43,7 +43,7 @@ struct IntervalSet{
             }
             else break;
         }
-        if(r<mr)st.insert(make_pair(r,mr));
+        if(r<mr) st.insert(make_pair(r,mr));
     }
     bool in(long x){
         auto it=st.lower_bound(make_pair(x+1,0));

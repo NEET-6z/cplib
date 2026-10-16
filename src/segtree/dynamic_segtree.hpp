@@ -22,7 +22,7 @@ template<class S,S (*op)(S,S),S (*e)(),typename K=uint64_t> struct dynamic_segtr
                 if(!now->right) now->right=new Node(now);
                 now=now->right;
             }
-            else {
+            else{
                 if(!now->left) now->left=new Node(now);
                 now=now->left;
             }
@@ -41,7 +41,7 @@ template<class S,S (*op)(S,S),S (*e)(),typename K=uint64_t> struct dynamic_segtr
                 if(!now->right) return e();
                 now=now->right;
             }
-            else {
+            else{
                 if(!now->left) return e();
                 now=now->left;
             }

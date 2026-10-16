@@ -5,7 +5,7 @@ struct Node {
     int prefix_cnt;
     int parent;
     vector<int> nxt,ids;
-    Node(int sigma=26,int parent=-1):prefix_cnt(0),parent(-1),nxt(sigma,-1){}
+    Node(int sigma=26,int parent=-1):prefix_cnt(0),parent(parent),nxt(sigma,-1){}
 };
 
 struct Trie {
@@ -24,6 +24,7 @@ struct Trie {
             nodes[now].prefix_cnt++;
             now=nodes[now].nxt[v];
         }
+        nodes[now].prefix_cnt++;
         nodes[now].ids.push_back(id);
         return now;
     }
@@ -48,7 +49,7 @@ struct AhoCorasick:Trie {
         while(!q.empty()){
             auto& now=nodes[q.front()];
             int fail=now.nxt[sigma];
-            cnt[q.front()]|=cnt[fail];
+            cnt[q.front()]+=cnt[fail]; //任意の演算 
             q.pop();
             rep(i,sigma){
                 if(~now.nxt[i]){

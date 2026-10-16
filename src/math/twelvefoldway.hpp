@@ -46,10 +46,13 @@ struct Twelvefoldway:Combination<T> {
     }
     T f101(int n,int k){
         //ベル数
-        vector<T> b(k+2,0);
-        rep(i,k+1) b[i+1]=b[i]+this->ifact(k)*(i%2*2-1);
+        if(n==0) return 1;
+        k=min(k,n);
+        vector<T> b(k+1,0);
+        b[0]=1;
+        rep(i,k) b[i+1]=b[i]+this->ifact(i+1)*(i%2*2-1);
         T ret=0;
-        rep(i,k+1) ret+=T(i).pow(n)*this->ifact(i)*b[k+1-i];
+        rep(i,k) ret+=T(i+1).pow(n)*this->ifact(i+1)*b[k-i-1];
         return ret;
     }
     T f102(int n,int k){

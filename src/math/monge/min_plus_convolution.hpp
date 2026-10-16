@@ -10,7 +10,7 @@ vector<T> concave_min_plus_convolution(vector<T> a,vector<T> b){
     };
     auto f=[&](int i,int j,int k)->bool {
         if(i<k) return true;
-        if(i-j>=m) return false;
+        if(i-j>=n) return false;
         return g(i,j)<=g(i,k);
     };
     vector<int> arm=monotone_minima(n+m-1,m,f);

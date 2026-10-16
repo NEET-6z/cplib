@@ -14,12 +14,18 @@ struct dsu_rollback {
     }
     int merge(int a,int b){
         a=leader(a),b=leader(b);
-        if(a==b) return a;
-        if(p[a]>p[b]) swap(a,b);
         st.push_back({a,p[a]});
         st.push_back({b,p[b]});
+        if(a==b) return a;
+        if(p[a]>p[b]) swap(a,b);
         p[a]+=p[b];
         p[b]=a;
         return a;
+    }
+    void undo(){
+        p[st.back().first]=st.back().second;
+        st.pop_back();
+        p[st.back().first]=st.back().second;
+        st.pop_back();
     }
 };

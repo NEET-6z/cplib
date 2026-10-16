@@ -1,13 +1,13 @@
 #include "../template.hpp"
 
 template<class Cap> struct maxflow {
-    struct edge {
+    struct E {
         int to,rev;
         Cap cap;
         bool isr;
     };
     int n;
-    vector<vector<edge>> g;
+    vector<vector<E>> g;
     vector<int> level,iter;
     maxflow(int n_):n(n_),g(n),level(n),iter(n){}
     void add_edge(int fr,int to,Cap cap){
@@ -24,17 +24,17 @@ template<class Cap> struct maxflow {
             int v=q.front();
             q.pop();
             for(auto& e:g[v]) if(e.cap>0&&level[e.to]<0){
-                level[e.to]=level[v]+1;
-                if(e.to==t) return true;
-                q.push(e.to);
-            }
+                    level[e.to]=level[v]+1;
+                    if(e.to==t) return true;
+                    q.push(e.to);
+                }
         }
         return level[t]>=0;
     }
     Cap dfs(int v,int t,Cap f){
         if(v==t) return f;
         for(int& i=iter[v];i<si(g[v]);i++){
-            edge& e=g[v][i];
+            E& e=g[v][i];
             if(e.cap<=0||level[v]>=level[e.to]) continue;
             Cap d=dfs(e.to,t,min(f,e.cap));
             if(d<=0) continue;
@@ -65,10 +65,22 @@ template<class Cap> struct maxflow {
             int v=q.front();
             q.pop();
             for(auto& e:g[v]) if(e.cap>0&&!vis[e.to]){
-                vis[e.to]=1;
-                q.push(e.to);
-            }
+                    vis[e.to]=1;
+                    q.push(e.to);
+                }
         }
         return vis;
+    }
+    void output(){
+        for(int v=0;v<n;v++){
+            for(E& e : g[v]){
+                if(!e.isr){
+                    int from=v;
+                    int to=e.to;
+                    Cap amount=g[to][e.rev].cap;
+                    cout<<from<<" -> "<<to<<" : "<<amount<<" / "<<e.cap+amount<<endl;
+                }
+            }
+        }
     }
 };

@@ -18,8 +18,8 @@ struct SWAG {
                 rd.pop_back();
             }
         }
+        assert(si(ld)>=2);
         ld.pop_back();
-        assert(si(ld));
     }
     S get(){
         return op(ld.back(),rd.back());

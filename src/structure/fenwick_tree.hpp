@@ -3,10 +3,10 @@
 
 template<class T> struct fenwick_tree {
     vector<T> a;
-    fenwick_tree():a(1,0){}
+    fenwick_tree(): fenwick_tree(1) {}
     fenwick_tree(int n):a(n+1,0){}
     void add(int i,T x){
-        for(i++;i<si(a);i+=i&-i) a[i]+=x;
+        for(i++;i<si(a);i+=i& -i) a[i]+=x;
     }
     T sum(int r){
         T s=0;
@@ -15,10 +15,10 @@ template<class T> struct fenwick_tree {
     }
     T sum(int l,int r){return sum(r)-sum(l);}
 
-    int lower_bound(T w){
+    int lower_bound(T w){ //minimize(r), sum(r)>=w 
         if(w<=0) return 0;
         int x=0,k=1;
-        while(k<si(a))k<<=1;
+        while(k<si(a)) k<<=1;
         for(;k;k>>=1){
             if(x+k<si(a)&&a[x+k]<w){
                 w-=a[x+k];

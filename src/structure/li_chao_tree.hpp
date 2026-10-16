@@ -35,7 +35,7 @@ template<typename T> struct li_chao_tree {
         return ret;
     }
     void add_line(Line f,int k,int l,int r){
-        if(r-l<=0) return ;
+        if(r-l<=0) return;
         int m=(l+r)/2;
         T xl=xs[l],xm=xs[m],xr=xs[r-1];
         Line g=seg[k];

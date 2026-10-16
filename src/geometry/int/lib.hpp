@@ -39,10 +39,10 @@ bool is_orthogonal(P a1,P a2,P b1,P b2){
 bool is_parallel(P a1,P a2,P b1,P b2){
     return cross(a1-a2,b1-b2)==0;
 }
-bool is_point_on_line(P a1,P a2,P b){
+bool is_point_on_segment(P a1,P a2,P b){
     return ccw(a1,b,a2)==0;
 }
-bool is_point_on_segment(P a1,P a2,P b){
+bool is_point_on_line(P a1,P a2,P b){
     return abs(ccw(a1,b,a2))!=1;
 }
 
@@ -111,6 +111,7 @@ int intersect_poly_segment(vector<P> ps,P a1,P a2){
 
 vector<P> convex_hull(vector<P> ps,bool strict=true){  //共線点を排除するか
     int n=si(ps),k=0;
+    assert(n>0);
     sort(ps.begin(),ps.end());
     vector<P> ch(2*n);
 
@@ -128,4 +129,13 @@ vector<P> convex_hull(vector<P> ps,bool strict=true){  //共線点を排除す�
 
 bool arglt(P a,P b){ //(0, -∞) ~ (-1, -∞) / (0, 0)を含むと狭義弱順序を満たさない
     return (P(0,0)<a)==(P(0,0)<b)?a.x*b.y>a.y*b.x:a<b;
+}
+
+P conj(P a){
+    return P(a.x,-a.y);
+}
+P multiply(P a,P b){return P(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+pair<P,long> divide(P a,P b){
+    return make_pair(multiply(a,conj(b)),norm(b));
+    // return P(dot(b,a), cross(b,a))/norm(b);
 }
