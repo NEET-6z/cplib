@@ -1,4 +1,4 @@
-#include "../"
+#include "../template.hpp"
 
 const long INF=3e18+100;
 struct Segtree_beats {
