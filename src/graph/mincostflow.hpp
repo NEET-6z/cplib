@@ -19,51 +19,55 @@ template<class Cap,class Cost> struct mcf_graph {
     }
 
     pair<Cap,Cost> flow(int s,int t,Cap lim=numeric_limits<Cap>::max()){
-        Cap flow=0;
-        Cost cost=0;
-        vector<Cost> h(n),dist(n);
+        const Cost INF=numeric_limits<Cost>::max();
+        Cap flow=0;Cost cost=0;
+        vector<Cost> h(n,INF),dist(n);
         vector<int> pv(n),pe(n);
 
-        while(flow<lim){
-            fill(dist.begin(),dist.end(),numeric_limits<Cost>::max());
-            priority_queue<pair<Cost,int>,vector<pair<Cost,int>>,greater<pair<Cost,int>>> pq;
-            dist[s]=0;
-            pq.push({0,s});
-
-            while(!pq.empty()){
-                auto [d,v]=pq.top();
-                pq.pop();
-                if(dist[v]!=d) continue;
-                for(int i=0;i<(int)g[v].size();i++){
-                    E &e=g[v][i];
-                    if(!e.cap) continue;
-                    Cost nd=d+e.cost+h[v]-h[e.to];
-                    if(dist[e.to]>nd){
-                        dist[e.to]=nd;
-                        pv[e.to]=v;
-                        pe[e.to]=i;
-                        pq.push({nd,e.to});
+        { //flowを2回以上呼び出す時
+            h[s]=0;
+            vector<char> inq(n,0);
+            deque<int> q{s};
+            inq[s]=1;
+            while(!q.empty()){
+                int v=q.front();q.pop_front();inq[v]=0;
+                for(auto&e:g[v]){
+                    if(e.cap&&h[e.to]>h[v]+e.cost){
+                        h[e.to]=h[v]+e.cost;
+                        if(!inq[e.to]) inq[e.to]=1,q.push_back(e.to);
                     }
                 }
             }
+            for(auto&x:h) if(x==INF) x=0;
+        }
 
-            if(dist[t]==numeric_limits<Cost>::max()) break;
-            for(int v=0;v<n;v++)
-                if(dist[v]<numeric_limits<Cost>::max()) h[v]+=dist[v];
+        while(flow<lim){
+            fill(dist.begin(),dist.end(),INF);
+            priority_queue<pair<Cost,int>,vector<pair<Cost,int>>,greater<>> pq;
+            dist[s]=0;pq.push({0,s});
+            while(!pq.empty()){
+                auto [d,v]=pq.top();pq.pop();
+                if(dist[v]!=d) continue;
+                for(int i=0;i<(int)g[v].size();i++){
+                    E&e=g[v][i];
+                    if(!e.cap) continue;
+                    Cost nd=d+e.cost+h[v]-h[e.to];
+                    if(dist[e.to]>nd) dist[e.to]=nd,pv[e.to]=v,pe[e.to]=i,pq.push({nd,e.to});
+                }
+            }
+            if(dist[t]==INF) break;
+            for(int v=0;v<n;v++) if(dist[v]!=INF) h[v]+=dist[v];
 
             Cap add=lim-flow;
             for(int v=t;v!=s;v=pv[v]) add=min(add,g[pv[v]][pe[v]].cap);
-
             for(int v=t;v!=s;v=pv[v]){
-                E &e=g[pv[v]][pe[v]];
+                E&e=g[pv[v]][pe[v]];
                 e.cap-=add;
                 g[v][e.rev].cap+=add;
             }
-
             flow+=add;
             cost+=add*h[t];
         }
-
         return {flow,cost};
     }
     void output(){
