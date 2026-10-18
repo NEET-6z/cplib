@@ -132,7 +132,7 @@ bool arglt(P a, P b){ //xの正軸から反時計回り　ゼロベクトルは�
         return p.y()<0||(p.y()==0&&p.x()<0);
     };
     if(half(a)!=half(b))return half(a)<half(b);
-    long c=1L*a.x()*b.y()-1L*a.y()*b.x();
+    long c=cross(a,b);
     if(c!=0) return c>0;
     return norm(a)<norm(b);
 }
@@ -140,8 +140,7 @@ bool arglt(P a, P b){ //xの正軸から反時計回り　ゼロベクトルは�
 P conj(P a){
     return P(a.x,-a.y);
 }
-P multiply(P a,P b){return P(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
-
+P multiply(P a,P b){return P(dot(a,conj(b)),cross(conj(a),b));}
 pair<P,long> divide(P a,P b){
     return make_pair(multiply(a,conj(b)),norm(b));
     // return P(dot(b,a), cross(b,a))/norm(b);

@@ -44,8 +44,8 @@ bool arglt(P a, P b){
         return p.imag()<0||(p.imag()==0&&p.real()<0);
     };
     if(half(a)!=half(b))return half(a)<half(b);
-    long c=1L*a.real()*b.imag()-1L*a.imag()*b.real();
-	if(c!=0) return c>0;
+    ld c=cross(a,b);
+	if(abs(c)>EPS) return c>EPS;
 	return norm(a)<norm(b);
 }
 bool arglt_direct(const P &p,const P &q){
