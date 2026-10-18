@@ -39,7 +39,16 @@ bool operator<(P a,P b){
     return sign(a.imag()-b.imag())<0;
 }
 
-bool arglt(const P &p,const P &q){
+bool arglt(P a, P b){
+    auto half=[](P &p){
+        return p.imag()<0||(p.imag()==0&&p.real()<0);
+    };
+    if(half(a)!=half(b))return half(a)<half(b);
+    long c=1L*a.real()*b.imag()-1L*a.imag()*b.real();
+	if(c!=0) return c>0;
+	return norm(a)<norm(b);
+}
+bool arglt_direct(const P &p,const P &q){
     return (abs(arg(p)-arg(q))>EPS?arg(p)<arg(q):norm(p)<norm(q));
 }
 

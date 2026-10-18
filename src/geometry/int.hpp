@@ -127,8 +127,14 @@ vector<P> convex_hull(vector<P> ps,bool strict=true){  //共線点を排除す�
     return ch;
 }
 
-bool arglt(P a,P b){ //(0, -∞) ~ (-1, -∞) / (0, 0)を含むと狭義弱順序を満たさない
-    return (P(0,0)<a)==(P(0,0)<b)?a.x*b.y>a.y*b.x:a<b;
+bool arglt(P a, P b){ //xの正軸から反時計回り　ゼロベクトルは未定義
+    auto half=[](P &p){
+        return p.y()<0||(p.y()==0&&p.x()<0);
+    };
+    if(half(a)!=half(b))return half(a)<half(b);
+    long c=1L*a.x()*b.y()-1L*a.y()*b.x();
+    if(c!=0) return c>0;
+    return norm(a)<norm(b);
 }
 
 P conj(P a){

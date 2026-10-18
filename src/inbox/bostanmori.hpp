@@ -13,5 +13,5 @@ mint Bostan_Mori(vector<mint> P,vector<mint> Q,long K){
         for(int i=0;i<si(V);i+=2) Q.push_back(V[i]);
         K/=2;
     }
-    return P[0];
+    return P[0]/Q[0]; //Q[0]==1であることが多い。Q[0]==0は定義できない
 }

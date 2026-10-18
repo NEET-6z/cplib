@@ -7,11 +7,11 @@ vector<int> suffix_array(vector<int>& S){
     vector<int> sa(n),tmp(n),rnk=S;
     iota(sa.begin(),sa.end(),0);
     for(int k=1;k<n;k*=2){
-        auto cmp=[&](int x,int y) {
+        auto cmp=[&](int x, int y){
             if(rnk[x]!=rnk[y]) return rnk[x]<rnk[y];
-            int rx=x+k<n?rnk[x+k]:-1;
-            int ry=y+k<n?rnk[y+k]:-1;
-            return rx<ry;
+            if(y+k>=n) return false;
+            if(x+k>=n) return true;
+            return rnk[x+k]<rnk[y+k];
         };
         sort(sa.begin(),sa.end(),cmp);
         tmp[sa[0]]=0;
