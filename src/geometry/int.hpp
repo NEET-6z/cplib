@@ -135,6 +135,7 @@ P conj(P a){
     return P(a.x,-a.y);
 }
 P multiply(P a,P b){return P(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+
 pair<P,long> divide(P a,P b){
     return make_pair(multiply(a,conj(b)),norm(b));
     // return P(dot(b,a), cross(b,a))/norm(b);
