@@ -4,7 +4,7 @@
 int main(){
     int N,Q;
     cin>>N>>Q;
-    dsu_weighted<int> uf(N);
+    dsu_w<int> uf(N);
     while(Q--){
         int o,x,y;
         cin>>o>>x>>y;

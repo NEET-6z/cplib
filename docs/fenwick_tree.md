@@ -1,6 +1,6 @@
 ---
 title: Fenwick Tree
-documentation_of: src/fenwick_tree.hpp
+documentation_of: src/structure/fenwick_tree.hpp
 ---
 
 にぶたんつきだよーん

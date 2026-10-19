@@ -1,11 +1,11 @@
 #include "../template.hpp"
 
 struct scc_graph {
+    int N;
     vector<vector<int>> G,H;
     vector<int> vis;
     stack<int> st;
-    int N;
-    scc_graph(int n):N(n),G(N),H(N),vis(N,0){}
+    scc_graph(int n):N(n),G(N),H(N) {}
     void add_edge(int u,int v){
         G[u].push_back(v);
         H[v].push_back(u);
@@ -25,8 +25,9 @@ struct scc_graph {
         }
     }
     vector<vector<int>> scc(){
+        vis.assign(N,0);
         rep(i,N) if(!vis[i]) dfs(i);
-        fill(all(vis),0);
+        vis.assign(N,0);
         vector<vector<int>> gr;
         while(si(st)){
             int v=st.top();
