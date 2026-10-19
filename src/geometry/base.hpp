@@ -33,17 +33,19 @@ ld angle(P a,P b){return atan2l(cross(a,b),dot(a,b));}         //aからbへの�
 
 // ld arg(const P&p){return atan2l(p.imag(), p.real());}
 
-
 bool operator<(P a,P b){
     if(sign(a.real()-b.real())) return sign(a.real()-b.real())<0;
     return sign(a.imag()-b.imag())<0;
 }
 
+
+int argtype(P p){
+    if (abs(p)==0) return 0;
+    if (p.y>0||(p.y==0&&p.x>0)) return 1;
+    return 2;
+}
 bool arglt(P a, P b){
-    auto half=[](P &p){
-        return p.imag()<0||(p.imag()==0&&p.real()<0);
-    };
-    if(half(a)!=half(b))return half(a)<half(b);
+    if(argtype(a)!=argtype(b))return argtype(a)<argtype(b);
     ld c=cross(a,b);
 	if(abs(c)>EPS) return c>EPS;
 	return norm(a)<norm(b);

@@ -127,11 +127,13 @@ vector<P> convex_hull(vector<P> ps,bool strict=true){  //共線点を排除す�
     return ch;
 }
 
-bool arglt(P a, P b){ //xの正軸から反時計回り　ゼロベクトルは未定義
-    auto half=[](P &p){
-        return p.y()<0||(p.y()==0&&p.x()<0);
-    };
-    if(half(a)!=half(b))return half(a)<half(b);
+int argtype(P p){
+    if (abs(p)==0) return 0;
+    if (p.y>0||(p.y==0&&p.x>0)) return 1;
+    return 2;
+}
+bool arglt(P a, P b){ //xの正軸から反時計回り
+    if(argtype(a)!=argtype(b))return argtype(a)<argtype(b);
     long c=cross(a,b);
     if(c!=0) return c>0;
     return norm(a)<norm(b);
@@ -144,4 +146,12 @@ P multiply(P a,P b){return P(dot(a,conj(b)),cross(conj(a),b));}
 pair<P,long> divide(P a,P b){
     return make_pair(multiply(a,conj(b)),norm(b));
     // return P(dot(b,a), cross(b,a))/norm(b);
+}
+
+long lnorm(P a, P d){
+    long g=gcd(d.imag(),d.real());
+    d/=g;
+    if(d.imag()<0)d=-d;
+    if(d.real()<0)d=-d;
+    return -d.imag()*a.real()+d.real()*a.imag();
 }
