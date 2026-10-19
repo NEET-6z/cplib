@@ -11,8 +11,8 @@ template<class S,S (*op)(S,S),S (*e)(),typename K=uint64_t> struct dynamic_segtr
     K n,log;
     Node* root;
     dynamic_segtree(K _n){
-        n=__bit_ceil(_n);
-        log=__countr_zero(n);
+        n=log=1;
+        while(n<_n)n<<=1,log++;
         root=new Node();
     }
     void set(K p,S x){
@@ -58,6 +58,18 @@ template<class S,S (*op)(S,S),S (*e)(),typename K=uint64_t> struct dynamic_segtr
         S rv=prod(a,b,now->right,c,r);
         return op(lv,rv);
     }
+    static void destroy(Node* t) {
+        if (!t) return;
+        destroy(t->left);
+        destroy(t->right);
+        delete t;
+    }
+
+    ~dynamic_segtree() {
+        destroy(root);
+    }
+    dynamic_segtree(const dynamic_segtree&) = delete;
+    dynamic_segtree& operator=(const dynamic_segtree&) = delete;
 };
 
 template<class T> using DynamicSegtreeFrom=
