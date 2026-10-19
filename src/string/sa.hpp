@@ -2,12 +2,15 @@
 #include "../template.hpp"
 
 
-vector<int> suffix_array(vector<int>& S){
-    int n=si(S);
-    vector<int> sa(n),tmp(n),rnk=S;
+template<class T>
+vector<int> suffix_array(vector<T> &s){
+    int n=s.size();
+    assert(n>0);
+    vector<int> sa(n);
+    vector<T> rnk=s,tmp(n,0);
     iota(sa.begin(),sa.end(),0);
-    for(int k=1;k<n;k*=2){
-        auto cmp=[&](int x, int y){
+    for(int k=1;k<n;k<<=1){
+        auto cmp=[&](int x,int y){
             if(rnk[x]!=rnk[y]) return rnk[x]<rnk[y];
             if(y+k>=n) return false;
             if(x+k>=n) return true;
@@ -15,16 +18,14 @@ vector<int> suffix_array(vector<int>& S){
         };
         sort(sa.begin(),sa.end(),cmp);
         tmp[sa[0]]=0;
-        for(int i=1;i<n;i++){
-            tmp[sa[i]]=tmp[sa[i-1]]+(cmp(sa[i-1],sa[i])?1:0);
-        }
+        for(int i=1;i<n;i++) tmp[sa[i]]=tmp[sa[i-1]]+(cmp(sa[i-1],sa[i])?1:0);
         swap(tmp,rnk);
     }
     return sa;
 }
 
-
-vector<int> lcp_array(vector<int> S,vector<int> sa){
+template<class T>
+vector<int> lcp_array(vector<T> &S,vector<int> &sa){
     int n=si(S);
     assert(n>0);
     vector<int> rsa(n,0),lcp(n-1,0);

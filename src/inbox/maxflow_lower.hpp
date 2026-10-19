@@ -1,14 +1,14 @@
 #include "../graph/maxflow.hpp"
 
 template <typename Cap>
-struct MaxFlowLowerBound {
+struct maxflow_lower {
     maxflow<Cap> mf;
     vector<Cap> in,up;
     int ts_edge,st_edge;
     int X,Y,V;
     Cap sum;
 
-    MaxFlowLowerBound(int V):mf(V+2),in(V),X(V),Y(V+1),V(V),sum(0){}
+    maxflow_lower(int V):mf(V+2),in(V),X(V),Y(V+1),V(V),sum(0){}
 
     void add_edge(int from,int to,Cap low,Cap high){
         assert(from!=to);

@@ -1,7 +1,9 @@
 #pragma once
 #include <bits/stdc++.h>
 using namespace std;
+using i128=__int128_t;
 #define si(a) (long)a.size()
+#define lbi(a,x) (lower_bound(a.begin(),a.end(),x)-a.begin())
 #define fi first
 #define se second
 #define all(x) x.begin(),x.end()

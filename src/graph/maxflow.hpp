@@ -11,7 +11,7 @@ template<class Cap> struct maxflow {
     vector<int> level,iter;
     maxflow(int n_):n(n_),g(n),level(n),iter(n){}
     void add_edge(int fr,int to,Cap cap){
-        int a=si(g[fr]),b=si(g[to]);
+        int a=si(sg[fr]),b=si(g[to]);
         g[fr].push_back({to,b,cap,0});
         g[to].push_back({fr,a,0,1});
     }
@@ -33,7 +33,7 @@ template<class Cap> struct maxflow {
     }
     Cap dfs(int v,int t,Cap f){
         if(v==t) return f;
-        for(int& i=iter[v];i<si(g[v]);i++){
+        for(int i=iter[v];i<si(g[v]);i++){
             E& e=g[v][i];
             if(e.cap<=0||level[v]>=level[e.to]) continue;
             Cap d=dfs(e.to,t,min(f,e.cap));

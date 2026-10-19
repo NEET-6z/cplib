@@ -1,6 +1,6 @@
 #include "../template.hpp"
 
-template<class Cap,class Cost> struct mcf_graph {
+template<class Cap,class Cost> struct mincostflow {
     struct E {
         int to,rev;
         Cap cap;
@@ -10,22 +10,22 @@ template<class Cap,class Cost> struct mcf_graph {
     int n;
     vector<vector<E>> g;
 
-    mcf_graph(int n=0):n(n),g(n){}
+    mincostflow(int n=0):n(n),g(n){}
 
-    void add_edge(int v,int to,Cap cap,Cost cost){
-        assert(0<=cap&&0<=cost&&v!=to);
-        g[v].push_back({to,(int)g[to].size(),cap,cost,false});
-        g[to].push_back({v,(int)g[v].size()-1,0,-cost,true});
+    void add_edge(int fr,int to,Cap cap,Cost cost){
+        int a=g[fr].size(),b=g[to].size();
+        g[fr].push_back({to,b,cap,cost,0});
+        g[to].push_back({fr,a,0,-cost,1});
     }
 
-    pair<Cap,Cost> flow(int s,int t,Cap lim=numeric_limits<Cap>::max()){
-        const Cost INF=numeric_limits<Cost>::max();
+    pair<Cap,Cost> flow(int s,int t,Cap lim=numeric_limits<Cap>::max()/2){
+        const Cost INF=numeric_limits<Cost>::max()/2;
         Cap flow=0;Cost cost=0;
         vector<Cost> h(n,INF),dist(n);
         vector<int> pv(n),pe(n);
-
+        h[s]=0;
+        
         { //flowを2回以上呼び出す時
-            h[s]=0;
             vector<char> inq(n,0);
             deque<int> q{s};
             inq[s]=1;
@@ -56,7 +56,7 @@ template<class Cap,class Cost> struct mcf_graph {
                 }
             }
             if(dist[t]==INF) break;
-            for(int v=0;v<n;v++) if(dist[v]!=INF) h[v]+=dist[v];
+            rep(v,n) if(dist[v]!=INF) h[v]+=dist[v];
 
             Cap add=lim-flow;
             for(int v=t;v!=s;v=pv[v]) add=min(add,g[pv[v]][pe[v]].cap);

@@ -1,16 +1,16 @@
 #include "../graph/mincostflow.hpp"
 
 
-template<class Cap,class Cost> struct mcf_lower_bound {
+template<class Cap,class Cost> struct mincostflow_lower {
     struct E { int from,idx;Cap low,high; };
     int n;
-    mcf_graph<Cap,Cost> mf;
+    mincostflow<Cap,Cost> mf;
     vector<Cap> bal;
     vector<E> edges;
     Cost base_cost=0;
     bool solved=false,feasible=false;
 
-    explicit mcf_lower_bound(int n):n(n),mf(n+2),bal(n,0){
+    explicit mincostflow_lower(int n):n(n),mf(n+2),bal(n,0){
         static_assert(is_signed_v<Cap>&&is_signed_v<Cost>);
     }
 
