@@ -11,7 +11,8 @@ template<class S,S (*op)(S,S),S (*e)(),typename K=uint64_t> struct dynamic_segtr
     K n,log;
     Node* root;
     dynamic_segtree(K _n){
-        n=log=1;
+        n=1;
+        log=0;
         while(n<_n)n<<=1,log++;
         root=new Node();
     }
