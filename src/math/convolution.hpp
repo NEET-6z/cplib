@@ -8,7 +8,7 @@ void fft(vector<mint>& a,bool inv=false){
     int n=si(a),s=__lg(n);
     static vector<mint> z,iz;
     while(si(z)<=s){
-        z.emplace_back(g.pow(mint(-1).val()/(1<<si(z))));
+        z.emplace_back(g.pow(mint(-1).val()>>si(z)));
         iz.emplace_back(z.back().inv());
     }
     vector<mint> b(n);
