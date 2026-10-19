@@ -11,20 +11,18 @@ struct Twelvefoldway:Combination<T> {
     }
     T f001(int n,int k){
         //分割数
-        vector<vector<T>> dp(k+1,vector<T>(n+1,0));
+        vector<vector<T>> dp(n+1,vector<T>(k+1,0));
         dp[0][0]=1;
-        rep(i,k){
-            rep(j,n+1){
-                if(j-i-1>=0){
-                    dp[i+1][j]=dp[i][j]+dp[i][j-i-1];
+        rep(i,n+1){
+            rep(j,k){
+                dp[i][j+1]+=dp[i][j];
+                if(i-j-1>=0){
+                    dp[i][j+1]+=dp[i-j-1][j+1];
                 }
-                else{
-                    dp[i+1][j]=dp[i][j];
-                }
+                
             }
         }
-        return dp[k][n];
-
+        return dp[n][k];
     }
     T f002(int n,int k){
         if(n<k) return 0;
@@ -69,7 +67,7 @@ struct Twelvefoldway:Combination<T> {
     T f112(int n,int k){
         if(n<k) return 0;
         T ret=0;
-        rep(i,k+1) ret+=((k-i)%2*2-1)*this->C(k,i)*T(i).pow(n);
+        rep(i,k+1) ret+=((k-i+1)%2*2-1)*this->C(k,i)*T(i).pow(n);
         return ret;
     }
 };
