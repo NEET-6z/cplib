@@ -1,4 +1,4 @@
 ---
-title: Lazy Segment Tree (ACL)
+title: lazy segtree
 documentation_of: src/segtree/lazy_segtree.hpp
 ---
