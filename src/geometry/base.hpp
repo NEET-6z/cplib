@@ -6,6 +6,14 @@ using P = complex<ld>;
 const ld EPS = 1e-12;
 const ld PI = acos(-1.0L);
 
+istream& operator>>(istream& is, complex<S>& p) {
+    S x,y;is>>x>>y;
+    p=complex<S>(x, y);
+    return is;
+}
+S sqr(S a){return a*a;}
+int sign(S a){return a>0?1:a<0?-1:0;}
+bool eq(S a,S b){return abs(a-b)<=EPS;}
 S dot(P a, P b) { return (conj(a) * b).real(); }
 S cross(P a, P b) { return (conj(a) * b).imag(); }
 P rotate(P p, ld r) { return p * polar(ld(1), r); }  // P(cos(r),sin(r))*p
@@ -21,6 +29,7 @@ int ccw(P b, P c){
     if(cross(b, c) < -EPS) return -1;  // clockwise(時計)
     if(dot(b, c) < -EPS) return 2;  // c-a-b
     if(norm(b) < norm(c)) return -2;  // a-b-c
+    return 0;  // a=c=b
 }
 
 int ccw(P a, P b, P c) {
@@ -66,12 +75,12 @@ struct Line {
     }
 };
 struct Circle {
-    P p;
+    P o;
     S r;
-    Circle(P p=P(), S r=0): p(p), r(r) {}
+    Circle(const P& o=P(),const S& r=0):o(o),r(r){}
 };
 
-P vec(Line&s){return s.b-s.a;}
+P vec(Line s){return s.b-s.a;}
 bool point_on_segment(Line &l, P &p) {
     P v = l.b - l.a;
     return dot(p - l.a, v) > -EPS && dot(p - l.b, v) < EPS;
