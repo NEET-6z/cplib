@@ -5,20 +5,15 @@ Circle circumcircle(P p1,P p2,P p3){
     S x1=p1.real(),y1=p1.imag();
     S x2=p2.real(),y2=p2.imag();
     S x3=p3.real(),y3=p3.imag();
-
     S a=2*(x1-x2);
     S b=2*(y1-y2);
     S p=norm(p1)-norm(p2);
-
     S c=2*(x1-x3);
     S d=2*(y1-y3);
     S q=norm(p1)-norm(p3);
-
     S det=a*d-b*c;
-
     S x=(d*p-b*q)/det;
     S y=(a*q-c*p)/det;
-
     P o(x,y);
     return {o,abs(o-p1)};
 }
@@ -28,10 +23,8 @@ Circle incircle(P p1,P p2,P p3){
     S d1=abs(p2-p3);
     S d2=abs(p3-p1);
     S d3=abs(p1-p2);
-
     S sum=d1+d2+d3;
     P c=(d1*p1+d2*p2+d3*p3)/sum;
-
     S area2=abs(imag(conj(p2-p1)*(p3-p1)));
     S r=area2/sum;
 
@@ -43,20 +36,22 @@ Circle excircle(P p1,P p2,P p3){
     S d1=abs(p2-p3);
     S d2=abs(p3-p1);
     S d3=abs(p1-p2);
-
     S sum=-d1+d2+d3;
     P c=(-d1*p1+d2*p2+d3*p3)/sum;
-
     S area2=abs(imag(conj(p2-p1)*(p3-p1)));
     S r=area2/sum;
 
     return {c,r};
 }
-int count_tangent(const Circle&a,const Circle&b){
+int count_tangent(const Circle&a,const Circle&b){ //共通接線の本数
     S d=norm(a.o-b.o);
     return d==sqr(a.r+b.r)?3:d>sqr(a.r+b.r)?4:d==sqr(a.r-b.r)?1:d>sqr(a.r-b.r)?2:0;
 }
-pair<P,P> tangent_points(Circle c,P p){
+bool intersect_cc(const Circle&a,const Circle&b){
+    int c=count_tangent(a,b);
+    return 1<=c&&c<=3;
+}
+pair<P,P> tangent_points(Circle c,P p){ //接線の接点
     P v=p-c.o;
     S d2=norm(v);
     S a=c.r*c.r/d2;
@@ -65,7 +60,7 @@ pair<P,P> tangent_points(Circle c,P p){
     P t2=c.o+v*a-normalvector(v)*b;
     return minmax(t1,t2,[&](P a,P b){return a<b;});
 }
-vector<Line> tangent(const Circle&a,const Circle&b){
+vector<Line> tangent(const Circle&a,const Circle&b){ //接線のaに対する接点
     vector<Line>ret;
     S g=abs(a.o-b.o);
     if(eq(g,0)) return ret;
@@ -96,8 +91,7 @@ S area(const vector<P>&p,const Circle&c){
             if(a<-PI) a+=2*PI;
             ret+=c.r*c.r*a;
         }
-        else
-        {
+        else{
             pair<P,P> x=crosspoint_cs(c,s);
             P tmp[4]={s.a,x.first,x.second,s.b};
             if(intersect_cs(c,Line(s.a,x.first))==2) swap(tmp[1],tmp[2]);
@@ -116,13 +110,11 @@ S area(const vector<P>&p,const Circle&c){
     return ret/2;
 }
 S area(const Circle&c){return PI*c.r*c.r;}
-S area(const Circle&a,const Circle&b)
-{
+S area(const Circle&a,const Circle&b){
     int c=count_tangent(a,b);
     if(c>=3) return 0;
     else if(c<=1) return area(a.r<b.r?a:b);
-    else
-    {
+    else{
         S d=abs(a.o-b.o);
         S ret=0;
         {
@@ -141,7 +133,7 @@ S area(const Circle&a,const Circle&b)
 
 
 template <class iter>
-Circle min_ball(iter left,iter right,int seed=time(0)){
+Circle min_ball(iter left,iter right,int seed=time(0)){ //最小包含円
     const int n=right-left;
     assert(n>=1);
     if(n==1) return {*left,S(0)};
