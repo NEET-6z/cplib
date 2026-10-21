@@ -1,5 +1,6 @@
-#include "int.hpp"
+#include "../template.hpp"
 
+using P=pair<long,long>;
 optional<P> parall_cross(P a1,P a2,P b1,P b2){
     auto [x1,y1]=a1;
     auto [x2,y2]=a2;
