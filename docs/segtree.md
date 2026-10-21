@@ -1,4 +1,4 @@
 ---
-title: segtree
+title: Segment Tree
 documentation_of: src/segtree/segtree.hpp
 ---
