@@ -37,7 +37,7 @@ struct HLD {
         return (order[u]<order[v]?u:v);
     }
 
-    vector<pair<int,int>> path_decompose(int u,int v,bool edge=1){
+    vector<pair<int,int>> path_decompose_commutative(int u,int v,bool edge=1){
         vector<pair<int,int>> ret;
         while(head[u]!=head[v]){
             if(order[u]<order[v]) swap(u,v);
@@ -55,6 +55,18 @@ struct HLD {
             u=par[head[u]];
         }
         if(u!=l) ret.emplace_back(order[l]+1,order[u]+1);
+        return ret;
+    }
+    vector<pair<int,int>> path_decompose(int u,int v,bool edge=1){
+        //[N:2N) 逆順
+        int l=lca(u,v);
+        vector<pair<int,int>> L=up_decompose(u,l);
+        vector<pair<int,int>> R=up_decompose(v,l);
+        reverse(R.begin(),R.end());
+        vector<pair<int,int>> ret;
+        for(auto &[f,s]:L) ret.emplace_back(2*N-s,2*N-f);
+        if(!edge) ret.emplace_back(order[l],order[l]+1);
+        for(auto &[f,s]:R) ret.emplace_back(f,s);
         return ret;
     }
 };
