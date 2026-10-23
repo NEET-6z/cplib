@@ -7,6 +7,6 @@ int main(){
     vector<int> A(N),B(M);
     rep(i,N)cin>>A[i];
     rep(i,M)cin>>B[i];
-    vector<int> C=concave_max_plus_convolution(A,B);
+    vector<int> C=concave_min_plus_convolution(A,B);
     rep(i,N+M-1)cout<<C[i]<<" \n"[i==N+M-2];
 }
