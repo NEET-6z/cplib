@@ -13,7 +13,7 @@ template<typename T> struct li_chao_tree {
     vector<Line> seg;
     li_chao_tree(const vector<T>& x, T inf):INF(inf){
         xs=x;
-        assert(si(xs));
+        xs.push_back(0);
         sort(all(xs));
         xs.erase(unique(all(xs)), xs.end());
         n=1;

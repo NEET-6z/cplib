@@ -3,29 +3,33 @@
 
 
 template<class T>
-vector<int> suffix_array(vector<T>& s){
+vector<int> suffix_array(vector<T> s){
     int n=s.size();
     assert(n>0);
-    vector<int> sa(n);
-    vector<T> rnk=s, tmp(n, 0);
+    vector<int> sa(n), rnk(s.begin(), s.end()), tmp(n+1, 0);
+    rep(i, n) sa[i]=i;
     iota(sa.begin(), sa.end(), 0);
     for(int k=1;k<n;k<<=1){
         auto cmp=[&](int x, int y){
             if(rnk[x]!=rnk[y]) return rnk[x]<rnk[y];
-            if(y+k>=n) return false;
             if(x+k>=n) return true;
+            if(y+k>=n) return false;
             return rnk[x+k]<rnk[y+k];
         };
         sort(sa.begin(), sa.end(), cmp);
         tmp[sa[0]]=0;
-        for(int i=1;i<n;i++) tmp[sa[i]]=tmp[sa[i-1]]+(cmp(sa[i-1], sa[i])?1:0);
+        for(int i=1;i<n;i++) tmp[sa[i]]=tmp[sa[i-1]]+cmp(sa[i-1], sa[i]);
         swap(tmp, rnk);
     }
     return sa;
 }
+vector<int> suffix_array(string s){
+    return suffix_array(vector<char>(s.begin(), s.end()));
+}
+
 
 template<class T>
-vector<int> lcp_array(vector<T>& S, vector<int>& sa){
+vector<int> lcp_array(vector<T> S, vector<int>& sa){
     int n=si(S);
     assert(n>0);
     vector<int> rsa(n, 0), lcp(n-1, 0);
