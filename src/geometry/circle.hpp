@@ -43,9 +43,9 @@ Circle excircle(P p1,P p2,P p3){
 
     return {c,r};
 }
-int count_tangent(const Circle&a,const Circle&b){ //共通接線の本数
-    S d=norm(a.o-b.o);
-    return d==sqr(a.r+b.r)?3:d>sqr(a.r+b.r)?4:d==sqr(a.r-b.r)?1:d>sqr(a.r-b.r)?2:0;
+int count_tangent(const Circle&a,const Circle&b){
+	S d=norm(a.o-b.o);
+	return sign(d-sqr(a.r+b.r))==0?3:sign(d-sqr(a.r+b.r))==1?4:sign(d-sqr(a.r-b.r))==0?1:sign(d-sqr(a.r-b.r))==1?2:0;
 }
 bool intersect_cc(const Circle&a,const Circle&b){
     int c=count_tangent(a,b);

@@ -6,8 +6,11 @@ template<class S,S (*op)(S,S),S (*e)()> struct segtree {
     vector<S> d;
     segtree():segtree(1){}
     explicit segtree(int n_):segtree(vector<S>(n_,e())){}
-    explicit segtree(const vector<S>& a):n(__bit_ceil(a.size())),d(n*2,e()){
-        rep(i,si(a)) d[n+i]=a[i];
+    explicit segtree(const vector<S>& a){
+        n=1;
+        while(n<a.size())n<<=1;
+        d.resize(n*2,e());
+        rep(i,a.size()) d[n+i]=a[i];
         for(int i=n;--i;) d[i]=op(d[i*2],d[i*2+1]);
     }
     void set(int i,S x){

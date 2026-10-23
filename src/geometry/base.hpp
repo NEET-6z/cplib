@@ -46,7 +46,10 @@ P unitvector(P a){return a/abs(a);}
 P normalvector(P a){return a*P(0,1);}//90度回転　法線ベクトル
 ld angle(P a,P b){return atan2l(cross(a,b),dot(a,b));}//aからbへの角度rad(=b/a)
 // ld arg(const P&p){return atan2l(p.imag(), p.real());}
-
+S angle_diff(P a,P b){   //0~π
+    S d=fabsl(arg(a)-arg(b));
+    return min(d,2*PI-d);
+}
 P projection(const Line &s,const P &p){
     P v=vec(s);
     return s.a+v*dot(p-s.a,v)/norm(v);
