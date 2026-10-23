@@ -3,9 +3,9 @@
 #include "../math/modint.hpp"
 
 using mint=modint<>;
-using S=pair<mint,mint>;
-S op(S l,S r){return {l.fi*r.fi,l.se*r.fi+r.se};}
-S e(){return {1,0};}
+using S=pair<mint, mint>;
+S op(S l, S r){return {l.fi*r.fi, l.se*r.fi+r.se};}
+S e(){return {1, 0};}
 
 int main(){
     ios::sync_with_stdio(false);
@@ -13,15 +13,15 @@ int main(){
     int Q;
     cin>>Q;
 
-    vector<pair<mint,mint>> R,LD,RD;
-    SWAG<S,op,e> swag;
+    vector<pair<mint, mint>> R, LD, RD;
+    SWAG<S, op, e> swag;
     while(Q--){
         int o;
         cin>>o;
         if(o==0){
-            int a,b;
+            int a, b;
             cin>>a>>b;
-            swag.push({a,b});
+            swag.push({a, b});
         }
         else if(o==1){
             swag.pop();

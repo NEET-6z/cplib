@@ -5,7 +5,7 @@
 // 偶数長の回文を含めて直径を知るには，N+1 個の $ を挿入して 1 を引く
 // $a$a$a$b$a$a$a$ -> 123432181234321
 auto manacher(string s){
-    long n=si(s),i=0,j=0;
+    long n=si(s), i=0, j=0;
     vector<long> r(n);
     while(i<n){
         while(i>=j&&i+j<n&&s[i-j]==s[i+j]) j++;
@@ -15,7 +15,7 @@ auto manacher(string s){
             r[i+k]=r[i-k];
             k++;
         }
-        i+=k,j-=k;
+        i+=k, j-=k;
     }
     return r;
 }

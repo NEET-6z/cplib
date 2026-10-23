@@ -1,19 +1,19 @@
 #include "../template.hpp"
 
 
-template<unsigned int sz,typename T=int>
+template<unsigned int sz, typename T=int>
 struct binarytrie {
-    using Bit=typename conditional<sz<=32,unsigned int,unsigned long long>::type;
+    using Bit=typename conditional<sz<=32, unsigned int, unsigned long long>::type;
     struct node {
         T cnt;
-        array<int,2>nxt;
-        node():cnt(0),nxt({-1,-1}){}
+        array<int, 2>nxt;
+        node():cnt(0), nxt({-1, -1}){}
     };
     vector<node>v;
     binarytrie(){v.emplace_back();}
-    void insert(Bit x){add(x,1);}
-    void erase(Bit x){add(x,-1);}
-    void add(Bit x,T k)
+    void insert(Bit x){add(x, 1);}
+    void erase(Bit x){add(x, -1);}
+    void add(Bit x, T k)
     {
         assert(0<=x&&(x>>sz)==0);
         int p=0;
@@ -29,7 +29,7 @@ struct binarytrie {
         }
     }
     //x未満の個数 [0,x)
-    T count(Bit x,Bit xor_val=0)const
+    T count(Bit x, Bit xor_val=0)const
     {
         assert(0<=xor_val&&(xor_val>>sz)==0);
         if(x<0) return 0;
@@ -37,7 +37,7 @@ struct binarytrie {
         T ret=0;
         int p=0;
         for(int i=sz;i--;){
-            int j=x>>i&1,k=xor_val>>i&1;
+            int j=x>>i&1, k=xor_val>>i&1;
             if(j==0) p=v[p].nxt[k];
             else
             {
@@ -82,7 +82,7 @@ struct binarytrie {
         return ret;
     }
     //小さい方からk番目(0-indexed)
-    Bit find_by_order(T ord,Bit xor_val=0)const
+    Bit find_by_order(T ord, Bit xor_val=0)const
     {
         assert(0<=xor_val&&(xor_val>>sz)==0);
         assert(0<=ord&&ord<v[0].cnt);
@@ -107,5 +107,5 @@ struct binarytrie {
         }
         return ret;
     }
-    T order_of_key(Bit x,Bit xor_val=0)const {return count(x,xor_val);}
+    T order_of_key(Bit x, Bit xor_val=0)const {return count(x, xor_val);}
 };

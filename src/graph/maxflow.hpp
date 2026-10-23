@@ -2,21 +2,21 @@
 
 template<class Cap> struct maxflow {
     struct E {
-        int to,rev;
+        int to, rev;
         Cap cap;
         bool isr;
     };
     int n;
     vector<vector<E>> g;
-    vector<int> level,iter;
-    maxflow(int n_):n(n_),g(n),level(n),iter(n){}
-    void add_edge(int fr,int to,Cap cap){
-        int a=si(g[fr]),b=si(g[to]);
-        g[fr].push_back({to,b,cap,0});
-        g[to].push_back({fr,a,0,1});
+    vector<int> level, iter;
+    maxflow(int n_):n(n_), g(n), level(n), iter(n){}
+    void add_edge(int fr, int to, Cap cap){
+        int a=si(g[fr]), b=si(g[to]);
+        g[fr].push_back({to, b, cap, 0});
+        g[to].push_back({fr, a, 0, 1});
     }
-    bool bfs(int s,int t){
-        fill(all(level),-1);
+    bool bfs(int s, int t){
+        fill(all(level), -1);
         queue<int> q;
         level[s]=0;
         q.push(s);
@@ -31,12 +31,12 @@ template<class Cap> struct maxflow {
         }
         return level[t]>=0;
     }
-    Cap dfs(int v,int t,Cap f){
+    Cap dfs(int v, int t, Cap f){
         if(v==t) return f;
         for(int i=iter[v];i<si(g[v]);i++){
             E& e=g[v][i];
             if(e.cap<=0||level[v]>=level[e.to]) continue;
-            Cap d=dfs(e.to,t,min(f,e.cap));
+            Cap d=dfs(e.to, t, min(f, e.cap));
             if(d<=0) continue;
             e.cap-=d;
             g[e.to][e.rev].cap+=d;
@@ -44,12 +44,12 @@ template<class Cap> struct maxflow {
         }
         return 0;
     }
-    Cap flow(int s,int t){
-        Cap ret=0,inf=numeric_limits<Cap>::max()/2;
-        while(bfs(s,t)){
-            fill(all(iter),0);
+    Cap flow(int s, int t){
+        Cap ret=0, inf=numeric_limits<Cap>::max()/2;
+        while(bfs(s, t)){
+            fill(all(iter), 0);
             while(true){
-                Cap f=dfs(s,t,inf);
+                Cap f=dfs(s, t, inf);
                 if(f==0) break;
                 ret+=f;
             }

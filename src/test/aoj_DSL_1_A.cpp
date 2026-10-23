@@ -2,17 +2,17 @@
 #include "../dsu/dsu.hpp"
 
 int main(){
-    int n,q;
+    int n, q;
     cin>>n>>q;
     dsu uf(n);
-    rep(i,q){
-        int c,x,y;
+    rep(i, q){
+        int c, x, y;
         cin>>c>>x>>y;
         if(c==0){
-            uf.merge(x,y);
+            uf.merge(x, y);
         }
-        else {
-            cout<<uf.same(x,y)<<"\n";
+        else{
+            cout<<uf.same(x, y)<<"\n";
         }
     }
 }

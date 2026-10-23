@@ -2,13 +2,13 @@
 #include "../graph/scc.hpp"
 
 int main(){
-    int n,m;
+    int n, m;
     cin>>n>>m;
     scc_graph scc(n);
-    rep(i,m){
-        int a,b;
+    rep(i, m){
+        int a, b;
         cin>>a>>b;
-        scc.add_edge(a,b);
+        scc.add_edge(a, b);
     }
     cout<<(scc.scc().size()!=n)<<endl;
 }

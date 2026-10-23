@@ -10,7 +10,7 @@ struct FS {
         do a.emplace_back(n=(n+B-1)/B);
         while(n>1);
     }
-    bool operator[](long i) const {
+    bool operator[](long i)const {
         return a[0][i/B]>>(i%B)&1;
     }
     void set(long i){
@@ -28,7 +28,7 @@ struct FS {
     }
     //iより大きい最小の要素
     long next(long i){
-        rep(h,si(a)){
+        rep(h, si(a)){
             i++;
             if(i/B>=si(a[h])) break;
             U d=a[h][i/B]>>(i%B);
@@ -43,7 +43,7 @@ struct FS {
     }
     //iより小さい最大の要素
     long prev(long i){
-        rep(h,si(a)){
+        rep(h, si(a)){
             i--;
             if(i<0) break;
             U d=a[h][i/B]<<(~i%B);

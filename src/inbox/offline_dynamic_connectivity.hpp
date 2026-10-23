@@ -1,66 +1,66 @@
 #include "../dsu/dsu_rollback.hpp"
 
 struct OfflineDynamicConnectivity {
-    using E=pair<int,int>;
+    using E=pair<int, int>;
 
     dsu_rollback uf;
-    int V,Q,segsz;
+    int V, Q, segsz;
     vector<vector<E>> seg;
     int comp;
 
-    vector<pair<pair<int,int>,E>> pend;
-    map<E,int> cnt,appear;
+    vector<pair<pair<int, int>, E>> pend;
+    map<E, int> cnt, appear;
 
-    OfflineDynamicConnectivity(int V,int Q):uf(V),V(V),Q(Q),comp(V){
+    OfflineDynamicConnectivity(int V, int Q):uf(V), V(V), Q(Q), comp(V){
         segsz=1;
         while(segsz<Q) segsz<<=1;
         seg.resize(2*segsz-1);
     }
 
-    void insert(int idx,int s,int t){
-        auto e=minmax(s,t);
+    void insert(int idx, int s, int t){
+        auto e=minmax(s, t);
         if(cnt[e]++==0) appear[e]=idx;
     }
 
-    void erase(int idx,int s,int t){
-        auto e=minmax(s,t);
-        if(--cnt[e]==0) pend.emplace_back(make_pair(appear[e],idx),e);
+    void erase(int idx, int s, int t){
+        auto e=minmax(s, t);
+        if(--cnt[e]==0) pend.emplace_back(make_pair(appear[e], idx), e);
     }
 
-    void add(int a,int b,const E& e,int k,int l,int r){
+    void add(int a, int b, const E& e, int k, int l, int r){
         if(r<=a||b<=l) return;
         if(a<=l&&r<=b){
             seg[k].emplace_back(e);
             return;
         }
-        add(a,b,e,2*k+1,l,(l+r)>>1);
-        add(a,b,e,2*k+2,(l+r)>>1,r);
+        add(a, b, e, 2*k+1, l, (l+r)>>1);
+        add(a, b, e, 2*k+2, (l+r)>>1, r);
     }
 
-    void add(int a,int b,const E& e){add(a,b,e,0,0,segsz);}
+    void add(int a, int b, const E& e){add(a, b, e, 0, 0, segsz);}
 
     void build(){
         for(auto& p: cnt){
             if(p.second>0)
-                pend.emplace_back(make_pair(appear[p.first],Q),p.first);
+                pend.emplace_back(make_pair(appear[p.first], Q), p.first);
         }
         for(auto& s: pend){
-            add(s.first.first,s.first.second,s.second);
+            add(s.first.first, s.first.second, s.second);
         }
     }
 
-    void run(const function<void(int)>& f,int k=0){
+    void run(const function<void(int)>& f, int k=0){
         int add=0;
         for(auto& e: seg[k]){
-            if(!uf.same(e.first,e.second)){
+            if(!uf.same(e.first, e.second)){
                 add++;
             }
-            uf.merge(e.first,e.second);
+            uf.merge(e.first, e.second);
         }
         comp-=add;
         if(k<segsz-1){
-            run(f,2*k+1);
-            run(f,2*k+2);
+            run(f, 2*k+1);
+            run(f, 2*k+2);
         }
         else if(k-(segsz-1)<Q){
             int query_index=k-(segsz-1);

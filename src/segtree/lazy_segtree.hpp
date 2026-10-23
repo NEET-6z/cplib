@@ -1,19 +1,19 @@
 #pragma once
 #include "../template.hpp"
 
-template<class S,auto op,auto e,class F,auto mpp,auto cmpo,auto id>
+template<class S, auto op, auto e, class F, auto mpp, auto cmpo, auto id>
 class lazy_segtree {
-    int n,log;
+    int n, log;
     vector<S> d;
     vector<F> lz;
-    void update(int k){d[k]=op(d[k*2],d[k*2+1]);}
-    void all_apply(int k,F f){
-        d[k]=mpp(f,d[k]);
-        if(k<n) lz[k]=cmpo(f,lz[k]);
+    void update(int k){d[k]=op(d[k*2], d[k*2+1]);}
+    void all_apply(int k, F f){
+        d[k]=mpp(f, d[k]);
+        if(k<n) lz[k]=cmpo(f, lz[k]);
     }
     void push(int k){
-        all_apply(k*2,lz[k]);
-        all_apply(k*2+1,lz[k]);
+        all_apply(k*2, lz[k]);
+        all_apply(k*2+1, lz[k]);
         lz[k]=id();
     }
     void UPDATE(int k){
@@ -23,16 +23,16 @@ class lazy_segtree {
         for(int i=log;--i;) push(k>>i);
     }
 public:
-    lazy_segtree(int n):lazy_segtree(vector<S>(n,e())){}
+    lazy_segtree(int n):lazy_segtree(vector<S>(n, e())){}
     lazy_segtree(vector<S> a){
         n=log=1;
-        while(n<si(a)) n<<=1,log++;
-        d.resize(2*n,e());
-        lz.resize(2*n,id());
-        rep(i,si(a)) d[n+i]=a[i];
+        while(n<si(a)) n<<=1, log++;
+        d.resize(2*n, e());
+        lz.resize(2*n, id());
+        rep(i, si(a)) d[n+i]=a[i];
         for(int i=n;--i;) update(i);
     }
-    void set(int p,S x){
+    void set(int p, S x){
         p+=n;
         PUSH(p);
         d[p]=x;
@@ -43,88 +43,88 @@ public:
         PUSH(p);
         return d[p];
     }
-    S prod(int l,int r){
+    S prod(int l, int r){
         if(l>=r) return e();
-        l+=n,r+=n;
+        l+=n, r+=n;
         for(int i=log;--i;){
             if((l>>i)<<i!=l) push(l>>i);
             if((r>>i)<<i!=r) push((r-1)>>i);
         }
-        S sl=e(),sr=e();
-        for(;l<r;l>>=1,r>>=1){
-            if(l&1) sl=op(sl,d[l++]);
-            if(r&1) sr=op(d[--r],sr);
+        S sl=e(), sr=e();
+        for(;l<r;l>>=1, r>>=1){
+            if(l&1) sl=op(sl, d[l++]);
+            if(r&1) sr=op(d[--r], sr);
         }
-        return op(sl,sr);
+        return op(sl, sr);
     }
-    void apply(int p,F f){
+    void apply(int p, F f){
         p+=n;
         PUSH(p);
-        d[p]=mpp(f,d[p]);
+        d[p]=mpp(f, d[p]);
         UPDATE(p);
     }
-    void apply(int l,int r,F f){
+    void apply(int l, int r, F f){
         if(l>=r) return;
-        l+=n,r+=n;
+        l+=n, r+=n;
         for(int i=log;--i;){
             if((l>>i)<<i!=l) push(l>>i);
             if((r>>i)<<i!=r) push((r-1)>>i);
         }
-        int ml=l,mr=r;
-        for(;l<r;l>>=1,r>>=1){
-            if(l&1) all_apply(l++,f);
-            if(r&1) all_apply(--r,f);
+        int ml=l, mr=r;
+        for(;l<r;l>>=1, r>>=1){
+            if(l&1) all_apply(l++, f);
+            if(r&1) all_apply(--r, f);
         }
-        l=ml,r=mr;
+        l=ml, r=mr;
         for(int i=1;i<log;i++){
             if((l>>i)<<i!=l) update(l>>i);
             if((r>>i)<<i!=r) update((r-1)>>i);
         }
     }
-    template <class G> int max_right(int l,G g){
+    template <class G> int max_right(int l, G g){
         if(l==n) return n;
         l+=n;
         PUSH(l);
         S sm=e();
-        do {
+        do{
             while(l%2==0) l>>=1;
-            if(!g(op(sm,d[l]))){
+            if(!g(op(sm, d[l]))){
                 while(l<n){
                     push(l);
                     l=(2*l);
-                    if(g(op(sm,d[l]))){
-                        sm=op(sm,d[l]);
+                    if(g(op(sm, d[l]))){
+                        sm=op(sm, d[l]);
                         l++;
                     }
                 }
                 return l-n;
             }
-            sm=op(sm,d[l]);
+            sm=op(sm, d[l]);
             l++;
-        } while((l& -l)!=l);
+        }while((l& -l)!=l);
         return n;
     }
-    template <class G> int min_left(int r,G g){
+    template <class G> int min_left(int r, G g){
         if(r==0) return 0;
         r+=n;
         PUSH(r-1);
         S sm=e();
-        do {
+        do{
             r--;
             while(r>1&&(r%2)) r>>=1;
-            if(!g(op(d[r],sm))){
+            if(!g(op(d[r], sm))){
                 while(r<n){
                     push(r);
                     r=(2*r+1);
-                    if(g(op(d[r],sm))){
-                        sm=op(d[r],sm);
+                    if(g(op(d[r], sm))){
+                        sm=op(d[r], sm);
                         r--;
                     }
                 }
                 return r+1-n;
             }
-            sm=op(d[r],sm);
-        } while((r& -r)!=r);
+            sm=op(d[r], sm);
+        }while((r& -r)!=r);
         return 0;
     }
 };

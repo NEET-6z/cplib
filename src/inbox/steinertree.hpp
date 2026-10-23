@@ -2,12 +2,12 @@
 
 
 
-struct Edge{
-    int from,to;
+struct Edge {
+    int from, to;
     long cost;
 };
 struct MinimumSteinerTree {
-    using pi=pair<int,int>;
+    using pi=pair<int, int>;
     const long infty=1e18;
     vector<vector<long>> dp;
     long cost;
@@ -17,16 +17,16 @@ struct MinimumSteinerTree {
                                 const vector<int>& terminal)
         :g(g),
         terminal(terminal),
-        dp(1<<terminal.size(),vector<long>(g.size(),infty)),
-        pre(1<<terminal.size(),vector<pi>(g.size(),pi(-1,-1))){
+        dp(1<<terminal.size(), vector<long>(g.size(), infty)),
+        pre(1<<terminal.size(), vector<pi>(g.size(), pi(-1, -1))){
         assert(not terminal.empty());
-        const int n=(int)g.size(),t=(int)terminal.size();
+        const int n=(int)g.size(), t=(int)terminal.size();
         for(int i=0;i<t;i++){
             assert(0<=terminal[i] and terminal[i]<n);
             dp[1<<i][terminal[i]]=0;
         }
-        using qt=pair<long,int>;
-        priority_queue<qt,vector<qt>,greater<>> que;
+        using qt=pair<long, int>;
+        priority_queue<qt, vector<qt>, greater<>> que;
         for(int i=1;i<(1<<t);i++){
             for(int j=0;j<n;j++){
                 for(int k=i;k>0;k=(k-1)&i){
@@ -34,26 +34,26 @@ struct MinimumSteinerTree {
                         long nxt=dp[k][j]+dp[i^k][j];
                         if(nxt<dp[i][j]){
                             dp[i][j]=nxt;
-                            pre[i][j]={k,-1};
+                            pre[i][j]={k, -1};
                         }
                     }
                 }
             }
             for(int j=0;j<n;j++){
                 if(dp[i][j]!=infty){
-                    que.emplace(dp[i][j],j);
+                    que.emplace(dp[i][j], j);
                 }
             }
             while(not que.empty()){
-                auto [now,v]=que.top();
+                auto [now, v]=que.top();
                 que.pop();
                 if(dp[i][v]<now) continue;
                 for(int j=0;j<(int)g[v].size();j++){
                     const auto& e=g[v][j];
                     if(now+e.cost<dp[i][e.to]){
                         dp[i][e.to]=now+e.cost;
-                        pre[i][e.to]={v,j};
-                        que.emplace(dp[i][e.to],e.to);
+                        pre[i][e.to]={v, j};
+                        que.emplace(dp[i][e.to], e.to);
                     }
                 }
             }
@@ -61,24 +61,24 @@ struct MinimumSteinerTree {
         cost=dp[(1<<t)-1][terminal[0]];
     }
 
-    vector<Edge> restore() const {
+    vector<Edge> restore()const {
         const int t=(int)terminal.size();
         assert(dp[(1<<t)-1][terminal[0]]!=infty);
         vector<Edge> tree;
-        vector<pair<int,int>> st;
-        st.emplace_back((1<<t)-1,terminal[0]);
+        vector<pair<int, int>> st;
+        st.emplace_back((1<<t)-1, terminal[0]);
         while(not st.empty()){
-            auto [x,y]=st.back();
+            auto [x, y]=st.back();
             st.pop_back();
             if(pre[x][y].second==-1){
                 if(pre[x][y].first!=-1){
-                    st.emplace_back(pre[x][y].first,y);
-                    st.emplace_back(x^pre[x][y].first,y);
+                    st.emplace_back(pre[x][y].first, y);
+                    st.emplace_back(x^pre[x][y].first, y);
                 }
             }
             else{
                 tree.emplace_back(g[pre[x][y].first][pre[x][y].second]);
-                st.emplace_back(x,pre[x][y].first);
+                st.emplace_back(x, pre[x][y].first);
             }
         }
         return tree;

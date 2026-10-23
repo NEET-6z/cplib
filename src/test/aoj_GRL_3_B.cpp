@@ -2,20 +2,20 @@
 #include "../graph/lowlink.hpp"
 
 int main(){
-    int N,M;
+    int N, M;
     cin>>N>>M;
     vector<vector<int>> G(N);
-    rep(i,M){
-        int s,t;
+    rep(i, M){
+        int s, t;
         cin>>s>>t;
         G[s].push_back(t);
         G[t].push_back(s);
     }
-    rep(i,N)sort(all(G[i]));
+    rep(i, N) sort(all(G[i]));
     LowLink LL(G);
-    rep(i,N)for(int j: G[i])if(i<j){
-        if(LL.is_bridge(i,j)){
-            cout<<i<<" "<<j<<"\n";
+    rep(i, N) for(int j: G[i]) if(i<j){
+            if(LL.is_bridge(i, j)){
+                cout<<i<<" "<<j<<"\n";
+            }
         }
-    }
 }

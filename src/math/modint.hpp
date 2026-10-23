@@ -22,14 +22,14 @@ template<int mod=998244353> struct modint {
         return *this;
     }
     constexpr modint& operator/=(modint r){return *this*=r.inv();}
-    constexpr friend modint operator+(modint a,modint b){return a+=b;}
-    constexpr friend modint operator-(modint a,modint b){return a-=b;}
-    constexpr friend modint operator*(modint a,modint b){return a*=b;}
-    constexpr friend modint operator/(modint a,modint b){return a/=b;}
-    constexpr modint inv() const {return pow(mod-2);}
-    constexpr modint pow(long long b) const {
+    constexpr friend modint operator+(modint a, modint b){return a+=b;}
+    constexpr friend modint operator-(modint a, modint b){return a-=b;}
+    constexpr friend modint operator*(modint a, modint b){return a*=b;}
+    constexpr friend modint operator/(modint a, modint b){return a/=b;}
+    constexpr modint inv()const {return pow(mod-2);}
+    constexpr modint pow(long long b)const {
         assert(0<=b);
-        modint a=*this,c=1;
+        modint a=*this, c=1;
         while(b){
             if(b&1) c*=a;
             a*=a;
@@ -37,9 +37,9 @@ template<int mod=998244353> struct modint {
         }
         return c;
     }
-    constexpr int val() const {return x;}
-    constexpr friend ostream& operator<<(ostream& os,const modint& m){return os<<m.val();}
-    constexpr friend istream& operator>>(istream& is,modint& m){
+    constexpr int val()const {return x;}
+    constexpr friend ostream& operator<<(ostream& os, const modint& m){return os<<m.val();}
+    constexpr friend istream& operator>>(istream& is, modint& m){
         long long v;
         is>>v;
         m=modint(v);
