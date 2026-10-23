@@ -4,7 +4,7 @@ using ld=long double;
 const ld INF=1e18;
 
 using pld=pair<ld, ld>;
-pair<ld, vector<pld>> cp_rec(vector<pld>& ps, int i, int n){ //最遠点対距離
+pair<ld, vector<pld>> cp_rec(vector<pld>& ps, int i, int n){ //最近点対距離
     if(n==0) return {INF, {}};
     if(n<=1) return {INF, {ps[i]}};
     int m=n/2;
