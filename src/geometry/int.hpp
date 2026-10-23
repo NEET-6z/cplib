@@ -51,19 +51,19 @@ struct Circle {
 S dot(P a,P b){return a.x*b.x+a.y*b.y;}
 S cross(P a,P b){return a.x*b.y-a.y*b.x;}
 S norm(P a){return dot(a,a);}
-ld abs(P a){return sqrt(norm(a));}
 P vec(Line s){return s.b-s.a;}
-ld arg(const P&p){return atan2l(p.imag(),p.real());}
-//P polar(S r,ld theta){return P(r*cosl(theta),r*sinl(theta));}
 P conj(P a){return P(a.x,-a.y);}
 P normalvector(P a){return P(-a.y,a.x);}
-P projection(const Line &s,const P &p){
-    P v=vec(s);
-    return s.a+v*dot(p-s.a,v)/norm(v); //※float
-}
-P reflection(const Line &l,const P &p){
-    return projection(l,p)*S(2)-p;
-}
+// ld abs(P a){return sqrt(norm(a));}
+// ld arg(const P&p){return atan2l(p.imag(),p.real());}
+// P polar(S r,ld theta){return P(r*cosl(theta),r*sinl(theta));}
+// P projection(const Line &s,const P &p){
+//     P v=vec(s);
+//     return s.a+v*dot(p-s.a,v)/norm(v);
+// }
+// P reflection(const Line &l,const P &p){
+//     return projection(l,p)*S(2)-p;
+// }
 
 int ccw(P b,P c){
     if(cross(b,c)>0) return 1;  // counter-clockwise(反時計)
