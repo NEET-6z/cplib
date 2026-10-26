@@ -4,7 +4,10 @@
 template<class S> struct merge_sort_tree {
     int n;
     vector<vector<S>> d;
-    merge_sort_tree(vector<S>& a):n(__bit_ceil(si(a))), d(n*2){
+    merge_sort_tree(vector<S>& a){
+        n=1;
+        while(n<si(a))n<<=1;
+        d.resize(n*2);
         rep(i, si(a)) d[n+i]={a[i]};
         for(int i=n;--i;){
             merge(all(d[i*2]), all(d[i*2+1]), back_inserter(d[i]));
