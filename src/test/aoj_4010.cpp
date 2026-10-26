@@ -5,17 +5,16 @@ long op(long l, long r){return l+r;}
 long e(){return 0l;}
 
 using Seg=persistent_segtree<long, op, e>;
-using NP=Seg::Node*;
 
 int main(){
     cin.tie(0)->sync_with_stdio(0);
 
     int N, Q;
     cin>>N>>Q;
-    vector<long> A(N);
+    vector<long> A(N);ziss
     rep(i, N) cin>>A[i];
     Seg seg(N);
-    vector<NP> root(N, nullptr);
+    vector<Seg::Node> root(N, Seg::null);
     root[0]=seg.build(A);
     rep(i, N-1) root[i+1]=root[i];
     while(Q--){

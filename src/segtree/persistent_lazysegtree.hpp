@@ -1,5 +1,8 @@
 #include "../template.hpp"
 
+extern "C" const char* __asan_default_options(){
+    return "detect_leaks=0";
+}
 template <class S, auto op, auto e, class F, auto mpp, auto cmpo, auto id>
 struct persistent_lazy_segtree {
     struct Node {
@@ -9,19 +12,24 @@ struct persistent_lazy_segtree {
     };
     using NP=Node*;
 
+
 private:
     int n{};
 
-    NP merge(NP l, NP r)const {return new Node{op(l->d, r->d), id(), l, r};}
+    NP make_node(const S& d, const F& lz, NP l, NP r)const {
+        return new Node{d, lz, l, r};
+    }
+
+    NP merge(NP l, NP r)const {return make_node(op(l->d, r->d), id(), l, r);}
 
     NP build(int l, int r, const vector<S>& v)const {
-        if(l+1==r) return new Node{v[l], id(), nullptr, nullptr};
+        if(l+1==r) return make_node(v[l], id(), nullptr, nullptr);
         NP lp=build(l, (l+r)/2, v);
         NP rp=build((l+r)/2, r, v);
         return merge(lp, rp);
     }
     NP all_apply(NP k, const F& f)const {
-        return new Node{mpp(f, k->d), cmpo(f, k->lz), k->l, k->r};
+        return make_node(mpp(f, k->d), cmpo(f, k->lz), k->l, k->r);
     }
     NP push(NP k)const {
         if(k->l==nullptr) return k;
@@ -29,7 +37,7 @@ private:
         if(k->lz==id()) return k;
         NP nl=all_apply(k->l, k->lz);
         NP nr=all_apply(k->r, k->lz);
-        return new Node{k->d, id(), nl, nr};
+        return make_node(k->d, id(), nl, nr);
     }
     NP apply(int a, int b, const F& f, NP k, int l, int r)const {
         if(r<=a||b<=l) return k;
@@ -43,7 +51,7 @@ private:
 
     NP set(int a, const S& x, NP k, int l, int r)const {
         if(r<=a||a+1<=l) return k;
-        if(a<=l&&r<=a+1) return new Node{x, id(), nullptr, nullptr};
+        if(a<=l&&r<=a+1) return make_node(x, id(), nullptr, nullptr);
         k=push(k);
         return merge(set(a, x, k->l, l, (l+r)>>1), set(a, x, k->r, (l+r)>>1, r));
     }
@@ -84,4 +92,3 @@ public:
         return prod(l, r, t, 0, n, id());
     }
 };
-

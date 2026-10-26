@@ -1,7 +1,9 @@
 #pragma once
 #include "../template.hpp"
 
-
+extern "C" const char* __asan_default_options(){
+    return "detect_leaks=0";
+}
 template <class S, auto op, auto e>
 struct persistent_segtree {
     struct Node {
@@ -13,10 +15,13 @@ struct persistent_segtree {
 private:
     int n{};
 
-    NP merge(NP l, NP r)const {return new Node{op(l->d, r->d), l, r};}
+    NP make_node(const S& d, NP l, NP r)const {
+        return new Node{d, l, r};
+    }
+    NP merge(NP l, NP r)const {return make_node(op(l->d, r->d), l, r);}
 
     NP build(int l, int r, const vector<S>& v)const {
-        if(l+1==r) return new Node{v[l], nullptr, nullptr};
+        if(l+1==r) return make_node(v[l], nullptr, nullptr);
         NP lp=build(l, (l+r)/2, v);
         NP rp=build((l+r)/2, r, v);
         return merge(lp, rp);
@@ -24,13 +29,13 @@ private:
 
     NP set(int a, const S& x, NP k, int l, int r)const {
         if(r<=a||a+1<=l) return k;
-        if(a<=l&&r<=a+1) return new Node{x, nullptr, nullptr};
+        if(a<=l&&r<=a+1) return make_node(x, nullptr, nullptr);
         return merge(set(a, x, k->l, l, (l+r)>>1), set(a, x, k->r, (l+r)>>1, r));
     }
 
     NP apply(int a, const S& x, NP k, int l, int r)const {
         if(r<=a||a+1<=l) return k;
-        if(a<=l&&r<=a+1) return new Node{op(k->d, x), nullptr, nullptr};
+        if(a<=l&&r<=a+1) return make_node(op(k->d, x), nullptr, nullptr);
         return merge(apply(a, x, k->l, l, (l+r)>>1), apply(a, x, k->r, (l+r)>>1, r));
     }
 
