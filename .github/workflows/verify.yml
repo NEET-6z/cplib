@@ -36,6 +36,10 @@ jobs:
         uses: competitive-verifier/actions/oj-resolve@v2
         with:
           output-path: verify_files.json
+          include: |
+                src/
+          exclude: |
+                src/inbox/
           # Specify patterns
           # include: your-own-include/
           # exclude: your-own-exclude/
