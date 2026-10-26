@@ -1,4 +1,4 @@
-#define PROBLEM "https://judge.yosupo.jp/problem/vertex_add_path_sum"
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/vertex_add_path_sum
 #include "../tree/hld.hpp"
 #include "../structure/fenwick_tree.hpp"
 

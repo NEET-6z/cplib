@@ -1,4 +1,4 @@
-#define PROBLEM "https://yukicoder.me/problems/no/3330"
+// competitive-verifier: PROBLEM https://yukicoder.me/problems/no/3330
 #include "../segtree/segtree2d.hpp"
 
 long op(long l, long r){

@@ -1,6 +1,6 @@
 #include "monotone_minima.hpp"
 
-//a凸b任意
+//a上凸, b任意
 template<typename T>
 vector<T> concave_min_plus_convolution(vector<T> a, vector<T> b){
     if(a.empty()||b.empty()) return {};

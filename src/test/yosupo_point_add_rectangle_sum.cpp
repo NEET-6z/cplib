@@ -1,4 +1,4 @@
-#define PROBLEM "https://judge.yosupo.jp/problem/point_add_rectangle_sum"
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/point_add_rectangle_sum
 #include "../segtree/segtree2d.hpp"
 
 long op(long l, long r){return l+r;}

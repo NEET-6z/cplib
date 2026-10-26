@@ -1,4 +1,4 @@
-#define PROBLEM "https://judge.yosupo.jp/problem/segment_add_get_min"
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/segment_add_get_min
 #include "../structure/li_chao_tree.hpp"
 
 const long INF=2e18;

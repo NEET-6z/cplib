@@ -1,0 +1,12 @@
+title: 競プロライブラリ
+
+description: 
+
+plugins:
+- jemoji
+- jekyll-remote-theme
+
+
+lang: ja
+timezone: Asia/Tokyo
+theme: jekyll-theme-dinky

@@ -1,4 +1,4 @@
-#define PROBLEM "https://judge.yosupo.jp/problem/min_plus_convolution_convex_arbitrary"
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/min_plus_convolution_convex_arbitrary
 #include "../math/monge/min_plus_convolution.hpp"
 
 int main(){
