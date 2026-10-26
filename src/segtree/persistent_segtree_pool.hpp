@@ -11,28 +11,28 @@ private:
     int n{};
     vector<Node> pl;
 
-    NP make_node(const S& d, NP l, NP r) {
+    NP make_node(const S& d, NP l, NP r){
         pl.push_back(Node{d, l, r});
         return (int)pl.size()-1;
     }
 
-    NP merge(NP l, NP r) {return make_node(op(pl[l].d, pl[r].d), l, r);}
+    NP merge(NP l, NP r){return make_node(op(pl[l].d, pl[r].d), l, r);}
 
 
-    NP build(int l, int r, const vector<S>& v) {
+    NP build(int l, int r, const vector<S>& v){
         if(l+1==r) return make_node(v[l], -1, -1);
         NP lp=build(l, (l+r)/2, v);
         NP rp=build((l+r)/2, r, v);
         return merge(lp, rp);
     }
 
-    NP set(int a, const S& x, NP k, int l, int r) {
+    NP set(int a, const S& x, NP k, int l, int r){
         if(r<=a||a+1<=l) return k;
         if(a<=l&&r<=a+1) return make_node(x, -1, -1);
         return merge(set(a, x, pl[k].l, l, (l+r)>>1), set(a, x, pl[k].r, (l+r)>>1, r));
     }
 
-    NP apply(int a, const S& x, NP k, int l, int r) {
+    NP apply(int a, const S& x, NP k, int l, int r){
         if(r<=a||a+1<=l) return k;
         if(a<=l&&r<=a+1) return make_node(op(pl[k].d, x), -1, -1);
         return merge(apply(a, x, pl[k].l, l, (l+r)>>1), apply(a, x, pl[k].r, (l+r)>>1, r));
@@ -82,13 +82,13 @@ public:
 
     explicit persistent_segtree(int n):n(n){}
 
-    NP build(const vector<S>& v) {
+    NP build(const vector<S>& v){
         assert(n==(int)v.size());
         assert(n>=1);
         return build(0, n, v);
     }
 
-    NP set(NP t, int k, const S& x) {
+    NP set(NP t, int k, const S& x){
         return set(k, x, t, 0, n);
     }
 
@@ -108,7 +108,7 @@ public:
         return pl[t].d;
     }
 
-    NP apply(NP t, int k, const S& x) {
+    NP apply(NP t, int k, const S& x){
         return apply(k, x, t, 0, n);
     }
 

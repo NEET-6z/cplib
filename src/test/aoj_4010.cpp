@@ -11,10 +11,10 @@ int main(){
 
     int N, Q;
     cin>>N>>Q;
-    vector<long> A(N);ziss
+    vector<long> A(N);
     rep(i, N) cin>>A[i];
     Seg seg(N);
-    vector<Seg::Node> root(N, nullptr);
+    vector<Seg::NP> root(N, nullptr);
     root[0]=seg.build(A);
     rep(i, N-1) root[i+1]=root[i];
     while(Q--){
