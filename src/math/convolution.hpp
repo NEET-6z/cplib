@@ -5,10 +5,10 @@
 template<typename mint>
 void fft(vector<mint>& a, bool inv=false){
     mint g=3;
-    int n=si(a), s=__lg(n);
+    int n=(int)a.size(), s=__lg(n);
     static vector<mint> z, iz;
-    while(si(z)<=s){
-        z.emplace_back(g.pow(mint(-1).val()>>si(z)));
+    while((int)z.size()<=s){
+        z.emplace_back(g.pow(mint(-1).val()>>(z.size())));
         iz.emplace_back(z.back().inv());
     }
     vector<mint> b(n);
@@ -47,3 +47,5 @@ vector<mint> convolution(vector<mint> a, vector<mint> b){
     for(auto&& e : a) e*=iz;
     return a;
 }
+
+// ntt frendly g=3: 998244353, 167772161, 469762049
