@@ -4,7 +4,11 @@
 
 template<class F, F (*id)(), void (*cmpo)(const F&, F&)> struct dual_segtree {
     dual_segtree():dual_segtree(1){}
-    explicit dual_segtree(int n_):n(__bit_ceil(n_)), d(2*n, id()){}
+    explicit dual_segtree(int _n){
+        n=1;
+        while(n<_n) n<<=1;
+        d.resize(2*n, id());
+    }
     void apply(int l, int r, F f){
         if(l==r) return;
         for(l+=n, r+=n;l<r;l>>=1, r>>=1){
