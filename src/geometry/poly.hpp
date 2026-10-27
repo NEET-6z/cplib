@@ -76,19 +76,19 @@ int convex_contains_log(const vector<P>& p, const P& a){
 }
 
 
-int intersect_poly_segment(const vector<P>& ps, P a1, P a2){
+
+int intersect_poly_segment(const vector<P>& ps, Line l){
     int n=si(ps);
     vector<Line> dia;
     rep(i, n) dia.emplace_back(Line(ps[i], ps[(i+1)%n]));
     rep(i, n/2) dia.emplace_back(Line(ps[i], ps[i+n/2]));
     if(n>=4&&n%2) dia.emplace_back(Line(ps.back(), ps[1]));
-    for(auto [d1, d2]:dia){
-        if(intersect_ss(Line(d1, d2), Line(a1, a2))==2){
+    for(Line& d:dia){
+        if(intersect_ss(d, l)==2){
             return 2; //内部を通過する
         }
     }
     rep(i, n) if(intersect_ss(Line(ps[i], ps[(i+1)%n]), l)==1) return 1;//周に触れる
-
     return 0; //触れない
 }
 
