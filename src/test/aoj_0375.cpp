@@ -1,4 +1,5 @@
 // competitive-verifier: PROBLEM https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0375
+// competitive-verifier: ERROR 1e-3
 #include "../geometry/poly.hpp"
 
 
