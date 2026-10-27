@@ -58,3 +58,22 @@ template<typename T> pair<T, T> crt(const vector<T>& r, const vector<T>& m){
     }
     return {r0, m0};
 }
+
+
+template<typename T>
+T garner(const vector<T>& a, vector<T> p, const T mod){
+    const int sz=a.size();
+    vector<T> kp(sz+1, 0), rmult(sz+1, 1);
+    p.push_back(mod);
+    for(int i=0;i<sz;++i){
+        T x=(a[i]-kp[i])%p[i];
+        if(x<0) x+=p[i];
+        x=x*inv_mod(rmult[i], p[i])%p[i];
+
+        for(int j=i+1;j<sz+1;++j){
+            kp[j]=(kp[j]+rmult[j]*x)%p[j];
+            rmult[j]=rmult[j]*p[i]%p[j];
+        }
+    }
+    return kp[sz];
+}

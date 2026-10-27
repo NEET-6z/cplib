@@ -12,7 +12,12 @@ bool eq(S a, S b){return (sign(a-b)==0);}
 S sqr(S a){return a*a;}
 ld radtodeg(ld rad){return rad*180/PI;}
 ld degtorad(ld deg){return deg*PI/180;}
-
+ld rad2pi(ld rad){
+    if(rad<0.0L){
+        rad+=2.0L*PI;
+    }
+    return rad;
+}
 bool operator<(P a, P b){
     if(a.real()!=b.real()) return a.real()<b.real();
     return a.imag()<b.imag();

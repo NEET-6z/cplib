@@ -8,9 +8,6 @@ void cmpo(const F& f, F& g){
 }
 
 int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int n, q;
     cin>>n>>q;
     dual_segtree<F, id, cmpo> seg(n);

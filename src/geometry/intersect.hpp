@@ -1,7 +1,7 @@
 #pragma once
 #include "base.hpp"
-S distance_lp(const Line&, const P&);
 
+S distance_lp(const Line&, const P&);
 bool is_orthogonal(Line a, Line b){
     return eq(dot(vec(a), vec(b)), 0);
 }

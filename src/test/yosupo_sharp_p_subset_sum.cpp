@@ -119,9 +119,6 @@ V subset_sum(const V& s, int T){
 }
 
 int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int n, T;cin>>n>>T;
     V s(n);
     for(int& x:s) cin>>x;

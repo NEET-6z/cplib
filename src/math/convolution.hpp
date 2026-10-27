@@ -6,7 +6,7 @@ template<typename mint>
 void fft(vector<mint>& a, bool inv=false){
     mint g=3;
     int n=(int)a.size(), s=__lg(n);
-    static vector<mint> z, iz;
+    vector<mint> z, iz; //static?
     while((int)z.size()<=s){
         z.emplace_back(g.pow(mint(-1).val()>>(z.size())));
         iz.emplace_back(z.back().inv());

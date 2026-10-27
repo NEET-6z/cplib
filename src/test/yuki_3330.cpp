@@ -9,9 +9,6 @@ long e(){
 }
 
 int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int N, K, Q;
     cin>>N>>K>>Q;
     vector<int> A(N);

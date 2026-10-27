@@ -6,7 +6,7 @@ template<class S> struct merge_sort_tree {
     vector<vector<S>> d;
     merge_sort_tree(vector<S>& a){
         n=1;
-        while(n<si(a))n<<=1;
+        while(n<si(a)) n<<=1;
         d.resize(n*2);
         rep(i, si(a)) d[n+i]={a[i]};
         for(int i=n;--i;){

@@ -22,9 +22,7 @@ struct rangefreq {
     int query(int a, int b, T x, int k=1, int l=0, int r=-1)const {            // [a,b) count(* < x)
         if(r<0) r=n;
         if(b<=l||r<=a) return 0;
-        if(a<=l&&r<=b)
-            return lower_bound(dat[k].begin(), dat[k].end(), x)-dat[k].begin();
-        return query(a, b, x, k*2, l, (l+r)/2)
-               +query(a, b, x, k*2+1, (l+r)/2, r);
+        if(a<=l&&r<=b) return lower_bound(dat[k].begin(), dat[k].end(), x)-dat[k].begin();
+        return query(a, b, x, k*2, l, (l+r)/2)+query(a, b, x, k*2+1, (l+r)/2, r);
     }
 };

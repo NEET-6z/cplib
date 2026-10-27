@@ -5,9 +5,6 @@ int op(int l, int r){return min(l, r);}
 int e(){return INT_MAX;}
 
 int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int n, q;
     cin>>n>>q;
     segtree<int, op, e> seg(n);

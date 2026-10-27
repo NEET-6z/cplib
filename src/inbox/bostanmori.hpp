@@ -55,7 +55,7 @@ mint nth_term(long n, vector<mint> s){
     vector<mint> Q=BerlekampMassey<mint>(s);
     int d=(int)Q.size()-1;
     if(d==0) return mint(0);
-    vector<mint> P = convolution(s, Q);
+    vector<mint> P=convolution(s, Q);
     P.resize(d);
     return Bostan_Mori(P, Q, n);
 }

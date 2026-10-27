@@ -2,9 +2,6 @@
 #include "../graph/maximal_independent_set.hpp"
 
 int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int N, M;
     cin>>N>>M;
     vector<BS> G(N);

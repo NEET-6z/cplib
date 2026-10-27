@@ -5,5 +5,5 @@ int main(){
     string S;
     cin>>S;
     vector<int> z=z_algorithm(S);
-    rep(i,S.size())cout<<z[i]<<" \n"[i+1==S.size()];
+    rep(i, S.size()) cout<<z[i]<<" \n"[i+1==S.size()];
 }
