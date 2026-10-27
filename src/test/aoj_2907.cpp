@@ -2,9 +2,6 @@
 #include "../segtree/merge_sort_tree.hpp"
 
 int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int N, Q;
     cin>>N>>Q;
     vector<string> S(N);

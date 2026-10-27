@@ -76,26 +76,26 @@ int convex_contains_log(const vector<P>& p, const P& a){
 }
 
 
-// int intersect_poly_segment(vector<P> ps,P a1,P a2){
-//     int n=si(ps);
-//     vector<pair<P,P>> dia;
-//     rep(i,n) dia.emplace_back(ps[i],ps[(i+1)%n]);
-//     rep(i,n/2) dia.emplace_back(ps[i],ps[i+n/2]);
-//     if(n>=4&&n%2) dia.emplace_back(ps.back(),ps[1]);
-//     for(auto [d1,d2]:dia){
+int intersect_poly_segment(const vector<P>& ps, P a1, P a2){
+    int n=si(ps);
+    vector<Line> dia;
+    rep(i, n) dia.emplace_back(Line(ps[i], ps[(i+1)%n]));
+    rep(i, n/2) dia.emplace_back(Line(ps[i], ps[i+n/2]));
+    if(n>=4&&n%2) dia.emplace_back(Line(ps.back(), ps[1]));
+    for(auto [d1, d2]:dia){
+        if(intersect_ss(Line(d1, d2), Line(a1, a2))==2){
+            return 2; //内部を通過する
+        }
+    }
+    rep(i, n) if(intersect_ss(Line(ps[i], ps[(i+1)%n]), l)==1) return 1;//周に触れる
 
-//         if(intersect_ss(Line(d1,d2),Line(a1,a2))==2){
-//             return 2; //内部を通過する
-//         }
-//     }
-//     rep(i,n) if(intersect_sp(Line(ps[i],ps[(i+1)%n]),a1)==1) return 1; //周に触れる
-//     return 0; //触れない
-// }
+    return 0; //触れない
+}
 
 vector<P> convex_hull(vector<P> ps, bool strict=true){  //共線点を排除するか
     int n=si(ps), k=0;
     assert(n>0);
-    sort(ps.begin(), ps.end()); //戻り値の順番: (最小/最大) (x優先/y優先)
+    sort(ps.begin(), ps.end(), [&](P a, P b){return a<b;}); //戻り値の順番: (最小/最大) (x優先/y優先)
     vector<P> ch(2*n);
 
     int bd=strict; //ldの場合は消す

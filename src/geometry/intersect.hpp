@@ -1,5 +1,6 @@
 #pragma once
 #include "base.hpp"
+S distance_lp(const Line&, const P&);
 
 bool is_orthogonal(Line a, Line b){
     return eq(dot(vec(a), vec(b)), 0);
@@ -11,8 +12,19 @@ bool is_parallel(Line a, Line b){
 bool intersect_lp(Line s, P p){return eq(cross(vec(s), p-s.a), 0);}
 bool intersect_ll(Line s, Line t){return !is_parallel(s, t)||intersect_lp(s, t.a);}
 bool intersect_sp(Line s, P p){return eq(ccw(s.a, s.b, p), 0);}
-bool intersect_ss(Line s, Line t){return ccw(s.a, s.b, t.a)*ccw(s.a, s.b, t.b)<=0&&ccw(t.a, t.b, s.a)*ccw(t.a, t.b, s.b)<=0;}
-bool intersect_ls(Line s, Line t){return sign(cross(vec(s), t.a-s.a))*sign(cross(vec(s), t.b-s.a))<=0;}
+int intersect_ss(Line s, Line t){
+    int a=ccw(s.a, s.b, t.a)*ccw(s.a, s.b, t.b);
+    int b=ccw(t.a, t.b, s.a)*ccw(t.a, t.b, s.b);
+    if(a==-1&&b==-1) return 2; //4本に分かれるか
+    if(a<=0&&b<=0) return 1; //触れるか
+    return 0;
+}
+int intersect_ls(Line l, Line s){
+    int a=ccw(l.a, l.b, s.a)*ccw(l.a, l.b, s.b);
+    if(a==-1) return 2; //4本に分かれるか
+    if(a!=1) return 1; //触れるか
+    return 0;
+}
 bool intersect_cp(Circle c, P p){return eq(abs(c.o-p), c.r);}
 int intersect_cl(const Circle& c, const Line& s){
     S d=distance_lp(s, c.o);

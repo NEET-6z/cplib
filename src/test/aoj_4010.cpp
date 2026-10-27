@@ -7,8 +7,6 @@ long e(){return 0l;}
 using Seg=persistent_segtree<long, op, e>;
 
 int main(){
-    cin.tie(0)->sync_with_stdio(0);
-
     int N, Q;
     cin>>N>>Q;
     vector<long> A(N);

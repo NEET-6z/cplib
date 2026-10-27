@@ -19,8 +19,6 @@ using ul=unsigned long;
 
 Random rd;
 int main(){
-    cin.tie(0)->ios::sync_with_stdio(0);
-
     map<array<long, 4>, ul> mp;
 
     int N, M;
