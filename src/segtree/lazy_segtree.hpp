@@ -3,7 +3,7 @@
 
 template<class S, auto op, auto e, class F, auto mpp, auto cmpo, auto id>
 class lazy_segtree {
-    int n, log;
+    int n, log, N;
     vector<S> d;
     vector<F> lz;
     void update(int k){d[k]=op(d[k*2], d[k*2+1]);}
@@ -25,6 +25,7 @@ class lazy_segtree {
 public:
     lazy_segtree(int n):lazy_segtree(vector<S>(n, e())){}
     lazy_segtree(vector<S> a){
+        N=a.size();
         n=log=1;
         while(n<si(a)) n<<=1, log++;
         d.resize(2*n, e());
@@ -82,7 +83,7 @@ public:
         }
     }
     template <class G> int max_right(int l, G g){
-        if(l==n) return n;
+        if(l==N) return N;
         l+=n;
         PUSH(l);
         S sm=e();
@@ -102,7 +103,7 @@ public:
             sm=op(sm, d[l]);
             l++;
         }while((l& -l)!=l);
-        return n;
+        return N;
     }
     template <class G> int min_left(int r, G g){
         if(r==0) return 0;
