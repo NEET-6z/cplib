@@ -6,6 +6,7 @@ template<class Cap> struct maxflow {
         Cap cap;
         bool isr;
     };
+    const Cap INF=numeric_limits<Cap>::max()/2;
     int n;
     vector<vector<E>> g;
     vector<int> level, iter;
@@ -33,7 +34,7 @@ template<class Cap> struct maxflow {
     }
     Cap dfs(int v, int t, Cap f){
         if(v==t) return f;
-        for(int i=iter[v];i<si(g[v]);i++){
+        for(int& i=iter[v];i<si(g[v]);i++){
             E& e=g[v][i];
             if(e.cap<=0||level[v]>=level[e.to]) continue;
             Cap d=dfs(e.to, t, min(f, e.cap));

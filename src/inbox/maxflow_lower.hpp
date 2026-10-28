@@ -56,21 +56,11 @@ struct maxflow_lower {
     optional<Cap> min_flow(int s, int t){
         if(can_flow(s, t)){
             auto ret=mf.INF-mf.g[t][ts_edge].cap;
-            mf.graph[t][ts_edge].cap=mf.g[s][st_edge].cap=0;
+            mf.g[t][ts_edge].cap=mf.g[s][st_edge].cap=0;
             return ret-mf.flow(t, s);
         }
         else{
             return nullopt;
         }
-    }
-
-    void output(int M){
-        vector<Cap> ans(M);
-        for(int i=0;i<mf.g.size();i++){
-            for(auto& e : mf.g[i]){
-                if(!e.isrev&&~e.idx) ans[e.idx]=up[e.idx]-e.cap;
-            }
-        }
-        for(auto& p : ans) cout<<p<<endl;
     }
 };

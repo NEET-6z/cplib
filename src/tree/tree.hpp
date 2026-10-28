@@ -40,7 +40,7 @@ struct Tree {
         return dep[u]+dep[v]-2*dep[l];
     }
     int kth_ancestor(int v, int k){
-        for(auto p: P){
+        for(auto& p: P){
             if(k<=0) break;
             if(k&1){
                 v=p[v];

@@ -3,7 +3,7 @@
 
 template<unsigned int sz, typename T=int>
 struct binarytrie {
-    using Bit=typename conditional<sz<=32, unsigned int, unsigned long long>::type;
+    using Bit=typename conditional<sz<32, unsigned int, unsigned long long>::type;
     struct node {
         T cnt;
         array<int, 2>nxt;

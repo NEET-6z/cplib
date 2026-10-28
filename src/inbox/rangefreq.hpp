@@ -1,3 +1,5 @@
+#include "../template.hpp"
+
 template<typename T>
 struct rangefreq {
     int n;

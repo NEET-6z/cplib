@@ -64,14 +64,14 @@ struct ReRooting {
     vector<S> dp2;
 };
 
-vector<long> A;
-struct E {
-    int to, from;
-};
-struct S {
-    long sum;
-};
+// vector<long> A;
+// struct E {
+//     int to, from;
+// };
+// struct S {
+//     long sum;
+// };
 
-S merge(S a, S b){return S{a.sum+b.sum};}
-S up(S a, E e){return S{max(0l, a.sum+A[e.to]+A[e.from])};}
-S id(){return S{0};};
+// S merge(S a, S b){return S{a.sum+b.sum};}
+// S up(S a, E e){return S{max(0l, a.sum+A[e.to]+A[e.from])};}
+// S id(){return S{0};};

@@ -1,5 +1,5 @@
-#include "../template.hpp"
 #include "../math/modint.hpp"
+#include "../math/convolution.hpp"
 
 template <typename G>
 struct CentroidDecomposition {
