@@ -30,15 +30,22 @@ int intersect_cl(const Circle& c, const Line& s){
     S d=distance_lp(s, c.o);
     return eq(d, c.r)?1:d<c.r?2:0;
 }
-int intersect_cs(Circle c, Line s){ // 交点数
-    P h=projection(s, c.o);
-    S d1=abs(c.o-s.a), d2=abs(c.o-s.b);
-    return abs(c.o-h)>c.r+EPS?0
-                :d1<c.r-EPS&&d2<c.r-EPS?0
-                :(d1<c.r-EPS&&d2>c.r-EPS)||(d1>c.r-EPS&&d2<c.r-EPS)?1
-                :intersect_sp(s, h)?eq(abs(c.o-h), c.r)?1:2
-                :0;
+// int intersect_cs(Circle c, Line s){ // 交点数
+//     P h=projection(s, c.o);
+//     S d1=abs(c.o-s.a), d2=abs(c.o-s.b);
+//     return abs(c.o-h)>c.r+EPS?0
+//                 :d1<c.r-EPS&&d2<c.r-EPS?0
+//                 :(d1<c.r-EPS&&d2>c.r-EPS)||(d1>c.r-EPS&&d2<c.r-EPS)?1
+//                 :intersect_sp(s, h)?eq(abs(c.o-h), c.r)?1:2
+//                 :0;
+// }
+int intersect_cs(Circle c, Line s) {
+    P A=s.a-c.o, v=s.b-s.a; S a=norm(v), b=2*dot(A,v), C=norm(A)-c.r*c.r, D=b*b-4*a*C;
+    if(eq(a,0)) return eq(abs(A),c.r); if(sign(D)<0) return 0;
+    S q=sqrt(max((S)0,D)), t1=(-b-q)/(2*a), t2=(-b+q)/(2*a);
+    return (sign(t1)>=0&&sign(1-t1)>=0)+(!eq(t1,t2)&&sign(t2)>=0&&sign(1-t2)>=0);
 }
+
 int contain_cp(const Circle& c, const P& p){ // 0:外,1:円周上,2:内
     S d=abs(c.o-p);
     return eq(d, c.r)?1:d<c.r?2:0;
