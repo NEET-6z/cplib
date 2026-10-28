@@ -2,12 +2,13 @@
 #include "../template.hpp"
 
 template<class S, S (*op)(S, S), S (*e)()> struct segtree {
-    int n;
+    int n,N;
     vector<S> d;
     segtree():segtree(1){}
     explicit segtree(int n_):segtree(vector<S>(n_, e())){}
     explicit segtree(const vector<S>& a){
         n=1;
+        N=a.size();
         while(n<a.size()) n<<=1;
         d.resize(n*2, e());
         rep(i, a.size()) d[n+i]=a[i];
@@ -26,7 +27,7 @@ template<class S, S (*op)(S, S), S (*e)()> struct segtree {
         return op(L, R);
     }
     template<typename F> int max_right(int l, F f)const {
-        if(l==n) return n;
+        if(l==N) return N;
         l+=n;
         S sm=e();
         do{
@@ -40,7 +41,7 @@ template<class S, S (*op)(S, S), S (*e)()> struct segtree {
             }
             sm=op(sm, d[l++]);
         }while((l& -l)!=l);
-        return n;
+        return N;
     }
     template<typename F> int min_left(int r, F f)const {
         if(r==0) return 0;
