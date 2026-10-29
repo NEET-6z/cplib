@@ -18,7 +18,7 @@ ld rad2pi(ld rad){
     }
     return rad;
 }
-bool operator<(P a, P b){
+bool operator<(const P& a, const P& b){
     if(a.real()!=b.real()) return a.real()<b.real();
     return a.imag()<b.imag();
 }
@@ -29,7 +29,7 @@ struct Circle {
 };
 struct Line {
     P a, b;
-    Line(P a=P(), P b=P()):a(a), b(b){}
+    Line(const P& a=P(), const P& b=P()):a(a), b(b){}
     Line(ld A, ld B, ld C){// Ax + By = C
         assert(A!=0||B!=0);
         if(eq(A, 0)) a=P(0, C/B), b=P(1, C/B);
@@ -43,15 +43,15 @@ istream& operator>>(istream& is, complex<S>& p){
     return is;
 }
 
-S dot(P a, P b){return (conj(a)*b).real();}
-S cross(P a, P b){return (conj(a)*b).imag();}
-P rotate(P p, ld r){return p*polar(ld(1), r);} // P(cos(r),sin(r))*p
-P vec(Line s){return s.b-s.a;}
-P unitvector(P a){return a/abs(a);}
-P normalvector(P a){return a*P(0, 1);}//90度回転　法線ベクトル
-ld angle(P a, P b){return atan2l(cross(a, b), dot(a, b));}//aからbへの角度rad(=b/a)
+S dot(const P& a, const P& b){return (conj(a)*b).real();}
+S cross(const P& a, const P& b){return (conj(a)*b).imag();}
+P rotate(const P& p, ld r){return p*polar(ld(1), r);} // P(cos(r),sin(r))*p
+P vec(const Line& s){return s.b-s.a;}
+P unitvector(const P& a){return a/abs(a);}
+P normalvector(const P& a){return a*P(0, 1);}//90度回転　法線ベクトル
+ld angle(const P& a, const P& b){return atan2l(cross(a, b), dot(a, b));}//aからbへの角度rad(=b/a)
 // ld arg(const P&p){return atan2l(p.imag(), p.real());}
-S angle_diff(P a, P b){   //0~π
+S angle_diff(const P& a, const P& b){   //0~π
     S d=fabsl(arg(a)-arg(b));
     return min(d, 2*PI-d);
 }
@@ -63,7 +63,7 @@ P reflection(const Line& l, const P& p){
     return projection(l, p)*S(2)-p;
 }
 
-int ccw(P b, P c){
+int ccw(const P& b, const P& c){
     if(cross(b, c)>EPS) return 1;    // counter-clockwise(反時計)
     if(cross(b, c)<-EPS) return -1;    // clockwise(時計)
     if(dot(b, c)<0) return 2;    // c-a-b
@@ -71,18 +71,17 @@ int ccw(P b, P c){
     return 0;  // a=c=b
 }
 
-int ccw(P a, P b, P c){
-    b-=a;c-=a;
-    return ccw(b, c);
+int ccw(const P& a, const P& b, const P& c){
+    return ccw(b-a,c-a);
 }
 
-int argtype(P p){
+int argtype(const P& p){
     if(norm(p)==0) return 0;
     if(p.imag()>0||(p.imag()==0&&p.real()>0)) return 1;
     return 2;
 }
 
-bool arglt(P a, P b){
+bool arglt(const P& a, const P& b){
     if(argtype(a)!=argtype(b)) return argtype(a)<argtype(b);
     S c=cross(a, b);
     if(abs(c)>EPS) return c>EPS;

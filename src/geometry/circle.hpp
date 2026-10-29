@@ -2,24 +2,24 @@
 #include "intersect.hpp"
 
 // 外接円
-Circle circumcircle(P a, P b, P c){
+Circle circumcircle(const P& a, const P& b, const P& c){
     S A=norm(b-c), B=norm(c-a), C=norm(a-b);
     P o=(A*(B+C-A)*a+B*(C+A-B)*b+C*(A+B-C)*c)/(4*cross(b-a, c-a)*cross(b-a, c-a));
-    return {o, abs(o-a)};
+    return {o, distance_pp(o,a)};
 }
 
 // 内接円
-Circle incircle(P a, P b, P c){
-    S A=abs(b-c), B=abs(c-a), C=abs(a-b);
+Circle incircle(const P& a, const P& b, const P& c){
+    S A=distance_pp(b,c), B=distance_pp(c,a), C=distance_pp(a,b);
     P o=(A*a+B*b+C*c)/(A+B+C);
     return {o, abs(cross(b-a, c-a))/(A+B+C)};
 }
 
 // 傍接円（辺 p2-p3 に対する傍接円）
-Circle excircle(P p1, P p2, P p3){
-    S d1=abs(p2-p3);
-    S d2=abs(p3-p1);
-    S d3=abs(p1-p2);
+Circle excircle(const P& p1, const P& p2, const P& p3){
+    S d1=distance_pp(p2,p3);
+    S d2=distance_pp(p3,p1);
+    S d3=distance_pp(p1,p2);
     S sum=-d1+d2+d3;
     P c=(-d1*p1+d2*p2+d3*p3)/sum;
     S area2=abs(imag(conj(p2-p1)*(p3-p1)));
@@ -35,18 +35,18 @@ bool intersect_cc(const Circle& a, const Circle& b){
     int c=count_tangent(a, b);
     return 1<=c&&c<=3;
 }
-pair<P, P> tangent_points(Circle c, P p){ //接線の接点
+pair<P, P> tangent_points(const Circle& c, const P& p){ //接線の接点
     P v=p-c.o;
     S d2=norm(v);
-    S a=c.r*c.r/d2;
-    S b=c.r*sqrtl(d2-c.r*c.r)/d2;
+    S a=sqr(c.r)/d2;
+    S b=c.r*sqrtl(d2-sqr(c.r))/d2;
     P t1=c.o+v*a+normalvector(v)*b;
     P t2=c.o+v*a-normalvector(v)*b;
-    return minmax(t1, t2, [&](P a, P b){return a<b;});
+    return minmax(t1,t2, [](const P& a,const P& b){return a<b;});
 }
 vector<Line> tangent(const Circle& a, const Circle& b){ //接線のaに対する接点
     vector<Line>ret;
-    S g=abs(a.o-b.o);
+    S g=distance_pp(a.o,b.o);
     if(eq(g, 0)) return ret;
     P u=(b.o-a.o)/g;
     P v=normalvector(u);
@@ -59,13 +59,13 @@ vector<Line> tangent(const Circle& a, const Circle& b){ //接線のaに対する
             ret.emplace_back(a.o+(U-V)*a.r, b.o-(U-V)*b.r*s);
         }
     }
-    sort(ret.begin(), ret.end(), [&](Line a, Line b){return a.a<b.a;});
+    sort(all(ret), [](const Line& a, const Line& b){return a.a<b.a;});
     return ret;
 }
 
 S area(const vector<P>& p, const Circle& c){
     S ret=0;
-    int n=p.size();
+    int n=si(p);
     rep(i, n){
         Line s(p[i], p[(i+1)%n]);
         if(contain_cs(c, s)) ret+=cross(s.a-c.o, s.b-c.o);
@@ -73,7 +73,7 @@ S area(const vector<P>& p, const Circle& c){
             S a=arg(s.b-c.o)-arg(s.a-c.o);
             if(a>PI) a-=2*PI;
             if(a<-PI) a+=2*PI;
-            ret+=c.r*c.r*a;
+            ret+=sqr(c.r)*a;
         }
         else{
             pair<P, P> x=crosspoint_cs(c, s);
@@ -86,30 +86,30 @@ S area(const vector<P>& p, const Circle& c){
                     S a=arg(t.b-c.o)-arg(t.a-c.o);
                     if(a>PI) a-=2*PI;
                     if(a<-PI) a+=2*PI;
-                    ret+=c.r*c.r*a;
+                    ret+=sqr(c.r)*a;
                 }
             }
         }
     }
     return ret/2;
 }
-S area(const Circle& c){return PI*c.r*c.r;}
+S area(const Circle& c){return PI*sqr(c.r);}
 S area(const Circle& a, const Circle& b){
     int c=count_tangent(a, b);
     if(c>=3) return 0;
     else if(c<=1) return area(a.r<b.r?a:b);
     else{
-        S d=abs(a.o-b.o);
+        S d=distance_pp(a.o,b.o);
         S ret=0;
         {
-            S alpha=acos((a.r*a.r+d*d-b.r*b.r)/(2*a.r*d));
-            ret+=alpha*a.r*a.r;
-            ret-=sin(alpha*2)*a.r*a.r/2;
+            S alpha=acos((sqr(a.r)+d*d-sqr(b.r))/(2*a.r*d));
+            ret+=alpha*sqr(a.r);
+            ret-=sin(alpha*2)*sqr(a.r)/2;
         }
         {
-            S alpha=acos((b.r*b.r+d*d-a.r*a.r)/(2*b.r*d));
-            ret+=alpha*b.r*b.r;
-            ret-=sin(alpha*2)*b.r*b.r/2;
+            S alpha=acos((sqr(b.r)+d*d-sqr(a.r))/(2*b.r*d));
+            ret+=alpha*sqr(b.r);
+            ret-=sin(alpha*2)*sqr(b.r)/2;
         }
         return ret;
     }
@@ -127,7 +127,7 @@ Circle min_ball(iter left, iter right, int seed=time(0)){   //最小包含円
 
     iter ps=left;
     auto make_circle_3=[](const P& a, const P& b, const P& c)->Circle {
-        S A=norm(b-c), B=norm(c-a), C=norm(a-b), D=cross(b-a, c-a);
+        S A=norm(b-c), B=norm(c-a), C=norm(a-b), D=cross(b-a,c-a);
         P p=(A*(B+C-A)*a+B*(C+A-B)*b+C*(A+B-C)*c)/(4*D*D);
         S r2=norm(p-a);
         return Circle{p, r2};

@@ -5,37 +5,37 @@ S distance_lp(const Line&, const P&);
 S distance_sp(const Line&, const P&);
 S distance_pp(const P& a, const P& b);
 
-bool is_orthogonal(Line a, Line b){
+bool is_orthogonal(const Line& a, const Line& b){
     return eq(dot(vec(a), vec(b)), 0);
 }
-bool is_parallel(Line a, Line b){
+bool is_parallel(const Line& a, const Line& b){
     return eq(cross(vec(a), vec(b)), 0);
 }
 
-bool intersect_lp(Line s, P p){return eq(cross(vec(s), p-s.a), 0);}
-bool intersect_ll(Line s, Line t){return !is_parallel(s, t)||intersect_lp(s, t.a);}
-bool intersect_sp(Line s, P p){return eq(ccw(s.a, s.b, p), 0);}
-int intersect_ss(Line s, Line t){
+bool intersect_lp(const Line& s, const P& p){return eq(cross(vec(s), p-s.a), 0);}
+bool intersect_ll(const Line& s, const Line& t){return !is_parallel(s, t)||intersect_lp(s, t.a);}
+bool intersect_sp(const Line& s, const P& p){return eq(ccw(s.a, s.b, p), 0);}
+int intersect_ss(const Line& s, const Line& t){
     int a=ccw(s.a, s.b, t.a)*ccw(s.a, s.b, t.b);
     int b=ccw(t.a, t.b, s.a)*ccw(t.a, t.b, s.b);
     if(a==-1&&b==-1) return 2; //4本に分かれるか
     if(a<=0&&b<=0) return 1; //触れるか
     return 0;
 }
-int intersect_ls(Line l, Line s){
+int intersect_ls(const Line& l, const Line& s){
     int a=ccw(l.a, l.b, s.a)*ccw(l.a, l.b, s.b);
     if(a==-1) return 2; //4本に分かれるか
     if(a!=1) return 1; //触れるか
     return 0;
 }
-bool intersect_cp(Circle c, P p){return eq(abs(c.o-p), c.r);}
+bool intersect_cp(const Circle& c, const P& p){return eq(distance_pp(c.o,p), c.r);}
 int intersect_cl(const Circle& c, const Line& s){
     S d=distance_lp(s, c.o);
     return sign(c.r-d)+1;
 }
 int intersect_cs(const Circle& c, const Line& s){
     S dmin=distance_sp(s, c.o);
-    S d1=abs(c.o-s.a), d2=abs(c.o-s.b);
+    S d1=distance_pp(c.o,s.a), d2=distance_pp(c.o,s.b);
     S dmax=max(d1, d2);
     if(dmin>c.r+EPS||dmax<c.r-EPS) return 0;
     if(eq(dmin, c.r)) return 1;
@@ -43,15 +43,15 @@ int intersect_cs(const Circle& c, const Line& s){
 }
 
 int contain_cp(const Circle& c, const P& p){ // 0:外,1:円周上,2:内
-    S d=abs(c.o-p);
+    S d=distance_pp(c.o,p);
     return sign(c.r-d)+1;
 }
 int contain_cs(const Circle& c, const Line& s){ // 0:外,1:円周上,2:内
-    S d1=abs(c.o-s.a), d2=abs(c.o-s.b);
-    return d1<c.r+EPS&&d2<c.r+EPS?eq(d1, c.r)||eq(d2, c.r)?1:2:0;
+    S d1=distance_pp(c.o,s.a), d2=distance_pp(c.o,s.b);
+    return d1<c.r+EPS&&d2<c.r+EPS?(eq(d1,c.r)||eq(d2,c.r)?1:2):0;
 }
 
-P crosspoint_ll(Line s, Line t){
+P crosspoint_ll(const Line& s, const Line& t){
     assert(!is_parallel(s, t));
     S d1=cross(vec(s), t.a-s.a);
     S d2=-cross(vec(s), t.b-s.a);
@@ -60,7 +60,7 @@ P crosspoint_ll(Line s, Line t){
 pair<P, P> crosspoint_cl(const Circle& c, const Line& s){
     P h=projection(s, c.o);
     P e=unitvector(vec(s))*sqrt(max<S>(0, sqr(c.r)-norm(h-c.o)));
-    return minmax(h-e, h+e, [](P x, P y){return x<y;});
+    return minmax(h-e, h+e, [](const P& a,const P& b){return a<b;});
 }
 pair<P, P> crosspoint_cs(const Circle& c, const Line& s){
     auto [p, q]=crosspoint_cl(c, s);
@@ -68,10 +68,10 @@ pair<P, P> crosspoint_cs(const Circle& c, const Line& s){
     return f&&g?make_pair(p, q):f?make_pair(p, p):make_pair(q, q);
 }
 pair<P, P> crosspoint_cc(const Circle& a, const Circle& b){
-    S d=abs(a.o-b.o);
+    S d=distance_pp(a.o,b.o);
     S alpha=acos((sqr(a.r)+sqr(d)-sqr(b.r))/(2*a.r*d));
     S theta=arg(b.o-a.o);
-    return minmax(a.o+polar(a.r, theta+alpha), a.o+polar(a.r, theta-alpha), [&](P a, P b){return a<b;});
+    return minmax(a.o+polar(a.r,theta+alpha),a.o+polar(a.r,theta-alpha), [](const P& a,const P& b){return a<b;});
 }
 
 S distance_pp(const P& a, const P& b){return abs(a-b);}
