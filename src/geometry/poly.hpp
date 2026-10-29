@@ -1,11 +1,11 @@
 #pragma once
 #include "intersect.hpp"
 
-S poly_area2(vector<P> ps){
+S poly_area(vector<P> ps){
     int n=si(ps);
     S ret=0;
     rep(i, n) ret+=cross(ps[i], ps[(i+1)%n]);
-    return ret; //面積の2倍 与えられるpsが時計回りの場合は負になる
+    return ret/2;
 }
 
 int is_convex(vector<P> ps){
