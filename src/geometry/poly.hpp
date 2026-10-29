@@ -73,41 +73,20 @@ int convex_contains_log(const vector<P>& p,const P& a){ // 共線点なし
     return 2;
 }
 
-// int intersect_poly_segment(const vector<P>& ps,Line l){
-//     int n=si(ps);
-//     vector<Line> dia;
-//     rep(i,n) dia.emplace_back(Line(ps[i],ps[(i+1)%n]));
-//     rep(i,n/2) dia.emplace_back(Line(ps[i],ps[i+n/2]));
-//     if(n>=4&&n%2) dia.emplace_back(Line(ps.back(),ps[1]));
-//     for(const Line& d:dia)
-//         if(intersect_ss(d,l)==2) return 2; // 内部を通過する
-//     rep(i,n)
-//         if(intersect_ss(Line(ps[i],ps[(i+1)%n]),l)==1)
-//             return 1; // 周に触れる
-//     return 0; // 触れない
-// }
-
-int intersect_convex_segment(const vector<P>& ps,const Line& l){ // psは反時計回りの凸多角形
+int intersect_poly_segment(const vector<P>& ps,Line l){
     int n=si(ps);
-    S lo=0,hi=1; // 線分上で内部にある部分は(lo,hi)
-    bool inside=true;
-    rep(i,n){
-        P a=ps[i],b=ps[(i+1)%n];
-        S f0=cross(b-a,l.a-a),f1=cross(b-a,l.b-a);
-        if(sign(f1-f0)==0){
-            if(sign(f0)<=0) inside=false;
-            continue;
-        }
-        S t=f0/(f0-f1);
-        if(f1>f0) lo=max(lo,t);
-        else hi=min(hi,t);
-    }
-    if(inside&&hi-lo>EPS) return 2; // 内部を通る
+    vector<Line> dia;
+    rep(i,n) dia.emplace_back(Line(ps[i],ps[(i+1)%n]));
+    rep(i,n/2) dia.emplace_back(Line(ps[i],ps[i+n/2]));
+    if(n>=4&&n%2) dia.emplace_back(Line(ps.back(),ps[1]));
+    for(const Line& d:dia)
+        if(intersect_ss(d,l)==2) return 2; // 内部を通過する
     rep(i,n)
-        if(intersect_ss(Line(ps[i],ps[(i+1)%n]),l)) return 1; // 周に触れる
-    return 0;
+        if(intersect_ss(Line(ps[i],ps[(i+1)%n]),l)==1)
+            return 1; // 周に触れる
+    return 0; // 触れない
 }
-}
+
 
 vector<P> convex_hull(vector<P> ps, bool strict=true){  //共線点を排除するか
     int n=si(ps), k=0;
