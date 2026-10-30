@@ -13,186 +13,99 @@ enum class Status {
 /*
 https://misawa.github.io/others/flow/library_design.html
 負辺/負サイクル/流量下限付き最小費用流
-void add_edge(from, to, lower bound, upper bound, cost): 流量上下限制約のついた辺を追加する.
-void add_supply(vertex, amount): 頂点に湧出しを追加する.
-void add_demand(vertex, amount): 頂点に吸込みを追加する.
-Result<Cost> solve(): 最小費用b-フロー問題を解き, 最小費用を返すか, 問題が infeasible であることを報告する.
-Result<(Flow, Cost)> solve(source, sink): 最小費用最大流問題
-
+add_vertices(n) 初期化
+add_edge(from, to, lower, upper, cost): 流量上下限つきの辺を追加 (EdgePtr を返す)
+add_supply(v, amount) / add_demand(v, amount): 湧出し/吸込み
+pair<Status, Cost> solve(): 最小費用b-フロー
+tuple<Status, Cost, Flow> solve(s, t): 最小費用最大流
+solve は1インスタンスにつき1回だけ(2回目は assert で落ちる)
 add_edgeが辺のポインタを返すのでvector edges(n, vector<MCF::EdgePtr>(n));などとしてメモっとけば流量の復元ができる
 */
 template <class Flow, class Cost, Objective objective=Objective::MINIMIZE>
 class MinCostFlow {
-    using V_id=uint32_t;
-    using E_id=uint32_t;
-
-    class Edge {
-        friend class MinCostFlow;
-
+    using V_id=int;
+    struct Edge {
         V_id src, dst;
         Flow flow, cap;
         Cost cost;
-        E_id rev;
-
-public:
-        Edge() = default;
-
-        Edge(const V_id src, const V_id dst, const Flow cap, const Cost cost, const E_id rev)
-            :src(src), dst(dst), flow(0), cap(cap), cost(cost), rev(rev){}
-
-        [[nodiscard]] Flow residual_cap()const {return cap-flow;}
+        int rev;
+        Flow residual_cap()const {return cap-flow;}
     };
 
 public:
     class EdgePtr {
         friend class MinCostFlow;
-
-        const MinCostFlow *instance;
+        const MinCostFlow *ins;
         V_id v;
-        E_id e;
-
-        EdgePtr(const MinCostFlow * const instance, const V_id v, const E_id e)
-            :instance(instance), v(v), e(e){}
-
-        [[nodiscard]] const Edge &edge()const {return instance->g[v][e];}
-
-        [[nodiscard]] const Edge &rev()const {
-            const Edge& e=edge();
-            return instance->g[e.dst][e.rev];
-        }
+        int e;
+        EdgePtr(const MinCostFlow *ins, V_id v, int e):ins(ins), v(v), e(e){}
+        const Edge &edge()const {return ins->g[v][e];}
+        const Edge &rev()const {return ins->g[edge().dst][edge().rev];}
 
 public:
         EdgePtr() = default;
-
-        [[nodiscard]] V_id src()const {return v;}
-
-        [[nodiscard]] V_id dst()const {return edge().dst;}
-
-        [[nodiscard]] Flow flow()const {return edge().flow;}
-
-        [[nodiscard]] Flow lower()const {return -rev().cap;}
-
-        [[nodiscard]] Flow upper()const {return edge().cap;}
-
-        [[nodiscard]] Cost cost()const {return edge().cost;}
-
-        [[nodiscard]] Cost gain()const {return -edge().cost;}
+        V_id src()const {return v;}
+        V_id dst()const {return edge().dst;}
+        Flow flow()const {return edge().flow;}
+        Flow lower()const {return -rev().cap;}
+        Flow upper()const {return edge().cap;}
+        Cost cost()const {return edge().cost;}
+        Cost gain()const {return -edge().cost;}
     };
 
 private:
-    V_id n;
+    int n=0;
+    bool used=false;
     vector<vector<Edge>> g;
     vector<Flow> b;
-
-public:
-    MinCostFlow():n(0){}
-
-    V_id add_vertex(){
-        ++n;
-        g.resize(n);
-        b.resize(n);
-        return n-1;
-    }
-
-    vector<V_id> add_vertices(const size_t size){
-        vector<V_id> ret(size);
-        iota(begin(ret), end(ret), n);
-        n+=size;
-        g.resize(n);
-        b.resize(n);
-        return ret;
-    }
-
-    EdgePtr add_edge(const V_id src, const V_id dst, const Flow lower,
-                     const Flow upper, const Cost cost){
-        const E_id e=g[src].size(), re=src==dst?e+1:g[dst].size();
-        assert(lower<=upper);
-        g[src].emplace_back(Edge{src, dst, upper, cost*objective, re});
-        g[dst].emplace_back(Edge{dst, src, -lower, -cost*objective, e});
-        return EdgePtr{this, src, e};
-    }
-
-    void add_supply(const V_id v, const Flow amount){b[v]+=amount;}
-
-    void add_demand(const V_id v, const Flow amount){b[v]-=amount;}
-
-    const vector<Cost>& dual_variables()const {
-        return potential;
-    }
-
-private:
-    // Variables used in calculation
-    static Cost constexpr unreachable=numeric_limits<Cost>::max();
     Cost farthest;
-    vector<Cost> potential;
-    vector<Cost> dist;
-    vector<Edge *> parent; // out-forrest.
-    priority_queue<pair<Cost, int>, vector<pair<Cost, int>>,
-                   greater<>>
-    pq;   // should be empty outside of dual()
-    vector<V_id> excess_vs, deficit_vs;
+    vector<Cost> potential, dist;
+    vector<Edge *> parent;
+    vector<V_id> ex, de;  // 超過頂点 / 不足頂点
 
-    Edge &rev(const Edge& e){return g[e.dst][e.rev];}
-
-    void push(Edge& e, const Flow amount){
-        e.flow+=amount;
-        g[e.dst][e.rev].flow-=amount;
-    }
-
-    Cost residual_cost(const V_id src, const V_id dst, const Edge& e){
-        return e.cost+potential[src]-potential[dst];
-    }
+    void push(Edge& e, Flow f){e.flow+=f;g[e.dst][e.rev].flow-=f;}
+    Cost rc(const Edge& e){return e.cost+potential[e.src]-potential[e.dst];}
 
     bool dual(){
-        dist.assign(n, unreachable);
+        dist.assign(n, numeric_limits<Cost>::max());
         parent.assign(n, nullptr);
-        excess_vs.erase(remove_if(begin(excess_vs), end(excess_vs),
-                                  [&](const V_id v) {return b[v]<=0;}),
-                        end(excess_vs));
-        deficit_vs.erase(remove_if(begin(deficit_vs),
-                                   end(deficit_vs),
-                                   [&](const V_id v) {return b[v]>=0;}),
-                         end(deficit_vs));
-        for(const auto v : excess_vs) pq.emplace(dist[v]=0, v);
+        ex.erase(remove_if(begin(ex), end(ex), [&](V_id v) {return b[v]<=0;}), end(ex));
+        de.erase(remove_if(begin(de), end(de), [&](V_id v) {return b[v]>=0;}), end(de));
+        priority_queue<pair<Cost, int>, vector<pair<Cost, int>>, greater<>> pq;
+        for(V_id v : ex) pq.emplace(dist[v]=0, v);
         farthest=0;
-        size_t deficit_count=0;
+        size_t cnt=0;
         while(!pq.empty()){
-            const auto [d, u]=pq.top();
+            auto [d, u]=pq.top();
             pq.pop();
             if(dist[u]<d) continue;
             farthest=d;
-            if(b[u]<0) ++deficit_count;
-            if(deficit_count>=deficit_vs.size()) break;
+            if(b[u]<0) ++cnt;
+            if(cnt>=de.size()) break;
             for(auto& e : g[u]){
                 if(e.residual_cap()<=0) continue;
-                const auto v=e.dst;
-                const auto new_dist=d+residual_cost(u, v, e);
-                if(new_dist>=dist[v]) continue;
-                pq.emplace(dist[v]=new_dist, v);
-                parent[v]=&e;
+                Cost nd=d+rc(e);
+                if(nd>=dist[e.dst]) continue;
+                pq.emplace(dist[e.dst]=nd, e.dst);
+                parent[e.dst]=&e;
             }
         }
-        pq=decltype(pq)(); // pq.clear() doesn't exist.
-        for(V_id v=0;v<n;++v){
-            potential[v]+=min(dist[v], farthest);
-        }
-        return deficit_count>0;
+        for(V_id v=0;v<n;++v) potential[v]+=min(dist[v], farthest);
+        return cnt>0;
     }
 
     void primal(){
-        for(const auto t : deficit_vs){
+        for(V_id t : de){
             if(dist[t]>farthest) continue;
             Flow f=-b[t];
             V_id v;
-            for(v=t;parent[v]!=nullptr;v=parent[v]->src){
-                f=min(f, parent[v]->residual_cap());
-            }
+            for(v=t;parent[v];v=parent[v]->src) f=min(f, parent[v]->residual_cap());
             f=min(f, b[v]);
             if(f<=0) continue;
-            for(v=t;parent[v]!=nullptr;){
-                auto& e=*parent[v];
+            for(v=t;parent[v];){
+                Edge& e=*parent[v];
                 push(e, f);
-                int u=parent[v]->src;
+                V_id u=e.src;
                 if(e.residual_cap()<=0) parent[v]=nullptr;
                 v=u;
             }
@@ -201,63 +114,74 @@ private:
         }
     }
 
-public:
-    pair<Status, Cost> solve(){
+    pair<Status, Cost> run(){
         potential.resize(n);
+        ex.clear(), de.clear();
         for(auto& es : g) for(auto& e : es){
-                const Flow rcap=e.residual_cap();
-                const Cost rcost=residual_cost(e.src, e.dst, e);
-                if(rcost<0||rcap<0){
-                    push(e, rcap);
-                    b[e.src]-=rcap;
-                    b[e.dst]+=rcap;
-                }
+                Flow c=e.residual_cap();
+                if(rc(e)<0||c<0){push(e, c);b[e.src]-=c;b[e.dst]+=c;}
             }
-        for(V_id v=0;v<n;++v) if(b[v]!=0){
-                (b[v]>0?excess_vs:deficit_vs).emplace_back(v);
-            }
-
+        for(V_id v=0;v<n;++v) if(b[v]) (b[v]>0?ex:de).push_back(v);
         while(dual()) primal();
-        Cost value=0;
-        for(const auto& es : g) for(const auto& e : es){
-                value+=e.flow*e.cost;
-            }
-        value/=2;
-
-        if(excess_vs.empty()&&deficit_vs.empty()){
-            return {Status::OPTIMAL, value/objective};
-        }
-        else{
-            return {Status::INFEASIBLE, value/objective};
-        }
+        Cost val=0;
+        for(auto& es : g) for(auto& e : es) val+=e.flow*e.cost;
+        return {ex.empty()&&de.empty()?Status::OPTIMAL:Status::INFEASIBLE, val/2/objective};
     }
 
+public:
+    vector<V_id> add_vertices(int k){
+        vector<V_id> r(k);
+        iota(begin(r), end(r), n);
+        n+=k;
+        g.resize(n), b.resize(n);
+        return r;
+    }
+    V_id add_vertex(){return add_vertices(1)[0];}
 
-    tuple<Status, Cost, Flow> solve(const V_id s, const V_id t){
-        assert(s!=t);
-        Flow inf_flow=abs(b[s]);
-        for(const auto& e : g[s]) inf_flow+=max(e.cap, static_cast<Flow>(0));
+    EdgePtr add_edge(V_id s, V_id d, Flow lo, Flow up, Cost c){
+        assert(lo<=up);
+        int e=g[s].size(), re=s==d?e+1:g[d].size();
+        g[s].push_back({s, d, 0, up, c*objective, re});
+        g[d].push_back({d, s, 0, -lo, -c*objective, e});
+        return {this, s, e};
+    }
+    void add_supply(V_id v, Flow x){b[v]+=x;}
+    void add_demand(V_id v, Flow x){b[v]-=x;}
+    const vector<Cost> &dual_variables()const {return potential;}
 
-        add_edge(t, s, 0, inf_flow, 0);
-        const auto [status, circulation_value]=solve();
+    pair<Status, Cost> solve(){
+        assert(!used);
+        used=true;
+        return run();
+    }
 
-        if(status==Status::INFEASIBLE){
-            g[s].pop_back();
-            g[t].pop_back();
-            return {status, circulation_value, 0};
+    tuple<Status, Cost, Flow> solve(V_id s, V_id t){
+        assert(!used&&s!=t);
+        used=true;
+        const Flow lim=numeric_limits<Flow>::max()/4;
+        auto inf=[&] {    // s から出る残余容量の合計(飽和加算)
+            Flow r=min(abs(b[s]), lim);
+            for(auto& e : g[s]){Flow x=max<Flow>(e.residual_cap(), 0);r=r>lim-x?lim:r+x;}
+            return r;
+        };
+        add_edge(t, s, 0, inf(), 0);
+        const auto [st, cv]=run();
+        Cost val=cv;
+        Flow f=0;
+        if(st==Status::OPTIMAL){
+            Flow x=inf();
+            b[s]+=x, b[t]-=x;
+            val=run().second;
+            f=b[t]+x;
         }
-        inf_flow=abs(b[s]);
-        for(const auto& e : g[s]) inf_flow+=e.residual_cap();
-        b[s]+=inf_flow;
-        b[t]-=inf_flow;
-        const auto [mf_status, mf_value]=solve();
-        b[s]-=inf_flow;
-        b[t]+=inf_flow;
-        g[s].pop_back();
-        g[t].pop_back();
-        return {Status::OPTIMAL, mf_value, b[t]};
+        g[s].pop_back(), g[t].pop_back();
+        return {st, val, f};
     }
 };
 
+
 template <class Flow, class Cost>
 using MaxGainFlow=MinCostFlow<Flow, Cost, Objective::MAXIMIZE>;
+using Flow=long long;
+using Cost=__int128_t;
+using MCF=MinCostFlow<Flow, Cost>;

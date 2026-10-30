@@ -1,84 +1,99 @@
 #include "../template.hpp"
 
-template<class Cap, class Cost> struct mincostflow {
+template <typename flow_t, typename cost_t>
+struct PrimalDual {
     struct E {
         int to, rev;
-        Cap cap;
-        Cost cost;
+        flow_t cap;
+        cost_t cost;
         bool isr;
     };
-    int n;
-    vector<vector<E>> g;
 
-    mincostflow(int n=0):n(n), g(n){}
+    vector<vector<E>> G;
+    vector<cost_t> P, mc;
+    vector<int> pv, pe;
+    const cost_t INF;
 
-    void add_edge(int fr, int to, Cap cap, Cost cost){
-        int a=si(g[fr]), b=si(g[to]);
-        g[fr].push_back({to, b, cap, cost, 0});
-        g[to].push_back({fr, a, 0, -cost, 1});
+    PrimalDual(int V):G(V), INF(numeric_limits<cost_t>::max()){}
+
+    void add_edge(int from, int to, flow_t cap, cost_t cost){
+        G[from].emplace_back(E{to, cap, cost, si(G[to]), false});
+        G[to].emplace_back(E{from, 0, -cost, si(G[from])-1, true});
     }
 
-    pair<Cap, Cost> flow(int s, int t, Cap lim=numeric_limits<Cap>::max()/2){
-        const Cost INF=numeric_limits<Cost>::max()/2;
-        Cap flow=0;Cost cost=0;
-        vector<Cost> h(n, INF), dist(n);
-        vector<int> pv(n), pe(n);
-        h[s]=0;
+    cost_t min_cost_flow(int s, int t, flow_t f){
+        int V=si(G);
+        cost_t ret=0;
+        using Pi=pair<cost_t, int>;
+        priority_queue<Pi, vector<Pi>, greater<Pi>> que;
+        P.assign(V, 0);  //init_potential(s)
+        pe.assign(V, -1);
+        pv.assign(V, -1);
 
-        { //flowを2回以上呼び出す時
-            vector<char> inq(n, 0);
-            deque<int> q{s};
-            inq[s]=1;
-            while(!q.empty()){
-                int v=q.front();q.pop_front();inq[v]=0;
-                for(auto& e:g[v]){
-                    if(e.cap&&h[e.to]>h[v]+e.cost){
-                        h[e.to]=h[v]+e.cost;
-                        if(!inq[e.to]) inq[e.to]=1, q.push_back(e.to);
+        while(f>0){
+            mc.assign(V, INF);
+            que.emplace(0, s);
+            mc[s]=0;
+            while(!que.empty()){
+                Pi p=que.top();
+                que.pop();
+                if(mc[p.se]<p.fi) continue;
+                rep(i, si(G[p.se])){
+                    E& e=G[p.se][i];
+                    cost_t nextCost=mc[p.se]+e.cost+P[p.se]-
+                                     P[e.to];
+                    if(e.cap>0&&mc[e.to]>nextCost){
+                        mc[e.to]=nextCost;
+                        pv[e.to]=p.se, pe[e.to]=i;
+                        que.emplace(mc[e.to], e.to);
                     }
                 }
             }
-            for(auto& x:h) if(x==INF) x=0;
-        }
-
-        while(flow<lim){
-            fill(dist.begin(), dist.end(), INF);
-            priority_queue<pair<Cost, int>, vector<pair<Cost, int>>, greater<>> pq;
-            dist[s]=0;pq.push({0, s});
-            while(!pq.empty()){
-                auto [d, v]=pq.top();pq.pop();
-                if(dist[v]!=d) continue;
-                for(int i=0;i<si(g[v]);i++){
-                    E& e=g[v][i];
-                    if(!e.cap) continue;
-                    Cost nd=d+e.cost+h[v]-h[e.to];
-                    if(dist[e.to]>nd) dist[e.to]=nd, pv[e.to]=v, pe[e.to]=i, pq.push({nd, e.to});
-                }
-            }
-            if(dist[t]==INF) break;
-            rep(v, n) if(dist[v]!=INF) h[v]+=dist[v];
-
-            Cap add=lim-flow;
-            for(int v=t;v!=s;v=pv[v]) add=min(add, g[pv[v]][pe[v]].cap);
+            if(mc[t]==INF) return -1;
+            rep(v, V) if(mc[v]!=INF) P[v]+=mc[v];
+            flow_t addflow=f;
             for(int v=t;v!=s;v=pv[v]){
-                E& e=g[pv[v]][pe[v]];
-                e.cap-=add;
-                g[v][e.rev].cap+=add;
+                addflow=min(addflow, G[pv[v]][pe[v]].cap);
             }
-            flow+=add;
-            cost+=add*h[t];
+            f-=addflow;
+            ret+=addflow*P[t];
+            for(int v=t;v!=s;v=pv[v]){
+                E& e=G[pv[v]][pe[v]];
+                e.cap-=addflow;
+                G[v][e.rev].cap+=addflow;
+            }
         }
-        return {flow, cost};
+        return ret;
     }
-    void output(){
-        for(int v=0;v<n;v++){
-            for(E& e : g[v]){
-                if(!e.isr){
-                    int from=v;
-                    int to=e.to;
-                    Cap amount=g[to][e.rev].cap;
-                    cout<<from<<" -> "<<to<<" : "<<amount<<" ( "<<e.cost<<" )"<<endl;
+    //負辺対応
+    void init_potential(int s){
+        int V=si(G);
+        P.assign(V, INF);
+        P[s]=0;
+        rep(i, V-1){
+            bool update=false;
+            rep(v, V){
+                if(P[v]==INF) continue;
+                for(auto& e : G[v]){
+                    if(e.cap>0&&
+                       P[e.to]>P[v]+e.cost){
+                        P[e.to]=P[v]+e.cost;
+                        update=true;
+                    }
                 }
+            }
+            if(!update) break;
+        }
+        rep(v, V) if(P[v]==INF) P[v]=0;
+    }
+
+    void output(){
+        rep(i, si(G)){
+            for(auto& e : G[i]){
+                if(e.isrev) continue;
+                auto& rev_e=G[e.to][e.rev];
+                cout<<i<<"->"<<e.to<<" (flow: "<<rev_e.cap<<"/"
+                    <<rev_e.cap+e.cap<<")"<<endl;
             }
         }
     }
