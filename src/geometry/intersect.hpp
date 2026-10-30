@@ -58,7 +58,7 @@ P crosspoint_ll(const Line& s, const Line& t){
 }
 pair<P, P> crosspoint_cl(const Circle& c, const Line& s){
     P h=projection(s, c.o);
-    P e=unitvector(vec(s))*sqrt(max<S>(0, sqr(c.r)-norm(h-c.o)));
+    P e=unitvector(vec(s))*sqrt(max<S>(S(0), sqr(c.r)-norm(h-c.o)));
     return minmax(h-e, h+e);
 }
 pair<P, P> crosspoint_cs(const Circle& c, const Line& s){
@@ -75,7 +75,8 @@ pair<P, P> crosspoint_cc(const Circle& a, const Circle& b){
 
 S distance_lp(const Line& s, const P& p){return abs(p-projection(s, p));}
 S distance_sp(const Line& s, const P& p){
-    return abs(p-dot(vec(s), p-s.a))<0?s.a:dot(-vec(s), p-s.b)<0?s.b:projection(s, p);
+    P v=vec(s);
+    return abs(p-(dot(v, p-s.a)<0?s.a:dot(-v, p-s.b)<0?s.b:projection(s, p)));
 }
 S distance_ss(const Line& s, const Line& t){
     return intersect_ss(s, t)?S(0):min({
@@ -89,12 +90,22 @@ S distance_ls(const Line& l, const Line& s){
     return x*y<=0?0:min(abs(x), abs(y))/abs(vec(l));
 }
 
-S distance_cp(const Circle& c, const P& p){return abs(abs(c.o-p)-c.r);} //円周
-S distance_cl(const Circle& c, const Line& s){return max(distance_lp(s, c.o)-c.r, S(0));} //円盤
-S distance_cs(const Circle& c, const Line& s){ //円周
+
+// 円周 c / 円盤 C
+S distance_cp(const Circle& c, const P& p){return abs(abs(c.o-p)-c.r);}
+S distance_Cp(const Circle& C, const P& p){return max(abs(C.o-p)-C.r, S(0));}
+S distance_cl(const Circle& c, const Line& l){return max(distance_lp(l, c.o)-c.r, S(0));}
+S distance_Cl(const Circle& C, const Line& l){return max(distance_lp(l, C.o)-C.r, S(0));}
+S distance_cs(const Circle& c, const Line& s){
     return max({distance_sp(s, c.o)-c.r, c.r-max(abs(c.o-s.a), abs(c.o-s.b)), S(0)});
+}
+S distance_Cs(const Circle& C, const Line& s){
+    return max(distance_sp(s, C.o)-C.r, S(0));
 }
 S distance_cc(const Circle& a, const Circle& b){
     S d=abs(a.o-b.o);
-    return max(d-a.r-b.r, S(0)); //円周上ならmax({...,abs(a.r-b.r)-d})
+    return max({d-a.r-b.r, abs(a.r-b.r)-d, S(0)});
+}
+S distance_CC(const Circle& a, const Circle& b){
+    return max(abs(a.o-b.o)-a.r-b.r, S(0));
 }
