@@ -19,6 +19,6 @@ int main(){
         cin>>a>>b>>c>>d;
         Line l(P(a, b), P(c, d));
         vector<P> C=convex_cut(A, l);
-        cout<<poly_area(C)/2<<"\n";
+        cout<<poly_area(C)<<"\n";
     }
 }

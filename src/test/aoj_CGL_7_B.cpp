@@ -7,5 +7,5 @@ int main(){
     P a, b, c;
     cin>>a>>b>>c;
     Circle d=incircle(a, b, c);
-    cout<<d.o.real()<<" "<<d.o.imag()<<"\n"<<d.r<<"\n";
+    cout<<d.o.real()<<" "<<d.o.imag()<<" "<<d.r<<"\n";
 }
