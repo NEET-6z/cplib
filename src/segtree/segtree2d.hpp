@@ -57,7 +57,7 @@ template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
     S range(K lv, K rv, K dv, K uv){
         if(dv>=uv) return e();
         int l=lbi(xs, lv);
-        int r=lbi(xs, rb);
+        int r=lbi(xs, rv);
         S sml=e(), smr=e();
         for(l+=n, r+=n;l<r;l>>=1, r>>=1){
             if(l&1){
