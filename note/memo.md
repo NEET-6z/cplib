@@ -1,4 +1,12 @@
 
+maxflowの計算量
+一般: O(N^2M)
+単位容量: O(M√N)
+
+mincostflowの計算量
+O(NM+FMlogN) Fは最大流量
+
+
 
 
 牛ゲー
