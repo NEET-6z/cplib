@@ -9,7 +9,7 @@ struct dsu_rollback {
     int leader(int x){return p[x]<0?x:leader(p[x]);}
     int time(){return si(st);}
     void rollback(int t){
-        for(int i=time();i-->t;) p[st[i].first]=st[i].second;
+        for(int i=time();i-->t;) p[st[i].fi]=st[i].se;
         st.resize(t);
     }
     int merge(int a, int b){
@@ -23,9 +23,9 @@ struct dsu_rollback {
         return a;
     }
     void undo(){
-        p[st.back().first]=st.back().second;
+        p[st.back().fi]=st.back().se;
         st.pop_back();
-        p[st.back().first]=st.back().second;
+        p[st.back().fi]=st.back().se;
         st.pop_back();
     }
 };

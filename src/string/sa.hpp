@@ -4,7 +4,7 @@
 
 template<class T>
 vector<int> suffix_array(vector<T> s){
-    int n=s.size();
+    int n=si(s);
     assert(n>0);
     vector<int> sa(n), rnk(s.begin(), s.end()), tmp(n+1, 0);
     rep(i, n) sa[i]=i;

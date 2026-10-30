@@ -16,8 +16,8 @@ template<class S> struct merge_sort_tree {
     int range_cnt(int l, int r, S& u){
         int ret=0;
         for(l+=n, r+=n;l<r;l>>=1, r>>=1){
-            if(l&1) ret+=lower_bound(all(d[l]), u)-d[l].begin(), l++;
-            if(r&1) --r, ret+=lower_bound(all(d[r]), u)-d[r].begin();
+            if(l&1) ret+=lbi(d[l], u), l++;
+            if(r&1) --r, ret+=lbi(d[r], u);
         }
         return ret;
     }

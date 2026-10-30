@@ -84,7 +84,7 @@ public:
     explicit persistent_segtree(int n):n(n){}
 
     NP build(const vector<S>& v)const {
-        assert(n==(int)v.size());
+        assert(n==si(v));
         assert(n>=1);
         return build(0, n, v);
     }

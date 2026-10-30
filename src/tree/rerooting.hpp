@@ -21,7 +21,7 @@ struct ReRooting {
     }
 
     void dfs2(int v, int p=-1){
-        int cn=G[v].size();
+        int cn=si(G[v]);
 
         vector<S> prodl(cn+1, id()), prodr(cn+1, id());
         for(int i=1;i<=cn;i++){

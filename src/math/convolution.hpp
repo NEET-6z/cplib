@@ -5,9 +5,9 @@
 template<typename mint>
 void fft(vector<mint>& a, bool inv=false){
     mint g=3;
-    int n=(int)a.size(), s=__lg(n);
+    int n=si(a), s=__lg(n);
     vector<mint> z, iz; //static?
-    while((int)z.size()<=s){
+    while(si(z)<=s){
         z.emplace_back(g.pow(mint(-1).val()>>(z.size())));
         iz.emplace_back(z.back().inv());
     }

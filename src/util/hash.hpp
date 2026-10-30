@@ -10,8 +10,8 @@ struct Hash {
 template<class T, class U>
 struct Hash<pair<T, U>> {
     size_t operator()(const pair<T, U>& p)const {
-        size_t h=Hash<T>{}(p.first);
-        h^=Hash<U>{}(p.second)+0x9e3779b9+(h<<6)+(h>>2);
+        size_t h=Hash<T>{}(p.fi);
+        h^=Hash<U>{}(p.se)+0x9e3779b9+(h<<6)+(h>>2);
         return h;
     }
 };

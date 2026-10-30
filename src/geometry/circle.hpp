@@ -64,7 +64,7 @@ vector<Line> tangent(const Circle& a, const Circle& b){ //接線のaに対する
 }
 
 S area(const vector<P>& p, Circle& c){
-    S ret=0;int n=p.size();
+    S ret=0;int n=si(p);
     for(int i=0;i<n;i++){
         P a=p[i]-c.o, b=p[(i+1)%n]-c.o, d=b-a;
         S A=norm(d), B=real(conj(a)*d), D=B*B-A*(norm(a)-c.r*c.r);

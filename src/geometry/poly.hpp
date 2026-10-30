@@ -111,7 +111,7 @@ vector<P> convex_hull(vector<P> ps, bool strict=true){  //共線点を排除す�
 }
 
 S convex_diamenter(vector<P> p){ //2乗
-    int n=p.size();
+    int n=si(p);
     int is=0, js=0;
     rep(i, n){
         if(p[i].imag()>p[is].imag()) is=i;

@@ -26,13 +26,13 @@ template<typename T> constexpr pair<T, T> inv_gcd(T a, T b){
 template<typename T> T inv_mod(T x, T m){
     assert(1<=m);
     auto z=inv_gcd(x, m);
-    assert(z.first==1);
-    return z.second;
+    assert(z.fi==1);
+    return z.se;
 }
 
 template<typename T> pair<T, T> crt(const vector<T>& r, const vector<T>& m){
     assert(r.size()==m.size());
-    int n=int(r.size());
+    int n=si(r);
     T r0=0, m0=1;
     for(int i=0;i<n;i++){
         assert(1<=m[i]);
@@ -62,7 +62,7 @@ template<typename T> pair<T, T> crt(const vector<T>& r, const vector<T>& m){
 
 template<typename T>
 T garner(const vector<T>& a, vector<T> p, const T mod){
-    const int sz=a.size();
+    const int sz=si(a);
     vector<T> kp(sz+1, 0), rmult(sz+1, 1);
     p.push_back(mod);
     for(int i=0;i<sz;++i){

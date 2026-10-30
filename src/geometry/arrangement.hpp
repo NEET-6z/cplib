@@ -2,7 +2,7 @@
 
 vector<vector<pair<int, S>>> segment_arrangement(const vector<Line>& ss, vector<P>& ps){
     ps.clear();
-    int n=ss.size();
+    int n=si(ss);
     vector<P> cand;
     rep(i, n){
         cand.push_back(ss[i].a);
@@ -14,7 +14,7 @@ vector<vector<pair<int, S>>> segment_arrangement(const vector<Line>& ss, vector<
     sort(all(cand), [](const P& x, const P& y){return x.real()<y.real();});
     for(const P& p: cand){
         bool dup=false;
-        for(int k=(int)ps.size()-1;k>=0&&p.real()-ps[k].real()<=EPS;--k)
+        for(int k=si(ps)-1;k>=0&&p.real()-ps[k].real()<=EPS;--k)
             if(abs(p-ps[k])<=EPS){dup=true;break;}
         if(!dup) ps.push_back(p);
     }
@@ -27,10 +27,10 @@ vector<vector<pair<int, S>>> segment_arrangement(const vector<Line>& ss, vector<
         if(intersect_sp(ss[i], ps[j]))
             list.emplace_back(norm(ps[j]-ss[i].a), j);
         sort(all(list));
-        for(int j=0;j+1<(int)list.size();++j){
-            int a=list[j].second, b=list[j+1].second;
+        for(int j=0;j+1<si(list);++j){
+            int a=list[j].se, b=list[j+1].se;
             if(a>b) swap(a, b);
-            if(!used.insert({a, b}).second) continue;
+            if(!used.insert({a, b}).se) continue;
             g[a].emplace_back(b, abs(ps[a]-ps[b]));
             g[b].emplace_back(a, abs(ps[a]-ps[b]));
         }

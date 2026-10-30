@@ -14,7 +14,7 @@ istream& operator>>(istream& is, i128& x){
     else if(s[0]=='+'){
         i=1;
     }
-    for(;i<(int)s.size();++i){
+    for(;i<si(s);++i){
         x=x*10+(s[i]-'0');
     }
     if(neg) x=-x;

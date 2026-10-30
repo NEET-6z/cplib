@@ -58,11 +58,11 @@ public:
             assert(pw.back()<=INT_MAX/B);
             pw.push_back(pw.back()*B);
         }
-        h=(int)pw.size()-1;
+        h=si(pw)-1;
     }
 
     NP build(const vector<S>& v)const {
-        assert(n==(int)v.size());
+        assert(n==si(v));
         assert(n>=1);
         return build(h, 0, v);
     }

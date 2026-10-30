@@ -13,7 +13,7 @@ private:
 
     NP make_node(const S& d, NP l, NP r){
         pl.push_back(Node{d, l, r});
-        return (int)pl.size()-1;
+        return si(pl)-1;
     }
 
     NP merge(NP l, NP r){return make_node(op(pl[l].d, pl[r].d), l, r);}
@@ -83,7 +83,7 @@ public:
     explicit persistent_segtree(int n):n(n){}
 
     NP build(const vector<S>& v){
-        assert(n==(int)v.size());
+        assert(n==si(v));
         assert(n>=1);
         return build(0, n, v);
     }

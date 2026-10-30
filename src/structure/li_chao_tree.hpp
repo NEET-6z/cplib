@@ -23,12 +23,12 @@ template<typename T> struct li_chao_tree {
     }
     void add_line(Line f){add_line(f, 1, 0, n);}
     void add_segment(Line f, T l, T r){
-        int L=lower_bound(all(xs), l)-xs.begin();
-        int R=lower_bound(all(xs), r)-xs.begin();
+        int L=lbi(xs, l);
+        int R=lbi(xs, r);
         add_segment(f, L, R, 1, 0, n);
     }
     T get(T x){
-        int k=lower_bound(all(xs), x)-xs.begin();
+        int k=lbi(xs, x);
         assert(k<n&&xs[k]==x);
         T ret=INF;
         for(k+=n;k;k>>=1) ret=min(ret, seg[k].get(x));

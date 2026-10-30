@@ -13,7 +13,7 @@ template<class Cap, class Cost> struct mincostflow {
     mincostflow(int n=0):n(n), g(n){}
 
     void add_edge(int fr, int to, Cap cap, Cost cost){
-        int a=g[fr].size(), b=g[to].size();
+        int a=si(g[fr]), b=si(g[to]);
         g[fr].push_back({to, b, cap, cost, 0});
         g[to].push_back({fr, a, 0, -cost, 1});
     }
@@ -48,7 +48,7 @@ template<class Cap, class Cost> struct mincostflow {
             while(!pq.empty()){
                 auto [d, v]=pq.top();pq.pop();
                 if(dist[v]!=d) continue;
-                for(int i=0;i<(int)g[v].size();i++){
+                for(int i=0;i<si(g[v]);i++){
                     E& e=g[v][i];
                     if(!e.cap) continue;
                     Cost nd=d+e.cost+h[v]-h[e.to];

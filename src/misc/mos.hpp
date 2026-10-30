@@ -7,22 +7,22 @@ struct Mo {
     void add(int l, int r){lr.emplace_back(l, r);}
     template<typename AL, typename AR, typename EL, typename ER, typename O>
     void build(const AL& add_left, const AR& add_right, const EL& erase_left, const ER& erase_right, const O& out){
-        int q=(int)lr.size();
+        int q=si(lr);
         assert(q>0);
         int bs=n/min<int>(n, sqrt(q));
         vector<int> ord(q);
         iota(all(ord), 0);
         sort(all(ord), [&](int a, int b) {
-            int ab=lr[a].first/bs, bb=lr[b].first/bs;
+            int ab=lr[a].fi/bs, bb=lr[b].fi/bs;
             if(ab!=bb) return ab<bb;
-            return (ab&1)?lr[a].second>lr[b].second:lr[a].second<lr[b].second;
+            return (ab&1)?lr[a].se>lr[b].se:lr[a].se<lr[b].se;
         });
         int l=0, r=0;
         for(auto idx : ord){
-            while(l>lr[idx].first) add_left(--l);
-            while(r<lr[idx].second) add_right(r++);
-            while(l<lr[idx].first) erase_left(l++);
-            while(r>lr[idx].second) erase_right(--r);
+            while(l>lr[idx].fi) add_left(--l);
+            while(r<lr[idx].se) add_right(r++);
+            while(l<lr[idx].fi) erase_left(l++);
+            while(r>lr[idx].se) erase_right(--r);
             out(idx);
         }
     }
