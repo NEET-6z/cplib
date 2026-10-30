@@ -1,7 +1,6 @@
 // competitive-verifier: PROBLEM https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0356
 // competitive-verifier: ERROR 1e-6
-#include "../geometry/poly.hpp"
-
+#include "../geometry/circle.hpp"
 
 int main(){
     int N, R;
