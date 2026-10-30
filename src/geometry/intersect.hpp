@@ -3,7 +3,6 @@
 
 S distance_lp(const Line&, const P&);
 S distance_sp(const Line&, const P&);
-S distance_pp(const P& a, const P& b);
 
 bool is_orthogonal(const Line& a, const Line& b){
     return eq(dot(vec(a), vec(b)), 0);
@@ -28,14 +27,14 @@ int intersect_ls(const Line& l, const Line& s){
     if(a!=1) return 1; //触れるか
     return 0;
 }
-bool intersect_cp(const Circle& c, const P& p){return eq(distance_pp(c.o,p), c.r);}
+bool intersect_cp(const Circle& c, const P& p){return eq(abs(c.o-p), c.r);}
 int intersect_cl(const Circle& c, const Line& s){
     S d=distance_lp(s, c.o);
     return sign(c.r-d)+1;
 }
 int intersect_cs(const Circle& c, const Line& s){
     S dmin=distance_sp(s, c.o);
-    S d1=distance_pp(c.o,s.a), d2=distance_pp(c.o,s.b);
+    S d1=abs(c.o-s.a), d2=abs(c.o-s.b);
     S dmax=max(d1, d2);
     if(dmin>c.r+EPS||dmax<c.r-EPS) return 0;
     if(eq(dmin, c.r)) return 1;
@@ -43,11 +42,11 @@ int intersect_cs(const Circle& c, const Line& s){
 }
 
 int contain_cp(const Circle& c, const P& p){ // 0:外,1:円周上,2:内
-    S d=distance_pp(c.o,p);
+    S d=abs(c.o-p);
     return sign(c.r-d)+1;
 }
 int contain_cs(const Circle& c, const Line& s){ // 0:外,1:円周上,2:内
-    S d1=distance_pp(c.o,s.a), d2=distance_pp(c.o,s.b);
+    S d1=abs(c.o-s.a), d2=abs(c.o-s.b);
     return d1<c.r+EPS&&d2<c.r+EPS?(eq(d1,c.r)||eq(d2,c.r)?1:2):0;
 }
 
@@ -68,16 +67,15 @@ pair<P, P> crosspoint_cs(const Circle& c, const Line& s){
     return f&&g?make_pair(p, q):f?make_pair(p, p):make_pair(q, q);
 }
 pair<P, P> crosspoint_cc(const Circle& a, const Circle& b){
-    S d=distance_pp(a.o,b.o);
+    S d=abs(a.o-b.o);
     S alpha=acos((sqr(a.r)+sqr(d)-sqr(b.r))/(2*a.r*d));
     S theta=arg(b.o-a.o);
     return minmax(a.o+polar(a.r,theta+alpha),a.o+polar(a.r,theta-alpha), [](const P& a,const P& b){return a<b;});
 }
 
-S distance_pp(const P& a, const P& b){return abs(a-b);}
-S distance_lp(const Line& s, const P& p){return distance_pp(p, projection(s, p));}
+S distance_lp(const Line& s, const P& p){return abs(p-projection(s, p));}
 S distance_sp(const Line& s, const P& p){
-    return distance_pp(p, dot(vec(s), p-s.a)<0?s.a:dot(-vec(s), p-s.b)<0?s.b:projection(s, p));
+    return abs(p-dot(vec(s), p-s.a)<0?s.a:dot(-vec(s), p-s.b)<0?s.b:projection(s, p));
 }
 S distance_ss(const Line& s, const Line& t){
     return intersect_ss(s, t)?S(0):min({
@@ -90,12 +88,12 @@ S distance_ls(const Line& s, const Line& t){
     return intersect_ls(s, t)?S(0):min(distance_lp(s, t.a), distance_lp(s, t.b));
 }
 
-S distance_cp(const Circle& c, const P& p){return abs(distance_pp(c.o, p)-c.r);} //円周
+S distance_cp(const Circle& c, const P& p){return abs(abs(c.o-p)-c.r);} //円周
 S distance_cl(const Circle& c, const Line& s){return max(distance_lp(s, c.o)-c.r, S(0));} //円盤
 S distance_cs(const Circle& c, const Line& s){ //円周
-    return intersect_cs(c, s)?S(0):contain_cs(c, s)?c.r-max(distance_pp(c.o, s.a), distance_pp(c.o, s.b)):distance_sp(s, c.o)-c.r;
+    return intersect_cs(c, s)?S(0):contain_cs(c, s)?c.r-max(abs(c.o-s.a), abs(c.o-s.b)):distance_sp(s, c.o)-c.r;
 }
 S distance_cc(const Circle& a, const Circle& b){
-    S d=distance_pp(a.o, b.o);
+    S d=abs(a.o-b.o);
     return max(d-a.r-b.r, S(0)); //円周上ならmax({...,abs(a.r-b.r)-d})
 }

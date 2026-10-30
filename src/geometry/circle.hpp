@@ -5,21 +5,21 @@
 Circle circumcircle(const P& a, const P& b, const P& c){
     S A=norm(b-c), B=norm(c-a), C=norm(a-b);
     P o=(A*(B+C-A)*a+B*(C+A-B)*b+C*(A+B-C)*c)/(4*cross(b-a, c-a)*cross(b-a, c-a));
-    return {o, distance_pp(o,a)};
+    return {o, abs(o-a)};
 }
 
 // 内接円
 Circle incircle(const P& a, const P& b, const P& c){
-    S A=distance_pp(b,c), B=distance_pp(c,a), C=distance_pp(a,b);
+    S A=abs(b-c), B=abs(c-a), C=abs(a-b);
     P o=(A*a+B*b+C*c)/(A+B+C);
     return {o, abs(cross(b-a, c-a))/(A+B+C)};
 }
 
 // 傍接円（辺 p2-p3 に対する傍接円）
 Circle excircle(const P& p1, const P& p2, const P& p3){
-    S d1=distance_pp(p2,p3);
-    S d2=distance_pp(p3,p1);
-    S d3=distance_pp(p1,p2);
+    S d1=abs(p2-p3);
+    S d2=abs(p3-p1);
+    S d3=abs(p1-p2);
     S sum=-d1+d2+d3;
     P c=(-d1*p1+d2*p2+d3*p3)/sum;
     S area2=abs(imag(conj(p2-p1)*(p3-p1)));
@@ -42,11 +42,11 @@ pair<P, P> tangent_points(const Circle& c, const P& p){ //接線の接点
     S b=c.r*sqrtl(d2-sqr(c.r))/d2;
     P t1=c.o+v*a+normalvector(v)*b;
     P t2=c.o+v*a-normalvector(v)*b;
-    return minmax(t1,t2, [](const P& a,const P& b){return a<b;});
+    return minmax(t1, t2, [](const P& a, const P& b){return a<b;});
 }
 vector<Line> tangent(const Circle& a, const Circle& b){ //接線のaに対する接点
     vector<Line>ret;
-    S g=distance_pp(a.o,b.o);
+    S g=abs(a.o-b.o);
     if(eq(g, 0)) return ret;
     P u=(b.o-a.o)/g;
     P v=normalvector(u);
@@ -63,43 +63,32 @@ vector<Line> tangent(const Circle& a, const Circle& b){ //接線のaに対する
     return ret;
 }
 
-S area(const vector<P>& p, const Circle& c){
-    S ret=0;
-    int n=si(p);
-    rep(i, n){
-        Line s(p[i], p[(i+1)%n]);
-        if(contain_cs(c, s)) ret+=cross(s.a-c.o, s.b-c.o);
-        else if(!intersect_cs(c, s)){
-            S a=arg(s.b-c.o)-arg(s.a-c.o);
-            if(a>PI) a-=2*PI;
-            if(a<-PI) a+=2*PI;
-            ret+=sqr(c.r)*a;
+S area(const vector<P>& p, Circle& c){
+    S ret=0;int n=p.size();
+    for(int i=0;i<n;i++){
+        P a=p[i]-c.o, b=p[(i+1)%n]-c.o, d=b-a;
+        S A=norm(d), B=real(conj(a)*d), D=B*B-A*(norm(a)-c.r*c.r);
+        vector<S> ts={0};
+        if(D>0){
+            S s=sqrtl(D);
+            for(S t:{(-B-s)/A, (-B+s)/A}) if(t>0&&t<1) ts.push_back(t);
         }
-        else{
-            pair<P, P> x=crosspoint_cs(c, s);
-            P tmp[4]={s.a, x.first, x.second, s.b};
-            if(intersect_cs(c, Line(s.a, x.first))==2) swap(tmp[1], tmp[2]);
-            for(int j=0;j<3;j++){
-                Line t(tmp[j], tmp[j+1]);
-                if(contain_cs(c, t)) ret+=cross(t.a-c.o, t.b-c.o);
-                else{
-                    S a=arg(t.b-c.o)-arg(t.a-c.o);
-                    if(a>PI) a-=2*PI;
-                    if(a<-PI) a+=2*PI;
-                    ret+=sqr(c.r)*a;
-                }
-            }
+        ts.push_back(1);
+        for(size_t j=0;j+1<ts.size();j++){
+            P u=a+d*ts[j], v=a+d*ts[j+1];
+            ret+=norm(u+v)<4*c.r*c.r?cross(u, v):c.r*c.r*arg(v/u);
         }
     }
     return ret/2;
 }
+
 S area(const Circle& c){return PI*sqr(c.r);}
 S area(const Circle& a, const Circle& b){
     int c=count_tangent(a, b);
     if(c>=3) return 0;
     else if(c<=1) return area(a.r<b.r?a:b);
     else{
-        S d=distance_pp(a.o,b.o);
+        S d=abs(a.o-b.o);
         S ret=0;
         {
             S alpha=acos((sqr(a.r)+d*d-sqr(b.r))/(2*a.r*d));
@@ -127,7 +116,7 @@ Circle min_ball(iter left, iter right, int seed=time(0)){   //最小包含円
 
     iter ps=left;
     auto make_circle_3=[](const P& a, const P& b, const P& c)->Circle {
-        S A=norm(b-c), B=norm(c-a), C=norm(a-b), D=cross(b-a,c-a);
+        S A=norm(b-c), B=norm(c-a), C=norm(a-b), D=cross(b-a, c-a);
         P p=(A*(B+C-A)*a+B*(C+A-B)*b+C*(A+B-C)*c)/(4*D*D);
         S r2=norm(p-a);
         return Circle{p, r2};
