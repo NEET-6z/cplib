@@ -11,6 +11,6 @@ int main(){
         cin>>x>>y;
         A[i]=P(x, y);
     }
-    ld ans=poly_area(A);
+    ld ans=area_poly(A);
     cout<<setprecision(1)<<ans<<"\n";
 }

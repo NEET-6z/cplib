@@ -5,5 +5,5 @@
 int main(){
     Circle a, b;
     cin>>a.o>>a.r>>b.o>>b.r;
-    cout<<area(a, b)<<"\n";
+    cout<<area_cc(a, b)<<"\n";
 }

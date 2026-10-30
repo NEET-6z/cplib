@@ -20,7 +20,7 @@ int main(){
         S m=(ok+ng)/2;
         Circle c(P(0, m), R);
         ld wa=0;
-        rep(i, N+1) wa+=area(A[i], c);
+        rep(i, N+1) wa+=area_pc(A[i], c);
         if(wa*2<=R*R*PI) ok=m;
         else ng=m;
     }

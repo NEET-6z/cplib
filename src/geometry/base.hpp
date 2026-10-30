@@ -85,7 +85,7 @@ int argtype(const P& p){
 bool arglt(const P& a, const P& b){
     if(argtype(a)!=argtype(b)) return argtype(a)<argtype(b);
     S c=cross(a, b);
-    if(abs(c)>EPS) return c>EPS;
+    if(abs(c)>0) return c>0;
     return norm(a)<norm(b);
 }
 bool arg_direct(const P& a, const P& b){

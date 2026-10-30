@@ -1,5 +1,6 @@
 #include "./intersect.hpp"
 
+//psが変更され、psにおける添字を頂点番号とたグラフを返す。secondは距離
 vector<vector<pair<int, S>>> segment_arrangement(const vector<Line>& ss, vector<P>& ps){
     ps.clear();
     int n=si(ss);

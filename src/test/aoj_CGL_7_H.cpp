@@ -9,5 +9,5 @@ int main(){
     vector<P> A(N);
     rep(i, N) cin>>A[i];
 
-    cout<<area(A, C)<<"\n";
+    cout<<area_pc(A, C)<<"\n";
 }

@@ -63,7 +63,7 @@ vector<Line> tangent(const Circle& a, const Circle& b){ //接線のaに対する
     return ret;
 }
 
-S area(const vector<P>& p, Circle& c){
+S area_pc(const vector<P>& p, Circle& c){
     S ret=0;int n=si(p);
     for(int i=0;i<n;i++){
         P a=p[i]-c.o, b=p[(i+1)%n]-c.o, d=b-a;
@@ -82,8 +82,8 @@ S area(const vector<P>& p, Circle& c){
     return ret/2;
 }
 
-S area(const Circle& c){return PI*sqr(c.r);}
-S area(const Circle& a, const Circle& b){
+S area_c(const Circle& c){return PI*sqr(c.r);}
+S area_cc(const Circle& a, const Circle& b){
     S d=abs(a.o-b.o);
     if(d>=a.r+b.r) return 0;
     if(d<=abs(a.r-b.r)) return PI*sqr(min(a.r, b.r));

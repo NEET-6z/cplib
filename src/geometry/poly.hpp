@@ -1,7 +1,7 @@
 #pragma once
 #include "intersect.hpp"
 
-S poly_area(const vector<P>& ps){
+S area_poly(const vector<P>& ps){
     int n=si(ps);
     S ret=0;
     rep(i, n) ret+=cross(ps[i], ps[(i+1)%n]);
@@ -132,6 +132,7 @@ S convex_diamenter(vector<P> p){ //2乗
     return md;
 }
 
+//ベクトルsに対して左側
 vector<P> convex_cut(const vector<P>& p, const Line& s){
     vector<P> r;int n=si(p);
     rep(i, n){
