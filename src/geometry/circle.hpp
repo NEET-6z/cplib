@@ -42,7 +42,7 @@ pair<P, P> tangent_points(const Circle& c, const P& p){ //接線の接点
     S b=c.r*sqrtl(d2-sqr(c.r))/d2;
     P t1=c.o+v*a+normalvector(v)*b;
     P t2=c.o+v*a-normalvector(v)*b;
-    return minmax(t1, t2, [](const P& a, const P& b){return a<b;});
+    return minmax(t1, t2);
 }
 vector<Line> tangent(const Circle& a, const Circle& b){ //接線のaに対する接点
     vector<Line>ret;
@@ -84,24 +84,11 @@ S area(const vector<P>& p, Circle& c){
 
 S area(const Circle& c){return PI*sqr(c.r);}
 S area(const Circle& a, const Circle& b){
-    int c=count_tangent(a, b);
-    if(c>=3) return 0;
-    else if(c<=1) return area(a.r<b.r?a:b);
-    else{
-        S d=abs(a.o-b.o);
-        S ret=0;
-        {
-            S alpha=acos((sqr(a.r)+d*d-sqr(b.r))/(2*a.r*d));
-            ret+=alpha*sqr(a.r);
-            ret-=sin(alpha*2)*sqr(a.r)/2;
-        }
-        {
-            S alpha=acos((sqr(b.r)+d*d-sqr(a.r))/(2*b.r*d));
-            ret+=alpha*sqr(b.r);
-            ret-=sin(alpha*2)*sqr(b.r)/2;
-        }
-        return ret;
-    }
+    S d=abs(a.o-b.o);
+    if(d>=a.r+b.r) return 0;
+    if(d<=abs(a.r-b.r)) return PI*sqr(min(a.r, b.r));
+    auto f=[&](S r, S R){S t=acos((sqr(r)+d*d-sqr(R))/(2*r*d)); return sqr(r)*(t-sin(2*t)/2);};
+    return f(a.r, b.r)+f(b.r, a.r);
 }
 
 

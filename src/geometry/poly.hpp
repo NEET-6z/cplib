@@ -56,7 +56,7 @@ int convex_contains_log(const vector<P>& p, const P& a){ // 共線点なし
     int n=si(p);
     if(a==p[0]) return 1;
     if(n==1) return 0;
-    if(intersect_sp(Line(p[0], p[1]), a)) return 1;
+    if(ccw(p[0], p[1], a)==0) return 1;
     if(n==2) return 0;
     if(ccw(p[0], p[1], a)==-1) return 0;
 
@@ -91,7 +91,7 @@ int intersect_poly_segment(const vector<P>& ps, Line l){
 vector<P> convex_hull(vector<P> ps, bool strict=true){  //共線点を排除するか
     int n=si(ps), k=0;
     assert(n>0);
-    sort(all(ps), [&](P a, P b){return a<b;}); //戻り値の順番: (最小/最大) (x優先/y優先)
+    sort(all(ps)); //戻り値の順番: (最小/最大) (x優先/y優先)
     vector<P> ch(2*n);
 
 
@@ -133,12 +133,12 @@ S convex_diamenter(vector<P> p){ //2乗
 }
 
 vector<P> convex_cut(const vector<P>& p, const Line& s){
-    vector<P> ret;
-    int n=si(p);
+    vector<P> r;int n=si(p);
     rep(i, n){
-        Line t(p[i], p[(i+1)%n]);
-        if(ccw(s.a, s.b, t.a)!=-1) ret.push_back(t.a);
-        if(intersect_ls(s, t)==2) ret.push_back(crosspoint_ll(s, t));
+        P a=p[i], b=p[(i+1)%n];
+        S x=cross(vec(s), a-s.a), y=cross(vec(s), b-s.a);
+        if(sign(x)>=0) r.push_back(a);
+        if(sign(x)*sign(y)<0) r.push_back(a+(b-a)*(x/(x-y)));
     }
-    return ret;
+    return r;
 }

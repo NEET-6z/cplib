@@ -18,9 +18,10 @@ ld rad2pi(ld rad){
     }
     return rad;
 }
+namespace std {
 bool operator<(const P& a, const P& b){
-    if(a.real()!=b.real()) return a.real()<b.real();
-    return a.imag()<b.imag();
+    return a.real()!=b.real()?a.real()<b.real():a.imag()<b.imag();
+}
 }
 struct Circle {
     P o;
@@ -72,7 +73,7 @@ int ccw(const P& b, const P& c){
 }
 
 int ccw(const P& a, const P& b, const P& c){
-    return ccw(b-a,c-a);
+    return ccw(b-a, c-a);
 }
 
 int argtype(const P& p){
