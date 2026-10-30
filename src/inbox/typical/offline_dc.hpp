@@ -1,5 +1,6 @@
 #include "../dsu/dsu_rollback.hpp"
 
+//QlogQlogN
 struct OfflineDynamicConnectivity {
     using E=pair<int, int>;
 
@@ -64,7 +65,7 @@ struct OfflineDynamicConnectivity {
         }
         else if(k-(segsz-1)<Q){
             int query_index=k-(segsz-1);
-            f(query_index);
+            f(query_index); //時刻kのadd/eraseが終わった直後
         }
         for(auto& e: seg[k]){
             uf.undo();

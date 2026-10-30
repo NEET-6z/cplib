@@ -29,17 +29,17 @@ struct Fen2D {
         }
     }
     void add(K x, K y, T w){
-        x=lower_bound(all(xz), x)-xz.begin();
+        x=lbi(xz,x);
         for(int i=x+1;i<=n;i+=i& -i){
-            int j=lower_bound(all(ys[i]), y)-ys[i].begin();
+            int j=lbi(ys[i],y);
             bit[i].add(j, w);
         }
     }
     T sum(K x, K y){
-        x=lower_bound(all(xz), x)-xz.begin();
+        x=lbi(xz,x);
         T s=0;
         for(;x;x-=x& -x){
-            int j=lower_bound(ys[x].begin(), ys[x].end(), y)-ys[x].begin();
+            int j=lbi(ys[x],y);
             s+=bit[x].sum(j);
         }
         return s;

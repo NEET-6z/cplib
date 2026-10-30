@@ -14,7 +14,8 @@ template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
     void build(){
         sort(all(xp));
         xp.erase(unique(all(xp)), xp.end());
-        n=__bit_ceil(xp.size());
+        n=1;
+        while(n<si(xp)) n<<=1;
         for(auto [x, y]:xp) xs.push_back(x);
         yp.resize(2*n);
         ys.resize(2*n);
@@ -33,24 +34,20 @@ template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
     }
 
     void set(K x, K y, S v){
-        auto it=lower_bound(all(xp), make_pair(x, y));
-        assert(it!=xp.end()&&it->fi==x&&it->se==y);
-        int k=it-xp.begin();
+        int k=lbi(xp, make_pair(x, y));
+        assert(k!=si(xp)&&xp[k].fi==x&&xp[k].se==y);
         for(k+=n;k;k>>=1){
-            auto it2=lower_bound(all(yp[k]), make_pair(y, x));
-            assert(it2!=yp[k].end());
-            int id=it2-yp[k].begin();
+            int id=lbi(yp[k], make_pair(y, x));
+            assert(id!=si(yp[k]));
             d[k].set(id, v);
         }
     }
     S get(K x, K y){
-        auto it=lower_bound(all(xp), make_pair(x, y));
-        assert(it!=xp.end()&&it->fi==x&&it->se==y);
-        int k=it-xp.begin();
+        int k=lbi(xp, make_pair(x, y));
+        assert(k!=si(xp)&&xp[k].fi==x&&xp[k].se==y);
         k+=n;
-        auto it2=lower_bound(all(yp[k]), make_pair(y, x));
-        assert(it2!=yp[k].end());
-        int id=it2-yp[k].begin();
+        int id=lbi(yp[k], make_pair(y, x));;
+        assert(id!=si(yp[k]));
         return d[k].get(id);
     }
     void apply(K x, K y, S v){
@@ -59,20 +56,20 @@ template<typename K, class S, S (*op)(S, S), S (*e)()> struct segtree_2d {
 
     S range(K lv, K rv, K dv, K uv){
         if(dv>=uv) return e();
-        int l=lower_bound(all(xs), lv)-xs.begin();
-        int r=lower_bound(all(xs), rv)-xs.begin();
+        int l=lbi(xs, lv);
+        int r=lbi(xs, rb);
         S sml=e(), smr=e();
         for(l+=n, r+=n;l<r;l>>=1, r>>=1){
             if(l&1){
-                int li=lower_bound(all(ys[l]), dv)-ys[l].begin();
-                int ri=lower_bound(all(ys[l]), uv)-ys[l].begin();
+                int li=lbi(ys[l], dv);
+                int ri=lbi(ys[l], uv);
                 sml=op(sml, d[l].prod(li, ri));
                 l++;
             }
             if(r&1){
                 --r;
-                int li=lower_bound(all(ys[r]), dv)-ys[r].begin();
-                int ri=lower_bound(all(ys[r]), uv)-ys[r].begin();
+                int li=lbi(ys[r], dv);
+                int ri=lbi(ys[r], uv);
                 smr=op(d[r].prod(li, ri), smr);
             }
         }
