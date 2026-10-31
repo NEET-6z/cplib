@@ -4,7 +4,7 @@
 int main(){
     int N, M, F;
     cin>>N>>M>>F;
-    mincostflow<long, long> g(N);
+    PrimalDual<long, long> g(N);
     rep(i, M){
         int u, v, c, d;
         cin>>u>>v>>c>>d;

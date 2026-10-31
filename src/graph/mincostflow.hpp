@@ -14,69 +14,76 @@ struct PrimalDual {
     vector<int> pv, pe;
     const cost_t INF;
 
-    PrimalDual(int V):G(V), INF(numeric_limits<cost_t>::max()){}
+    PrimalDual(int V):G(V), P(V, 0), INF(numeric_limits<cost_t>::max()){}
 
     void add_edge(int from, int to, flow_t cap, cost_t cost){
-        G[from].emplace_back(E{to, cap, cost, si(G[to]), false});
-        G[to].emplace_back(E{from, 0, -cost, si(G[from])-1, true});
+        G[from].push_back(E{to, (int)G[to].size(), cap, cost, false});
+        G[to].push_back(E{from, (int)G[from].size()-1, 0, -cost, true});
     }
 
-    cost_t min_cost_flow(int s, int t, flow_t f){
-        int V=si(G);
+    pair<flow_t, cost_t> flow(int s, int t, flow_t f){
+        int V=G.size();
+        flow_t sent=0;
         cost_t ret=0;
         using Pi=pair<cost_t, int>;
         priority_queue<Pi, vector<Pi>, greater<Pi>> que;
-        P.assign(V, 0);  //init_potential(s)
         pe.assign(V, -1);
         pv.assign(V, -1);
 
         while(f>0){
             mc.assign(V, INF);
-            que.emplace(0, s);
             mc[s]=0;
+            que.emplace(0, s);
             while(!que.empty()){
-                Pi p=que.top();
+                auto [d, v]=que.top();
                 que.pop();
-                if(mc[p.se]<p.fi) continue;
-                rep(i, si(G[p.se])){
-                    E& e=G[p.se][i];
-                    cost_t nextCost=mc[p.se]+e.cost+P[p.se]-
-                                     P[e.to];
-                    if(e.cap>0&&mc[e.to]>nextCost){
-                        mc[e.to]=nextCost;
-                        pv[e.to]=p.se, pe[e.to]=i;
-                        que.emplace(mc[e.to], e.to);
+                if(mc[v]<d) continue;
+                for(int i=0;i<(int)G[v].size();i++){
+                    E& e=G[v][i];
+                    if(e.cap<=0) continue;
+                    cost_t nc=d+e.cost+P[v]-P[e.to];
+                    if(mc[e.to]>nc){
+                        mc[e.to]=nc;
+                        pv[e.to]=v, pe[e.to]=i;
+                        que.emplace(nc, e.to);
                     }
                 }
             }
-            if(mc[t]==INF) return -1;
-            rep(v, V) if(mc[v]!=INF) P[v]+=mc[v];
-            flow_t addflow=f;
-            for(int v=t;v!=s;v=pv[v]){
-                addflow=min(addflow, G[pv[v]][pe[v]].cap);
-            }
-            f-=addflow;
-            ret+=addflow*P[t];
+            if(mc[t]==INF) break;
+            for(int v=0;v<V;v++) if(mc[v]!=INF) P[v]+=mc[v];
+            flow_t add=f;
+            for(int v=t;v!=s;v=pv[v]) add=min(add, G[pv[v]][pe[v]].cap);
+            f-=add;
+            sent+=add;
+            ret+=add*(P[t]-P[s]);
             for(int v=t;v!=s;v=pv[v]){
                 E& e=G[pv[v]][pe[v]];
-                e.cap-=addflow;
-                G[v][e.rev].cap+=addflow;
+                e.cap-=add;
+                G[v][e.rev].cap+=add;
             }
         }
-        return ret;
+        return {sent, ret};
     }
-    //負辺対応
+
+    cost_t min_cost_flow(int s, int t, flow_t f){
+        auto [sent, cost]=flow(s, t, f);
+        return sent==f?cost:-1;
+    }
+
+    pair<flow_t, cost_t> min_cost_max_flow(int s, int t){
+        return flow(s, t, numeric_limits<flow_t>::max());
+    }
+    //負辺対応(流す前に呼ぶ)
     void init_potential(int s){
-        int V=si(G);
+        int V=G.size();
         P.assign(V, INF);
         P[s]=0;
-        rep(i, V-1){
+        for(int i=0;i<V-1;i++){
             bool update=false;
-            rep(v, V){
+            for(int v=0;v<V;v++){
                 if(P[v]==INF) continue;
                 for(auto& e : G[v]){
-                    if(e.cap>0&&
-                       P[e.to]>P[v]+e.cost){
+                    if(e.cap>0&&P[e.to]>P[v]+e.cost){
                         P[e.to]=P[v]+e.cost;
                         update=true;
                     }
@@ -84,17 +91,16 @@ struct PrimalDual {
             }
             if(!update) break;
         }
-        rep(v, V) if(P[v]==INF) P[v]=0;
+        for(int v=0;v<V;v++) if(P[v]==INF) P[v]=0;
     }
 
     void output(){
-        rep(i, si(G)){
+        for(int i=0;i<(int)G.size();i++)
             for(auto& e : G[i]){
-                if(e.isrev) continue;
-                auto& rev_e=G[e.to][e.rev];
-                cout<<i<<"->"<<e.to<<" (flow: "<<rev_e.cap<<"/"
-                    <<rev_e.cap+e.cap<<")"<<endl;
+                if(e.isr) continue;
+                auto& r=G[e.to][e.rev];
+                cout<<i<<"->"<<e.to<<" (flow: "<<r.cap<<"/"
+                    <<r.cap+e.cap<<")"<<endl;
             }
-        }
     }
 };

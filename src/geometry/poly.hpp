@@ -73,7 +73,8 @@ int convex_contains_log(const vector<P>& p, const P& a){ // 共線点なし
     return 2;
 }
 
-int intersect_poly_segment(const vector<P>& ps, Line l){
+
+int intersect_convex_segment(const vector<P>& ps, Line l){
     int n=si(ps);
     vector<Line> dia;
     rep(i, n) dia.emplace_back(Line(ps[i], ps[(i+1)%n]));

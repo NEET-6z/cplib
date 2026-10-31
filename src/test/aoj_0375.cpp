@@ -12,12 +12,12 @@ int main(){
     rep(i, N) cin>>A[i];
 
     vector<ld> d(N, 1e9);
-    rep(i, N) if(intersect_poly_segment(A, Line(S, A[i]))<=1) d[i]=abs(S-A[i]);
+    rep(i, N) if(intersect_convex_segment(A, Line(S, A[i]))<=1) d[i]=abs(S-A[i]);
     rep(i, N*2) d[(i+1)%N]=min(d[(i+1)%N], d[i%N]+abs(A[i%N]-A[(i+1)%N]));
     for(int i=N*2;i--;) d[i%N]=min(d[i%N], d[(i+1)%N]+abs(A[i%N]-A[(i+1)%N]));
     ld ans=1e9;
-    rep(i, N) if(intersect_poly_segment(A, Line(G, A[i]))<=1) ans=min(ans, d[i]+abs(G-A[i]));
-    if(intersect_poly_segment(A, Line(S, G))<=1){
+    rep(i, N) if(intersect_convex_segment(A, Line(G, A[i]))<=1) ans=min(ans, d[i]+abs(G-A[i]));
+    if(intersect_convex_segment(A, Line(S, G))<=1){
         rep(i, N){
             Line l{A[i], A[(i+1)%N]};
             if(ccw(l.a, l.b, S)!=ccw(l.a, l.b, G)) continue;

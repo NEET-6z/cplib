@@ -1,75 +1,60 @@
-#include "../dsu/dsu_rollback.hpp"
-
 //QlogQlogN
 struct OfflineDynamicConnectivity {
     using E=pair<int, int>;
-
-    dsu_rollback uf;
-    int V, Q, segsz;
+    int V, Q=0, n=1, comp;
+    vector<int> p;                          // DSU(union by size, 経路圧縮なし)
+    vector<tuple<int, int, int>> st;        // (親にした根 a, 子にした根 b, 元の p[b])
     vector<vector<E>> seg;
-    int comp;
+    map<E, int> appear;                     // 現在存在する辺の開始時刻
+    vector<tuple<int, int, E>> pend;        // 確定した辺区間 [l, r)
 
-    vector<pair<pair<int, int>, E>> pend;
-    map<E, int> cnt, appear;
+    OfflineDynamicConnectivity(int V):V(V), comp(V), p(V, -1){}
 
-    OfflineDynamicConnectivity(int V, int Q):uf(V), V(V), Q(Q), comp(V){
-        segsz=1;
-        while(segsz<Q) segsz<<=1;
-        seg.resize(2*segsz-1);
-    }
-
-    void insert(int idx, int s, int t){
-        auto e=minmax(s, t);
-        if(cnt[e]++==0) appear[e]=idx;
-    }
-
+    void insert(int idx, int s, int t){appear[minmax(s, t)]=idx;}
     void erase(int idx, int s, int t){
         auto e=minmax(s, t);
-        if(--cnt[e]==0) pend.emplace_back(make_pair(appear[e], idx), e);
+        pend.emplace_back(appear[e], idx, e);
+        appear.erase(e);
     }
 
-    void add(int a, int b, const E& e, int k, int l, int r){
-        if(r<=a||b<=l) return;
-        if(a<=l&&r<=b){
-            seg[k].emplace_back(e);
-            return;
-        }
-        add(a, b, e, 2*k+1, l, (l+r)>>1);
-        add(a, b, e, 2*k+2, (l+r)>>1, r);
-    }
-
-    void add(int a, int b, const E& e){add(a, b, e, 0, 0, segsz);}
-
-    void build(){
-        for(auto& p: cnt){
-            if(p.second>0)
-                pend.emplace_back(make_pair(appear[p.first], Q), p.first);
-        }
-        for(auto& s: pend){
-            add(s.first.first, s.first.second, s.second);
+    void add(int l, int r, E e){
+        for(l+=n, r+=n;l<r;l>>=1, r>>=1){
+            if(l&1) seg[l++].push_back(e);
+            if(r&1) seg[--r].push_back(e);
         }
     }
 
-    void run(const function<void(int)>& f, int k=0){
-        int add=0;
-        for(auto& e: seg[k]){
-            if(!uf.same(e.first, e.second)){
-                add++;
-            }
-            uf.merge(e.first, e.second);
-        }
-        comp-=add;
-        if(k<segsz-1){
-            run(f, 2*k+1);
-            run(f, 2*k+2);
-        }
-        else if(k-(segsz-1)<Q){
-            int query_index=k-(segsz-1);
-            f(query_index); //時刻kのadd/eraseが終わった直後
-        }
-        for(auto& e: seg[k]){
-            uf.undo();
-        }
-        comp+=add;
+    void build(int q){
+        Q=q;
+        while(n<Q) n<<=1;
+        seg.assign(2*n, {});
+        for(auto& [e, t] : appear) pend.emplace_back(t, Q, e);
+        for(auto& [l, r, e] : pend) add(l, r, e);
+    }
+
+    int leader(int x)const {while(p[x]>=0) x=p[x];return x;}
+    bool same(int a, int b)const {return leader(a)==leader(b);}
+    int size(int x)const {return -p[leader(x)];}
+
+    void merge(int a, int b){
+        a=leader(a), b=leader(b);
+        if(a==b) return;
+        if(p[a]>p[b]) swap(a, b);
+        st.emplace_back(a, b, p[b]);
+        p[a]+=p[b];p[b]=a;
+        comp--;
+    }
+    void undo(){
+        auto [a, b, pb]=st.back();st.pop_back();
+        p[a]-=pb;p[b]=pb;
+        comp++;
+    }
+
+    void run(const function<void(int)>& f, int k=1){
+        size_t t=st.size();
+        for(auto& [a, b] : seg[k]) merge(a, b);
+        if(k<n) run(f, 2*k), run(f, 2*k+1);
+        else if(k-n<Q) f(k-n);
+        while(st.size()>t) undo();
     }
 };
