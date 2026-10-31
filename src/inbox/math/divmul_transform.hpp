@@ -1,6 +1,7 @@
 #include "../template.hpp"
 
 /*
+https://nyaannyaan.github.io/library/multiplicative-function/divisor-multiple-transform.hpp.html
 divisor_transform::zeta(a): aを約数ゼータ変換する(下位集合への累積和=一般的な累積和)
 divisor_transform::mobius(a): aを約数メビウス変換する(下位集合への累積和の逆変換)
 multiple_transform::zeta(a): aを倍数ゼータ変換する(上位集合への累積和)
@@ -87,8 +88,3 @@ struct multiple_transform {
                 if(p2->first%p1->first==0) p1->second-=p2->second;
     }
 };
-
-/**
- * @brief 倍数変換・約数変換
- * @docs docs/multiplicative-function/divisor-multiple-transform.md
- */

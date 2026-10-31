@@ -1,5 +1,6 @@
 #include "../template.hpp"
 
+//https://hitonanode.github.io/cplib-cpp/graph/manhattan_mst.hpp.html
 template <typename T>
 vector<tuple<T, int, int>> manhattan_mst(vector<T> xs, vector<T> ys){
     const int n=xs.size();

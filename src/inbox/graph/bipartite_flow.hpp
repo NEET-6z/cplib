@@ -1,9 +1,6 @@
 #include "../template.hpp"
 
-/**
- * @brief Bipartite Flow(二部グラフのフロー)
- *
- */
+//https://ei1333.github.io/library/graph/flow/bipartite-flow.hpp
 struct BipartiteFlow {
     size_t n, m, time_stamp;
     vector<vector<int>> g, rg;

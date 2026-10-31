@@ -1,5 +1,6 @@
 #pragma once
 #include "../template.hpp"
+
 using BS=bitset<40>;
 BS maximal_independent_set(vector<BS> g, BS d=0){
     int n=si(g);

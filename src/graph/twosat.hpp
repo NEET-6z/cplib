@@ -1,5 +1,7 @@
 #include "../template.hpp"
 
+
+//https://ei1333.github.io/library/graph/others/two-satisfiability.hpp
 struct two_sat {
     two_sat():two_sat(0){}
     two_sat(int n):n(n), g(2*n), built(false){}

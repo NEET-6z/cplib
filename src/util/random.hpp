@@ -31,3 +31,6 @@ struct SplitMix64 {
     SplitMix64(uint64_t seed=0):state(seed){}
     uint64_t operator()(){return splitmix64(state+=0x9e3779b97f4a7c15ULL);}
 };
+
+
+// srand(time(NULL));rand();0以上RAND_MAX以下

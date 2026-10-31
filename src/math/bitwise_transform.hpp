@@ -1,7 +1,7 @@
 #include "../template.hpp"
 
 //https://qandori.github.io/cp-library/components/bitwise_zeta.hpp.html
-//inverse: Mebius, superset:上位集合
+//inverse?Mebius:Zeta, superset?上位集合:下位集合
 template <bool inverse=false, bool superset=false, class T>
 void bitwise_zeta(vector<T>& a){
     assert(a.empty()||has_single_bit(a.size()));
@@ -15,34 +15,25 @@ void bitwise_zeta(vector<T>& a){
             }
 }
 
+
 vector<int> subset_zeta(int n, vector<int> a){
     rep(j, n){
         int b=1<<j;
-        rep(i, 1<<n){
-            if(i&b) a[i]+=a[i^b];
-        }
+        rep(i, 1<<n) if(i&b) a[i]+=a[i^b];
     }
     return a;
 }
 vector<int> subset_mobius(int n, vector<int> a){
     rep(j, n){
         int b=1<<j;
-        rep(i, 1<<n){
-            if(i&b){
-                a[i]-=a[i^b];
-            }
-        }
+        rep(i, 1<<n) if(i&b) a[i]-=a[i^b];
     }
     return a;
 }
 vector<int> superset_zeta(int n, vector<int> a){
     rep(j, n){
         int b=1<<j;
-        rep(i, 1<<n){
-            if((i&b)==0){
-                a[i]+=a[i|b];
-            }
-        }
+        rep(i, 1<<n) if((i&b)==0) a[i]+=a[i|b];
     }
     return a;
 }
@@ -50,11 +41,7 @@ vector<int> superset_zeta(int n, vector<int> a){
 vector<int> superset_mobius(int n, vector<int> a){
     rep(j, n){
         int b=1<<j;
-        rep(i, 1<<n){
-            if((i&b)==0){
-                a[i]-=a[i|b];
-            }
-        }
+        rep(i, 1<<n) if((i&b)==0) a[i]-=a[i|b];
     }
     return a;
 }

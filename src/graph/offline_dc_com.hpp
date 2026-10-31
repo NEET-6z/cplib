@@ -1,14 +1,22 @@
-//QlogQlogN
+
+template<class S, S (*op)(S, S)>
 struct OfflineDynamicConnectivity {
     using E=pair<int, int>;
-    int V, Q=0, n=1, comp;
-    vector<int> p;                          // DSU(union by size, 経路圧縮なし)
-    vector<tuple<int, int, int>> st;        // (親にした根 a, 子にした根 b, 元の p[b])
-    vector<vector<E>> seg;
-    map<E, int> appear;                     // 現在存在する辺の開始時刻
-    vector<tuple<int, int, E>> pend;        // 確定した辺区間 [l, r)
+    struct Rec { int a, b, pa, pb;S va;char ha; };
 
-    OfflineDynamicConnectivity(int V):V(V), comp(V), p(V, -1){}
+    int V, Q, n=1;
+    vector<S> A;
+    vector<int> p;
+    vector<S> val;
+    vector<char> has;
+    vector<Rec> st;
+    vector<vector<pair<int, S>>> sets;
+    vector<vector<E>> seg;
+    map<E, int> appear;
+    vector<tuple<int, int, E>> pend;
+
+    OfflineDynamicConnectivity(const vector<S>& A)
+        :V(A.size()), A(A), p(V, -1), val(V), has(V, 0), sets(V){}
 
     void insert(int idx, int s, int t){appear[minmax(s, t)]=idx;}
     void erase(int idx, int s, int t){
@@ -16,6 +24,7 @@ struct OfflineDynamicConnectivity {
         pend.emplace_back(appear[e], idx, e);
         appear.erase(e);
     }
+    void set(int idx, int v, S x){sets[v].emplace_back(idx, x);}
 
     void add(int l, int r, E e){
         for(l+=n, r+=n;l<r;l>>=1, r>>=1){
@@ -30,24 +39,34 @@ struct OfflineDynamicConnectivity {
         seg.assign(2*n, {});
         for(auto& [e, t] : appear) pend.emplace_back(t, Q, e);
         for(auto& [l, r, e] : pend) add(l, r, e);
+        for(int v=0;v<V;v++){
+            S cur=A[v];
+            int t0=0;
+            auto put=[&](int r) {
+                if(t0>=r) return;
+                add(t0, r, E(v, (int)p.size()));
+                p.push_back(-1);val.push_back(cur);has.push_back(1);
+            };
+            for(auto& [t, x] : sets[v]){put(t);cur=x;t0=t;}
+            put(Q);
+        }
     }
 
     int leader(int x)const {while(p[x]>=0) x=p[x];return x;}
-    bool same(int a, int b)const {return leader(a)==leader(b);}
-    int size(int x)const {return -p[leader(x)];}
+    S get(int x)const {return val[leader(x)];}
 
     void merge(int a, int b){
         a=leader(a), b=leader(b);
         if(a==b) return;
         if(p[a]>p[b]) swap(a, b);
-        st.emplace_back(a, b, p[b]);
+        st.push_back({a, b, p[a], p[b], val[a], has[a]});
         p[a]+=p[b];p[b]=a;
-        comp--;
+        if(has[b]){val[a]=has[a]?op(val[a], val[b]):val[b];has[a]=1;}
     }
     void undo(){
-        auto [a, b, pb]=st.back();st.pop_back();
-        p[a]-=pb;p[b]=pb;
-        comp++;
+        auto& r=st.back();
+        p[r.a]=r.pa;p[r.b]=r.pb;val[r.a]=r.va;has[r.a]=r.ha;
+        st.pop_back();
     }
 
     void run(const function<void(int)>& f, int k=1){

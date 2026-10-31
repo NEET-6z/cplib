@@ -1,6 +1,6 @@
 #include "../template.hpp"
 
-
+//https://ei1333.github.io/library/structure/trie/binary-trie.hpp
 template<unsigned int sz, typename T=int>
 struct binarytrie {
     using Bit=typename conditional<sz<32, unsigned int, unsigned long long>::type;
