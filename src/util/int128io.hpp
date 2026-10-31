@@ -1,5 +1,5 @@
+#pragma once
 #include "../template.hpp"
-
 
 istream& operator>>(istream& is, i128& x){
     string s;

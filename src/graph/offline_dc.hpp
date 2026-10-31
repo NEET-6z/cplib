@@ -1,3 +1,6 @@
+#pragma once
+#include "../template.hpp"
+
 //QlogQlogN
 struct OfflineDynamicConnectivity {
     using E=pair<int, int>;

@@ -1,3 +1,4 @@
+#pragma once
 #include "./modint.hpp"
 #include "./convolution.hpp"
 #include "./crt.hpp"

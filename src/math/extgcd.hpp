@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 // returns gcd(a, b) and assign x, y to integers

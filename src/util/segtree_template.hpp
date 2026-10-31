@@ -1,6 +1,5 @@
+#pragma once
 #include "../template.hpp"
-
-
 struct Min {
     using S=long;
     S op(S l, S r){return min(l, r);}

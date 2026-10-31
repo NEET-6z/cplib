@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 vector<int> eratosthenes(int N){

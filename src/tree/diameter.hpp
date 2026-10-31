@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 pair<int, pair<int, int>> get_diameter(vector<vector<int>> G){

@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 vector<pair<long, long>> segment_interval(long L, long R){

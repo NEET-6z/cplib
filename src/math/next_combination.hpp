@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 bool next_combination(vector<int>& a, int n){

@@ -1,3 +1,4 @@
+#pragma once
 #include "./intersect.hpp"
 
 //psが変更され、psにおける添字を頂点番号としたグラフを返す。secondは距離

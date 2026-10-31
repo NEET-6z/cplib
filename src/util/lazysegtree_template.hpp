@@ -1,3 +1,4 @@
+#pragma once
 #include "../segtree/lazy_segtree.hpp"
 
 struct RMQ_RAQ {

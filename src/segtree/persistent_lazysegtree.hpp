@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 extern "C" const char* __asan_default_options(){

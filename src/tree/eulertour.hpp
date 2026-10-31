@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 pair<vector<int>, vector<int>> ET(vector<vector<int>> G, int root=0){

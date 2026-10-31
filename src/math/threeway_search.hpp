@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 template<class T, class F>

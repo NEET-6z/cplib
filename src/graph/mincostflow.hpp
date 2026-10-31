@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 template <typename flow_t, typename cost_t>

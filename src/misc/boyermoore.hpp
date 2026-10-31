@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 vector<int> boyer_moore_generalized(vector<int> a, int k){

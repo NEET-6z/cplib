@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 inline vector<array<long, 3>> floor_intervals(long N){

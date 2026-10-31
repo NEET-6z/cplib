@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 //https://qandori.github.io/cp-library/components/bitwise_zeta.hpp.html

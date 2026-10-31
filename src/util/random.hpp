@@ -1,5 +1,5 @@
+#pragma once
 #include "../template.hpp"
-
 struct Random {
     mt19937 mt;
     Random(){

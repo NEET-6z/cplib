@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 #include "../structure/sparsetable.hpp"
 

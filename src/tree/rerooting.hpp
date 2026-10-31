@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 template <class E, class S, S (*merge)(S, S), S (*up)(S, E), S (*id)()>
