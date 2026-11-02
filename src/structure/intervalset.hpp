@@ -37,6 +37,6 @@ struct IntervalSet {
     }
     bool in(K x){
         auto it=--st.lower_bound({x+1, -INF});
-        return x<it->se;
+        return x<it->fi.se;
     }
 };
