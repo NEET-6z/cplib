@@ -40,6 +40,7 @@ jobs:
                 src/
           exclude: |
                 src/inbox/
+                note/
           # Specify patterns
           # include: your-own-include/
           # exclude: your-own-exclude/
