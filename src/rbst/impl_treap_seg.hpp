@@ -1,16 +1,16 @@
 #include "../template.hpp"
-extern "C" const char* __asan_default_options(){
-    return "detect_leaks=0";
-}
-
-template<class S, auto op, auto e>
+template<class S, auto op, auto e, int MAX_N=1000000>
 struct Treap {
     struct Node {
-        S val, sum, rsum;int sz=1;bool rev=0;unsigned pri=rng();Node *l=0, *r=0;
-        Node(S x):val(x), sum(x), rsum(x){}
+        S val, sum, rsum;int sz=1;bool rev=0;unsigned pri;Node *l=0, *r=0;
+        Node() = default;
+        Node(S x):val(x), sum(x), rsum(x), pri(rng()){}
         static unsigned rng(){static mt19937 g(random_device{}());return g();}
     };
     using P=Node*;
+    inline static Node pool[MAX_N];
+    inline static int ptr=0;
+    static P new_node(S x){assert(ptr<MAX_N);P t=&pool[ptr++];*t=Node(x);return t;}
     P root=0;
 
     static int sz(P t){return t?t->sz:0;}
@@ -36,22 +36,23 @@ struct Treap {
         upd(t);
     }
     template<class G> S range(int l, int r, G f){
+        if(l==r) return e();
         P a, b, c;
         sp(root, l, a, b);sp(b, r-l, b, c);
         f(b);
-        S ret=b->sum;
+        S ret=sm(b);
         root=mg(mg(a, b), c);
         return ret;
     }
 
-    static Treap join(Treap l, Treap r){Treap t;t.root=mg(l.root, r.root);return t;}
+    static Treap join(Treap& l, Treap& r){Treap t;t.root=mg(l.root, r.root);l.root=r.root=nullptr;return t;}
     pair<Treap, Treap> split(int k){Treap a, b;sp(root, k, a.root, b.root);root=0;return {a, b};}
 
     void set(int k, S x){range(k, k+1, [&](P b){b->val=b->sum=b->rsum=x;});}
     S get(int k){return range(k, k+1, [](P){});}
     S fold(int l, int r){return range(l, r, [](P){});}
     void reverse(int l, int r){range(l, r, [](P b){toggle(b);});}
-    void insert(int k, S x){P a, b;sp(root, k, a, b);root=mg(mg(a, new Node(x)), b);}
+    void insert(int k, S x){P a, b;sp(root, k, a, b);root=mg(mg(a, new_node(x)), b);}
     void erase(int k){P a, b, c;sp(root, k, a, b);sp(b, 1, b, c);root=mg(a, c);}
     void push_front(S x){insert(0, x);}
     void push_back(S x){insert(size(), x);}
@@ -91,5 +92,38 @@ struct Treap {
         }
         root=mg(a, b);
         return l;
+    }
+    static P build(const vector<S>& a, int l, int r, const vector<unsigned>& p, int& idx){
+        if(l>=r) return 0;
+        int m=(l+r)/2;
+        assert(ptr<MAX_N);
+        P t=&pool[ptr++];
+        *t=Node(a[m]);
+        t->pri=p[idx++];
+        t->l=build(a, l, m, p, idx);
+        t->r=build(a, m+1, r, p, idx);
+        upd(t);
+        return t;
+    }
+    void build(const vector<S>& a){
+        int n=a.size();
+        vector<unsigned> p(n);
+        for(auto& x:p) x=Node::rng();
+        sort(p.begin(), p.end(), greater<unsigned>());
+        int idx=0;
+        root=build(a, 0, n, p, idx);
+    }
+    static void dump(P t, vector<S>& out){
+        if(!t) return;
+        push(t);
+        dump(t->l, out);
+        out.push_back(t->val);
+        dump(t->r, out);
+    }
+    vector<S> to_vector(){
+        vector<S> out;
+        out.reserve(size());
+        dump(root, out);
+        return out;
     }
 };

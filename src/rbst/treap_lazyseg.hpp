@@ -1,16 +1,16 @@
 #include "../template.hpp"
-extern "C" const char* __asan_default_options(){
-    return "detect_leaks=0";
-}
-
-template<class K, class S, auto op, auto e, class F, auto mpp, auto cmpo, auto id>
+template<class K, class S, auto op, auto e, class F, auto mpp, auto cmpo, auto id, int MAX_N=1000000>
 struct Treap {
     struct Node {
-        K key;S val, sum;F lz=id();int sz=1;unsigned pri=rng();Node *l=0, *r=0;
-        Node(K k, S x):key(k), val(x), sum(x){}
+        K key;S val, sum;F lz=id();int sz=1;unsigned pri;Node *l=0, *r=0;
+        Node() = default;
+        Node(K k, S x):key(k), val(x), sum(x), pri(rng()){}
         static unsigned rng(){static mt19937 g(random_device{}());return g();}
     };
     using P=Node*;
+    inline static Node pool[MAX_N];
+    inline static int ptr=0;
+    static P new_node(K k, S x){assert(ptr<MAX_N);P t=&pool[ptr++];*t=Node(k, x);return t;}
     P root=0;
 
     static int sz(P t){return t?t->sz:0;}
@@ -21,7 +21,7 @@ struct Treap {
     }
     static void apply(P t, const F& f){
         if(!t) return;
-        t->val=mpp(t->val, f);t->sum=mpp(t->sum, f);
+        t->val=mpp(f, t->val);t->sum=mpp(f, t->sum);
         t->lz=cmpo(f, t->lz);
     }
     static void push(P t){
@@ -48,10 +48,10 @@ struct Treap {
         upd(t);return t;
     }
 
-    static Treap join(Treap l, Treap r){Treap t;t.root=mg(l.root, r.root);return t;}
+    static Treap join(Treap &l, Treap &r){Treap t;t.root=mg(l.root, r.root);l.root=r.root=nullptr;return t;}
     pair<Treap, Treap> split(K k){Treap a, b;sp(root, k, a.root, b.root);root=0;return {a, b};}
 
-    void insert(K k, S x){P a, b;root=er(root, k);sp(root, k, a, b);root=mg(mg(a, new Node(k, x)), b);}
+    void insert(K k, S x){P a, b;root=er(root, k);sp(root, k, a, b);root=mg(mg(a, new_node(k, x)), b);}
     void erase(K k){root=er(root, k);}
     S* find(K k){
         P t=root;

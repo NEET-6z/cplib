@@ -1,15 +1,17 @@
 #include "../template.hpp"
-extern "C" const char* __asan_default_options(){
-    return "detect_leaks=0";
-}
-template<class S>
+
+template<class S, int MAX_N = 1000000>
 struct Treap {
     struct Node {
-        S val;int sz=1;unsigned pri=rng();Node *l=0, *r=0;
-        Node(S x):val(x){}
+        S val;int sz=1;unsigned pri;Node *l=0, *r=0;
+        Node() = default;
+        Node(S x):val(x), pri(rng()){}
         static unsigned rng(){static mt19937 g(random_device{}());return g();}
     };
     using P=Node*;
+    inline static Node pool[MAX_N];
+    inline static int ptr=0;
+    static P new_node(S x){assert(ptr<MAX_N);P t=&pool[ptr++];*t=Node(x);return t;}
     P root=0;
 
     static int sz(P t){return t?t->sz:0;}
@@ -26,7 +28,7 @@ struct Treap {
         upd(t);
     }
 
-    static Treap join(Treap l, Treap r){Treap t;t.root=mg(l.root, r.root);return t;}
+    static Treap join(Treap &l, Treap &r){Treap t;t.root=mg(l.root, r.root);l.root=r.root=nullptr;return t;}
     pair<Treap, Treap> split(int k){Treap a, b;sp(root, k, a.root, b.root);root=0;return {a, b};}
 
     S& operator[](int k){
@@ -38,7 +40,7 @@ struct Treap {
             else k-=s+1, t=t->r;
         }
     }
-    void insert(int k, S x){P a, b;sp(root, k, a, b);root=mg(mg(a, new Node(x)), b);}
+    void insert(int k, S x){P a, b;sp(root, k, a, b);root=mg(mg(a, new_node(x)), b);}
     void erase(int k){P a, b, c;sp(root, k, a, b);sp(b, 1, b, c);root=mg(a, c);}
     void push_front(S x){insert(0, x);}
     void push_back(S x){insert(size(), x);}
