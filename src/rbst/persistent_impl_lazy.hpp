@@ -3,7 +3,7 @@
 template<class S, auto op, auto e, class F, auto mpp, auto cmpo, auto id, int MAX_N=1000000>
 struct Treap {
     struct Node {
-        S val, sum, rsum;F lz=id();int sz=1;bool rev=0;unsigned pri;Node *l=0, *r=0;
+        S val, sum, rsum;F lz=id();long sz=1;bool rev=0;unsigned pri;Node *l=0, *r=0;
         Node() = default;
         Node(S x):val(x), sum(x), rsum(x), pri(rng()){}
         static unsigned rng(){static mt19937 g(random_device{}());return g();}
@@ -16,7 +16,7 @@ struct Treap {
     static void reset(){ptr=0;}
     P root=0;
 
-    static int sz(P t){return t?t->sz:0;}
+    static long sz(P t){return t?t->sz:0;}
     static S sm(P t){return t?t->sum:e();}
     static S rs(P t){return t?t->rsum:e();}
     static void upd(P t){
@@ -46,7 +46,7 @@ struct Treap {
         if(a->pri>b->pri){a=clone(a);push(a);a->r=mg(a->r, b);upd(a);return a;}
         b=clone(b);push(b);b->l=mg(a, b->l);upd(b);return b;
     }
-    static void sp(P t, int k, P& a, P& b){
+    static void sp(P t, long k, P& a, P& b){
         if(!t){a=b=0;return;}
         if(k<=0){a=0;b=t;return;}
         if(k>=t->sz){a=t;b=0;return;}
@@ -55,7 +55,7 @@ struct Treap {
         else{a=t;sp(t->r, k-sz(t->l)-1, t->r, b);}
         upd(t);
     }
-    template<class G> S range(int l, int r, G f){
+    template<class G> S range(long l, long r, G f){
         if(l==r) return e();
         P a, b, c;
         sp(root, l, a, b);sp(b, r-l, b, c);
@@ -66,10 +66,10 @@ struct Treap {
     }
 
     static Treap join(const Treap& l, const Treap& r){Treap t;t.root=mg(l.root, r.root);return t;}
-    pair<Treap, Treap> split(int k)const {Treap a, b;sp(root, k, a.root, b.root);return {a, b};}
+    pair<Treap, Treap> split(long k)const {Treap a, b;sp(root, k, a.root, b.root);return {a, b};}
 
-    void update(int l, int r, F x){range(l, r, [&](P b){return apply(b, x);});}
-    static S query(P t, int l, int r, F f, bool rev){
+    void update(long l, long r, F x){range(l, r, [&](P b){return apply(b, x);});}
+    static S query(P t, long l, long r, F f, bool rev){
         if(!t||l>=r) return e();
         if(l==0&&r==t->sz){
             S res=t->sum;
@@ -79,31 +79,31 @@ struct Treap {
         P R=rev?t->l:t->r;
         bool nr=rev^t->rev;
         F nf=cmpo(f, t->lz);
-        int n=sz(L);
+        long n=sz(L);
         S res=e();
         if(l<n) res=op(res, query(L, l, min(r, n), nf, nr));
         if(l<=n&&n<r) res=op(res, mpp(f, t->val));
-        if(r>n+1) res=op(res, query(R, max(0, l-n-1), r-n-1, nf, nr));
+        if(r>n+1) res=op(res, query(R, max(0L, l-n-1), r-n-1, nf, nr));
         return res;
     }
-    S fold(int l, int r)const {
+    S fold(long l, long r)const {
         return query(root, l, r, id(), false);
     }
-    void reverse(int l, int r){range(l, r, [](P b){return toggle(b);});}
-    void insert(int k, S x){P a, b;sp(root, k, a, b);root=mg(mg(a, new_node(x)), b);}
-    void erase(int k){P a, b, c;sp(root, k, a, b);sp(b, 1, b, c);root=mg(a, c);}
+    void reverse(long l, long r){range(l, r, [](P b){return toggle(b);});}
+    void insert(long k, S x){P a, b;sp(root, k, a, b);root=mg(mg(a, new_node(x)), b);}
+    void erase(long k){P a, b, c;sp(root, k, a, b);sp(b, 1, b, c);root=mg(a, c);}
     void push_front(S x){insert(0, x);}
     void push_back(S x){insert(size(), x);}
     void pop_front(){erase(0);}
     void pop_back(){erase(size()-1);}
-    int size()const {return sz(root);}
+    long size()const {return sz(root);}
     bool empty()const {return !root;}
     void clear(){root=nullptr;}
 
-    template<class G> int max_right(int l, G f){
+    template<class G> long max_right(long l, G f){
         P a, b;
         sp(root, l, a, b);
-        int r=l;
+        long r=l;
         S acc=e();
         for(P t=b;t; ){
             push(t);
@@ -115,10 +115,10 @@ struct Treap {
         }
         return r;
     }
-    template<class G> int min_left(int r, G f){
+    template<class G> long min_left(long r, G f){
         P a, b;
         sp(root, r, a, b);
-        int l=r;
+        long l=r;
         S acc=e();
         for(P t=a;t; ){
             push(t);
@@ -130,25 +130,20 @@ struct Treap {
         }
         return l;
     }
-    static P build(const vector<S>& a, int l, int r, const vector<unsigned>& p, int& idx){
+    static P build(const vector<S>& a, int l, int r, int d){
         if(l>=r) return 0;
         int m=(l+r)/2;
         assert(ptr<MAX_N);
         P t=&pool[ptr++];
         *t=Node(a[m]);
-        t->pri=p[idx++];
-        t->l=build(a, l, m, p, idx);
-        t->r=build(a, m+1, r, p, idx);
+        t->pri=((unsigned)max(0, 31-d)<<27)|(Node::rng()>>5);
+        t->l=build(a, l, m, d+1);
+        t->r=build(a, m+1, r, d+1);
         upd(t);
         return t;
     }
     void build(const vector<S>& a){
-        int n=a.size();
-        vector<unsigned> p(n);
-        for(auto& x:p) x=Node::rng();
-        sort(p.begin(), p.end(), greater<unsigned>());
-        int idx=0;
-        root=build(a, 0, n, p, idx);
+        root=build(a, 0, (int)a.size(), 0);
     }
     static void dump(P t, F f, bool rev, vector<S>& out){
         if(!t) return;

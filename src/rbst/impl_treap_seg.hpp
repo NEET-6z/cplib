@@ -93,25 +93,20 @@ struct Treap {
         root=mg(a, b);
         return l;
     }
-    static P build(const vector<S>& a, int l, int r, const vector<unsigned>& p, int& idx){
+    static P build(const vector<S>& a, int l, int r, int d){
         if(l>=r) return 0;
         int m=(l+r)/2;
         assert(ptr<MAX_N);
         P t=&pool[ptr++];
         *t=Node(a[m]);
-        t->pri=p[idx++];
-        t->l=build(a, l, m, p, idx);
-        t->r=build(a, m+1, r, p, idx);
+        t->pri=((unsigned)max(0, 31-d)<<27)|(Node::rng()>>5);
+        t->l=build(a, l, m, d+1);
+        t->r=build(a, m+1, r, d+1);
         upd(t);
         return t;
     }
     void build(const vector<S>& a){
-        int n=a.size();
-        vector<unsigned> p(n);
-        for(auto& x:p) x=Node::rng();
-        sort(p.begin(), p.end(), greater<unsigned>());
-        int idx=0;
-        root=build(a, 0, n, p, idx);
+        root=build(a, 0, (int)a.size(), 0);
     }
     static void dump(P t, vector<S>& out){
         if(!t) return;
